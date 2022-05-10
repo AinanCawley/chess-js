@@ -119,6 +119,15 @@ const loadPosition = function(fenString)
 {
     //TODO: save other board state features like E.P. square, castling rights, side to move 
 
+    if(boardPerspective=="white")
+    { //To remove all previous piece classes from the board and to start anew
+        createWhiteChessboard(); 
+    }
+    if(boardPerspective=="black")
+    { //To remove all previous piece classes from the board and to start anew
+        createBlackChessboard();
+    }
+
     fenString = fenString.slice(0,(fenString.indexOf(" ")));
     //^^ Remove anything that isn't purely where pieces are
 
@@ -203,11 +212,78 @@ const loadPosition = function(fenString)
             currentSquare += fenArray[index]; 
         }
     });
+
+    //TODO: update visuals
 }
 
-//Board state STUFF
+const updateVisuals = function()
+{
+    let whitePawns = document.querySelectorAll(".whitePawn");
+    whitePawns.forEach(function(piece)
+    {
+        piece.innerText = "\u2659";
+    });
+    let blackPawns = document.querySelectorAll(".blackPawn");
+    blackPawns.forEach(function(piece)
+    {
+        piece.innerText = "\u265F";
+    });
+    let whiteKnight = document.querySelectorAll(".whiteKnight");
+    whiteKnight.forEach(function(piece)
+    {
+        piece.innerText = "\u2658";
+    });
+    let blackKnights = document.querySelectorAll(".blackKnight");
+    blackKnights.forEach(function(piece)
+    {
+        piece.innerText = "\u265E";
+    });
+    let whiteBishops = document.querySelectorAll(".whiteBishop");
+    whiteBishops.forEach(function(piece)
+    {
+        piece.innerText = "\u2657";
+    });
+    let blackBishops = document.querySelectorAll(".blackBishop");
+    blackBishops.forEach(function(piece)
+    {
+        piece.innerText = "\u265D";
+    });
+    let whiteRooks = document.querySelectorAll(".whiteRook");
+    whiteRooks.forEach(function(piece)
+    {
+        piece.innerText = "\u2656";
+    });
+    let blackRooks = document.querySelectorAll(".blackRook");
+    blackRooks.forEach(function(piece)
+    {
+        piece.innerText = "\u265C";
+    });
+    let whiteQueens = document.querySelectorAll(".whiteQueen");
+    whiteQueens.forEach(function(piece)
+    {
+        piece.innerText = "\u2655";
+    });
+    let blackQueens = document.querySelectorAll(".blackQueen");
+    blackQueens.forEach(function(piece)
+    {
+        piece.innerText = "\u265B";
+    });
+    let whiteKings = document.querySelectorAll(".whiteKing");
+    whiteKings.forEach(function(piece)
+    {
+        piece.innerText = "\u2654";
+    });
+    let blackKings = document.querySelectorAll(".blackKing");
+    blackKings.forEach(function(piece)
+    {
+        piece.innerText = "\u265A";
+    });
+}
+
+//Game state STUFF
 
 let currentFEN = "";
+let boardPerspective = ""; //"white" or "black"
 
 //DOM STUFF
 

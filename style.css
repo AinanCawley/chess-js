@@ -37,4 +37,10 @@
 .chessboardSquare
 {
     flex: 1 1 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    font-size: 300%;
+    user-select: none;
 }
