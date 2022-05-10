@@ -50,8 +50,15 @@ const createWhiteChessboard = function()
     
             square.setAttribute("id", numberToLetter(i) + "" + (8-j) );
             //^^To give each square its standard coordinate name as id
-    
-            square.innerText = square.id; //FOR CHECKING PURPOSES
+
+            if( (i+j)%2==0 )
+            {
+                square.style.backgroundColor = lightSquareColour;
+            }
+            else
+            {
+                square.style.backgroundColor = darkSquareColour;
+            }
     
             column.appendChild(square);
         }
@@ -70,7 +77,7 @@ const createBlackChessboard = function()
     let chessboard = document.createElement('div');
     let boardFragment = document.createDocumentFragment();
     
-    for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
+    for( let i = 0; i < 8; i++ ) //This creates a chessboard from BLACK's perspective
     {
         let column = document.createElement("div");
         column.classList.add("chessboardColumn");
@@ -81,8 +88,15 @@ const createBlackChessboard = function()
     
             square.setAttribute("id", numberToLetter(7-i) + "" + (j+1) );
             //^^To give each square its standard coordinate name as id
-    
-            square.innerText = square.id; //FOR CHECKING PURPOSES
+
+            if( (i+j)%2==0 )
+            {
+                square.style.backgroundColor = lightSquareColour;
+            }
+            else
+            {
+                square.style.backgroundColor = darkSquareColour;
+            }
     
             column.appendChild(square);
         }
@@ -100,3 +114,7 @@ const createBlackChessboard = function()
 
 const gameContainer = document.getElementById("gameContainer")
 
+//VISUAL STUFF
+
+const lightSquareColour = "hsl(80, 50%, 70%)";
+const darkSquareColour = "hsl(110, 50%, 40%)";
