@@ -34,32 +34,41 @@ const numberToLetter = function(number)
     }
 }
 
+const createWhiteChessboard = function()
+{
+    let chessboard = document.createElement('div');
+    let boardFragment = document.createDocumentFragment();
+    
+    for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
+    {
+        let column = document.createElement("div");
+        column.classList.add("chessboardColumn");
+        for( let j = 0; j < 8; j++ )
+        {
+            let square = document.createElement('div');
+            square.classList.add("chessboardSquare");
+    
+            square.setAttribute("id", numberToLetter(i) + "" + (8-j) );
+            //^^To give each square its standard coordinate name as id
+    
+            square.innerText = square.id; //FOR CHECKING PURPOSES
+    
+            column.appendChild(square);
+        }
+    
+        boardFragment.appendChild(column);
+    }
+    chessboard.appendChild(boardFragment);
+    chessboard.setAttribute("class", "chessboard");
+    gameContainer.appendChild(chessboard);
+}
+
+const createBlackChessboard = function()
+{
+
+}
+
 //DOM STUFF
 
 const gameContainer = document.getElementById("gameContainer")
-const chessboard = document.createElement('div');
-const boardFragment = document.createDocumentFragment();
-
-for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
-{
-    let column = document.createElement("div");
-    column.classList.add("chessboardColumn");
-    for( let j = 0; j < 8; j++ )
-    {
-        let square = document.createElement('div');
-        square.classList.add("chessboardSquare");
-
-        square.setAttribute("id", numberToLetter(i) + "" + (8-j) );
-        //^^To give each square its standard coordinate name as id
-
-        square.innerText = square.id; //FOR CHECKING PURPOSES
-
-        column.appendChild(square);
-    }
-
-    boardFragment.appendChild(column);
-}
-
-chessboard.appendChild(boardFragment);
-chessboard.classList.add("chessboard");
-gameContainer.appendChild(chessboard);
+createWhiteChessboard();
