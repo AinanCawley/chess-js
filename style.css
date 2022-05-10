@@ -18,20 +18,21 @@
 .chessboard, .chessboardColumn
 {
     display: flex;
-    justify-content: stretch;
-    align-items: stretch;
 }
 
 .chessboard
 {
     height: 80vh;
     width: 80vh;
+    justify-content: space-evenly;
+    align-items: stretch;
 }
 
 .chessboardColumn
 {
     flex: 1 1 0;
     flex-direction: column;
+    justify-content: space-evenly;    
 }
 
 .chessboardSquare
