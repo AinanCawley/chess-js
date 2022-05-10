@@ -58,17 +58,45 @@ const createWhiteChessboard = function()
     
         boardFragment.appendChild(column);
     }
+    chessboard.replaceChildren();
     chessboard.appendChild(boardFragment);
     chessboard.setAttribute("class", "chessboard");
+    gameContainer.replaceChildren();
     gameContainer.appendChild(chessboard);
 }
 
 const createBlackChessboard = function()
 {
-
+    let chessboard = document.createElement('div');
+    let boardFragment = document.createDocumentFragment();
+    
+    for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
+    {
+        let column = document.createElement("div");
+        column.classList.add("chessboardColumn");
+        for( let j = 0; j < 8; j++ )
+        {
+            let square = document.createElement('div');
+            square.classList.add("chessboardSquare");
+    
+            square.setAttribute("id", numberToLetter(7-i) + "" + (j+1) );
+            //^^To give each square its standard coordinate name as id
+    
+            square.innerText = square.id; //FOR CHECKING PURPOSES
+    
+            column.appendChild(square);
+        }
+    
+        boardFragment.appendChild(column);
+    }
+    chessboard.replaceChildren();
+    chessboard.appendChild(boardFragment);
+    chessboard.setAttribute("class", "chessboard");
+    gameContainer.replaceChildren();
+    gameContainer.appendChild(chessboard);
 }
 
 //DOM STUFF
 
 const gameContainer = document.getElementById("gameContainer")
-createWhiteChessboard();
+
