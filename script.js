@@ -40,7 +40,7 @@ const gameContainer = document.getElementById("gameContainer")
 const chessboard = document.createElement('div');
 const boardFragment = document.createDocumentFragment();
 
-for( let i = 0; i < 8; i++ )
+for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
 {
     let column = document.createElement("div");
     column.classList.add("chessboardColumn");
