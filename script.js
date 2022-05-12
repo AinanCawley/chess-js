@@ -1,3 +1,137 @@
+// ENGINE STUFF
+
+let engineConventionalBoard =  [["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""],
+                                ["","","","","","","",""]];
+
+const fenToConventionalBoard = function(fenString)
+{
+    let conventionalBoardArray =   [["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""],
+                                    ["","","","","","","",""]];
+
+    fenString = fenString.slice(0,(fenString.indexOf(" ")));
+    //^^ Remove anything that isn't purely where pieces are
+
+    let fenArray = Array.from(fenString);
+    let currentRank = 0;
+    let currentFile = 0;
+    
+    fenArray.forEach(function(element,index)
+    {
+        if( isNaN(Number(fenArray[index])) )
+        {
+            if(element=="/")
+            {
+                currentRank++; // we're going to the next rank
+                currentFile = 0; // and starting from the first file of this next rank
+            }
+            else
+            {
+                if(element=="P")
+                {  
+                    conventionalBoardArray[currentRank][currentFile] = "P";
+                    currentFile++;
+                }
+                if(element=="p")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "p";
+                    currentFile++;
+                }
+                if(element=="N")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "N";
+                    currentFile++;
+                }
+                if(element=="n")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "n";
+                    currentFile++;
+                }
+                if(element=="B")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "B";
+                    currentFile++;
+                }
+                if(element=="b")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "b";
+                    currentFile++;
+                }
+                if(element=="R")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "R";
+                    currentFile++;
+                }
+                if(element=="r")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "r";
+                    currentFile++;
+                }
+                if(element=="Q")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "Q";
+                    currentFile++;
+                }
+                if(element=="q")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "q";
+                    currentFile++;
+                }
+                if(element=="K")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "K";
+                    currentFile++;
+                }
+                if(element=="k")
+                {
+                    conventionalBoardArray[currentRank][currentFile] = "k";
+                    currentFile++;
+                }
+            }
+        }
+        else
+        {
+            fenArray[index] = Number(fenArray[index]); // coerce the string to number so that the next line of code works
+            currentFile += fenArray[index]; 
+        }
+    });
+
+    return conventionalBoardArray;
+}
+
+const legalMovesFromConventionalBoard = function(conventionalBoardArray)
+{ // TODO: everything
+    return arrayOfLegalMoves;
+}
+
+const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
+{ // TODO: everything
+    return arrayOfPseudoLegalMoves;
+}
+
+const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray)
+{ // TODO: everything
+    return Boolean;
+}
+
+const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
+{ // TODO: everything
+    return newConventionalBoardArray;
+}
+
+// GUI BACKEND
+
 const numberToLetter = function(number)
 { //for converting a number between "0" and "7" to a letter between "a" and "h"
     if(number==0)
@@ -262,7 +396,7 @@ const loadPosition = function(fenString)
         }
         else
         {
-            fenArray[index] = Number(fenArray[index]);
+            fenArray[index] = Number(fenArray[index]); // coerce the string to number so that the next line of code works
             currentSquare += fenArray[index]; 
         }
     });
@@ -334,7 +468,7 @@ const updateVisuals = function()
     });
 }
 
-const processMove = function(move) // will check if move is legal before changing anything
+const guiProcessMove = function(move) // will check if move is legal before changing anything
 { // move is in long algebraic notation. For example: "e2e4" or "g1f3"
 
     // TODO: everything
