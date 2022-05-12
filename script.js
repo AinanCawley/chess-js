@@ -75,6 +75,8 @@ const createWhiteChessboard = function()
     chessboard.setAttribute("class", "chessboard");
     gameContainer.replaceChildren();
     gameContainer.appendChild(chessboard);
+
+    boardPerspective = true;
 }
 
 const createBlackChessboard = function()
@@ -113,11 +115,64 @@ const createBlackChessboard = function()
     chessboard.setAttribute("class", "chessboard");
     gameContainer.replaceChildren();
     gameContainer.appendChild(chessboard);
+
+    boardPerspective = false;
 }
 
 const loadPosition = function(fenString)
 {
-    //TODO: save other board state features like E.P. square, castling rights, side to move 
+    //TODO: save other board state features like E.P. square, castling rights, side to move
+    currentFEN = fenString;
+
+    let fenSlice = fenString.slice(fenString.indexOf(" ") + 1);
+    if( fenSlice.slice(0,1) == "w")
+    {
+        sideToMove = true; // white to move
+    }
+    else
+    {
+        sideToMove = false; // black to move
+    }
+
+    fenSlice = fenSlice.slice(fenSlice.indexOf(" ") + 1);
+    fullMoveNumber = fenSlice.slice(-1);
+    fenSlice = fenSlice.slice(0,-2);
+    halfMoveClock = fenSlice.slice(-1);
+    fenSlice = fenSlice.slice(0,-2);
+    enPassantSquare = fenSlice.slice(fenSlice.indexOf(" ") + 1); // will be "-" if no en passant square
+    fenSlice = fenSlice.slice(0,fenSlice.indexOf(" "));
+
+    whiteCastleKingside = false;    //
+    whiteCastleQueenside = false;   // Set all to false so that later so that... 
+    blackCastleKingside = false;    // ...only the true values need to be changed to true
+    blackCastleQueenside = false;   //
+    if( fenSlice.includes("-") == true )
+    {
+        // Do nothing as all the castling values are already false
+    }
+    else
+    {
+        if( fenSlice.includes("K"))
+        {
+            whiteCastleKingside = true;
+        }
+        if( fenSlice.includes("Q"))
+        {
+            whiteCastleQueenside = true;
+        }
+        if( fenSlice.includes("k"))
+        {
+            blackCastleKingside = true;
+        }
+        if( fenSlice.includes("q"))
+        {
+            blackCastleQueenside = true;
+        }
+    }
+
+    gameHistoryArray = []; // start anew
+    gameHistoryArray.push(fenString);
+
 
     if(boardPerspective=="white")
     { //To remove all previous piece classes from the board and to start anew
@@ -282,8 +337,17 @@ const updateVisuals = function()
 
 //Game state STUFF
 
-let currentFEN = "";
-let boardPerspective = ""; //"white" or "black"
+let currentFEN = ""; // current board position represented in FEN
+let boardPerspective = true; // true for white and false for black
+let sideToMove = true;       // true for white and false for black
+let whiteCastleKingside = false;  //
+let whiteCastleQueenside = false; // true for castling rights in that direction
+let blackCastleKingside = false;  // false for no castling rights in that direction
+let blackCastleQueenside = false; //
+let enPassantSquare = ""; // the coordinate behind a pawn that was pushed 2 squares. For en passant moves. Will be "-" for null
+let halfMoveClock = ""; // number of halfmoves (plies) since a capture or a pawn move was made. For the 50-move draw rule.
+let fullMoveNumber = ""; // number of fullmoves. Increments after every Black turn. Starts at 1.
+let gameHistoryArray = []; // array of FENs to keep track of repetition. For the draw by repetition rule.
 
 //DOM STUFF
 
