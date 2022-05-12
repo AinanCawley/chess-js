@@ -126,7 +126,7 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray)
 }
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
-{ // TODO: everything
+{ // this assumes the move given is legal and executes it
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
     let newConventionalBoardArray = conventionalBoardArray;
@@ -138,7 +138,40 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
     newConventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))] = "";
     // ^^The square the move leaves from will always be empty after the move is made
 
-    // TODO: add castling moving the Rook too and add enpassant removing the enemy pawn
+    // TODO: add enpassant removing the enemy pawn
+    if((newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="K")
+    {
+        if(startSquare=="e1")
+        {
+            if(endSquare=="g1")
+            {
+                newConventionalBoardArray[7][7] = "";
+                newConventionalBoardArray[7][5] = "R";
+            }
+            if(endSquare=="c1")
+            {
+                newConventionalBoardArray[7][0] = "";
+                newConventionalBoardArray[7][3] = "R";
+            }
+        }
+    } // ^^ Move over White Rook when castling
+    if((newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="k")
+    {
+        if(startSquare=="e8")
+        {
+            if(endSquare=="g8")
+            {
+                newConventionalBoardArray[0][7] = "";
+                newConventionalBoardArray[0][5] = "r";
+            }
+            if(endSquare=="c8")
+            {
+                newConventionalBoardArray[0][0] = "";
+                newConventionalBoardArray[0][3] = "r";
+            }
+        }
+    } // ^^ Move over Black Rook when castling
+    
 
     return newConventionalBoardArray;
 }
