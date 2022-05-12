@@ -129,51 +129,78 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
 { // this assumes the move given is legal and executes it
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
-    let newConventionalBoardArray = conventionalBoardArray;
-
-    newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = 
-    newConventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))];
-    // ^^The piece moves to the new square
-
-    newConventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))] = "";
-    // ^^The square the move leaves from will always be empty after the move is made
 
     // TODO: add enpassant removing the enemy pawn
-    if((newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="K")
-    {
+    if((conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))])=="P")
+    { // ^^ If a White pawn move...
+        if((8-(Number(endSquare.slice(1))))==2)
+        { // ...goes to the 6th rank...
+            if(conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))]=="")
+            {  // ...and goes to a square that was already empty...
+                if(startSquare.slice(0,1) != endSquare.slice(0,1))
+                { // and is a diagonal pawn move... then it's an en passant and the opponent pawn must be removed
+                    conventionalBoardArray[3][(letterToNumber(endSquare.slice(0,1)))] = "";
+                }
+            }
+        }
+    }
+    if((conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))])=="p")
+    { // ^^ If a Black pawn move...
+        if((8-(Number(endSquare.slice(1))))==5)
+        { // ...goes to the 3rd rank...
+            if(conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))]=="")
+            {  // ...and goes to a square that was already empty...
+                if(startSquare.slice(0,1) != endSquare.slice(0,1))
+                { // and is a diagonal pawn move... then it's an en passant and the opponent pawn must be removed
+                    conventionalBoardArray[4][(letterToNumber(endSquare.slice(0,1)))] = "";
+                }
+            }
+        }
+    }
+    
+
+    conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = 
+    conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))];
+    // ^^The piece moves to the new square
+
+    conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))] = "";
+    // ^^The square the move leaves from will always be empty after the move is made
+
+    if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="K")
+    { // ^^ If a king move...
         if(startSquare=="e1")
-        {
+        { // ...that starts on the starting square and goes to a castled square....
             if(endSquare=="g1")
             {
-                newConventionalBoardArray[7][7] = "";
-                newConventionalBoardArray[7][5] = "R";
+                conventionalBoardArray[7][7] = "";
+                conventionalBoardArray[7][5] = "R";
             }
             if(endSquare=="c1")
             {
-                newConventionalBoardArray[7][0] = "";
-                newConventionalBoardArray[7][3] = "R";
+                conventionalBoardArray[7][0] = "";
+                conventionalBoardArray[7][3] = "R";
             }
         }
     } // ^^ Move over White Rook when castling
-    if((newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="k")
-    {
+    if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="k")
+    { // ^^ If a king move...
         if(startSquare=="e8")
-        {
+        { // ...that starts on the starting square and goes to a castled square....
             if(endSquare=="g8")
             {
-                newConventionalBoardArray[0][7] = "";
-                newConventionalBoardArray[0][5] = "r";
+                conventionalBoardArray[0][7] = "";
+                conventionalBoardArray[0][5] = "r";
             }
             if(endSquare=="c8")
             {
-                newConventionalBoardArray[0][0] = "";
-                newConventionalBoardArray[0][3] = "r";
+                conventionalBoardArray[0][0] = "";
+                conventionalBoardArray[0][3] = "r";
             }
         }
     } // ^^ Move over Black Rook when castling
     
 
-    return newConventionalBoardArray;
+    return conventionalBoardArray;
 }
 
 // GUI BACKEND
