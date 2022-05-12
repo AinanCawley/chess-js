@@ -127,10 +127,59 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray)
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
 { // TODO: everything
+    let startSquare = moveString.slice(0,2);
+    let endSquare = moveString.slice(2);
+    let newConventionalBoardArray = conventionalBoardArray;
+
+    newConventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = 
+    newConventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))];
+    // ^^The piece moves to the new square
+
+    newConventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))] = "";
+    // ^^The square the move leaves from will always be empty after the move is made
+
+    // TODO: add castling moving the Rook too and add enpassant removing the enemy pawn
+
     return newConventionalBoardArray;
 }
 
 // GUI BACKEND
+
+const letterToNumber = function(letter)
+{ // for converting a letter to a number between 0 and 7
+    if(letter=="a")
+    {
+        return 0;
+    }
+    if(letter=="b")
+    {
+        return 1;
+    }
+    if(letter=="c")
+    {
+        return 2;
+    }
+    if(letter=="d")
+    {
+        return 3;
+    }
+    if(letter=="e")
+    {
+        return 4;
+    }
+    if(letter=="f")
+    {
+        return 5;
+    }
+    if(letter=="g")
+    {
+        return 6;
+    }
+    if(letter=="h")
+    {
+        return 7;
+    }
+}
 
 const numberToLetter = function(number)
 { //for converting a number between "0" and "7" to a letter between "a" and "h"
