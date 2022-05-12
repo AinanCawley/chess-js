@@ -121,7 +121,6 @@ const createBlackChessboard = function()
 
 const loadPosition = function(fenString)
 {
-    //TODO: save other board state features like E.P. square, castling rights, side to move
     currentFEN = fenString;
 
     let fenSlice = fenString.slice(fenString.indexOf(" ") + 1);
@@ -268,7 +267,7 @@ const loadPosition = function(fenString)
         }
     });
 
-    //TODO: update visuals
+    updateVisuals();
 }
 
 const updateVisuals = function()
@@ -333,6 +332,13 @@ const updateVisuals = function()
     {
         piece.innerText = "\u265A";
     });
+}
+
+const processMove = function(move) // will check if move is legal before changing anything
+{ // move is in long algebraic notation. For example: "e2e4" or "g1f3"
+
+    // TODO: everything
+    updateVisuals();
 }
 
 //Game state STUFF
