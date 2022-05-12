@@ -517,7 +517,7 @@ const updateVisuals = function()
     });
 }
 
-const guiProcessMove = function(move) // will check if move is legal before changing anything
+const guiProcessMove = function(moveString) // will check if move is legal before changing anything
 { // move is in long algebraic notation. For example: "e2e4" or "g1f3"
 
     // TODO: everything
@@ -544,5 +544,5 @@ const gameContainer = document.getElementById("gameContainer")
 
 //VISUAL STUFF
 
-const lightSquareColour = "hsl(80, 50%, 70%)";
-const darkSquareColour = "hsl(110, 50%, 40%)";
+let lightSquareColour = "hsl(80, 50%, 80%)";
+let darkSquareColour = "hsl(110, 50%, 50%)";
