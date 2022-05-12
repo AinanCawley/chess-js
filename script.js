@@ -130,7 +130,6 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
 
-    // TODO: add enpassant removing the enemy pawn
     if((conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))])=="P")
     { // ^^ If a White pawn move...
         if((8-(Number(endSquare.slice(1))))==2)
