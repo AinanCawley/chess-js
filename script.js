@@ -126,24 +126,24 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
 { // TODO: everything
     if( booleanToMove==true )
     { // ^^This means White to move, so check if Black is in check
-
+        let blackKingCoordinates = findCoordinatesOfKing(conventionalBoardArray,false);
     }
 
     return Boolean;
 }
 
 const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
-{
+{ // True is White, False is Black
     let arrayOfTwoNumbers = [0,0];
 
     if( booleanToMove == true )
-    {
+    { // ^^If looking for the White King...
         for( let i = 7; i > -1; i-- )
         {
             for( let j = 7; j > -1; j-- )
             {
                 if( conventionalBoardArray[i][j] == "K" )
-                {
+                { // ...search for the White King...
                     arrayOfTwoNumbers[0] = i;
                     arrayOfTwoNumbers[1] = j;
                     break;
@@ -152,13 +152,13 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
         }
     }
     else
-    {
+    { // ^^...otherwise...
         for( let i = 0; i < 8; i++ )
         {
             for( let j = 0; j < 8; j++ )
             {
                 if( conventionalBoardArray[i][j] == "k" )
-                {
+                { // ...search for the Black King
                     arrayOfTwoNumbers[0] = i;
                     arrayOfTwoNumbers[1] = j;
                     break;
