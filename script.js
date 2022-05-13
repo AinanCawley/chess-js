@@ -131,7 +131,7 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
             if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "N" )
-            {
+            { // ^^ Search for White Knights since we're checking for a Black King
                 return true;
             }
         }
@@ -143,7 +143,7 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
             if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "n" )
-            {
+            { // ^^ Search for Black Knights since we're checking for a White King
                 return true;
             }
         }
