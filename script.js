@@ -157,6 +157,34 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
                     break;
                 }
             }
+            if( (coordinatesArray[0]+i) < 8)
+            { // Checking for raytracing attacks from the 6 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "Q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "R") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "r") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "q") )
+                {
+                    break;
+                }
+            }
         }
         let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,false));
         
