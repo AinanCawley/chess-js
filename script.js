@@ -123,14 +123,33 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
 }
 
 const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
-{ // TODO: everything
+{ // TODO: check for raytracing attacks
     if( booleanToMove==true )
-    { // ^^This means White to move, so check if Black is in check
-        let blackKingCoordinates = findCoordinatesOfKing(conventionalBoardArray,false);
-
+    { // ^^This means White to move, so check if Black's King is in check
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,false));
+        
+        for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
+        {
+            if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "N" )
+            {
+                return true;
+            }
+        }
+    }
+    else
+    { // ^^ else means Black to move, so check if White's King is in check
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,true));
+        
+        for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
+        {
+            if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "n" )
+            {
+                return true;
+            }
+        }
     }
 
-    return Boolean;
+    return false;
 }
 
 const createCoordinatesKnightAttack = function(coordinateArray)
