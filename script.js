@@ -134,7 +134,7 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
 }
 
 const createCoordinatesKnightAttack = function(coordinateArray)
-{
+{ // Takes in an array with two values: rank, file (conventional board)
     let arrayOfCoordinates = [];
 
     if(coordinateArray[0]>1)
@@ -181,8 +181,8 @@ const createCoordinatesKnightAttack = function(coordinateArray)
             arrayOfCoordinates.push([(coordinateArray[0]+1),(coordinateArray[1]-2)]);
         }
     }
-
-    return arrayOfCoordinates;
+    // vv outputs an array of arrays. Inner arrays are of the same format as the input array
+    return arrayOfCoordinates; 
 }
 
 const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
