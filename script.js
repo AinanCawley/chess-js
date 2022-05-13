@@ -127,9 +127,62 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
     if( booleanToMove==true )
     { // ^^This means White to move, so check if Black is in check
         let blackKingCoordinates = findCoordinatesOfKing(conventionalBoardArray,false);
+
     }
 
     return Boolean;
+}
+
+const createCoordinatesKnightAttack = function(coordinateArray)
+{
+    let arrayOfCoordinates = [];
+
+    if(coordinateArray[0]>1)
+    {
+        if(coordinateArray[1]>0)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]-2),(coordinateArray[1]-1)]);
+        }
+        if(coordinateArray[1]<7)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]-2),(coordinateArray[1]+1)]);
+        }
+    }
+    if(coordinateArray[0]<6)
+    {
+        if(coordinateArray[1]>0)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]+2),(coordinateArray[1]-1)]);
+        }
+        if(coordinateArray[1]<7)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]+2),(coordinateArray[1]+1)]);
+        }
+    }
+    if(coordinateArray[1]<6)
+    {
+        if(coordinateArray[0]>0)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]-1),(coordinateArray[1]+2)]);
+        }
+        if(coordinateArray[0]<7)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]+1),(coordinateArray[1]+2)]);
+        }
+    }
+    if(coordinateArray[1]>1)
+    {
+        if(coordinateArray[0]>0)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]-1),(coordinateArray[1]-2)]);
+        }
+        if(coordinateArray[0]<7)
+        {
+            arrayOfCoordinates.push([(coordinateArray[0]+1),(coordinateArray[1]-2)]);
+        }
+    }
+
+    return arrayOfCoordinates;
 }
 
 const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
