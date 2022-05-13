@@ -8,6 +8,8 @@ let engineConventionalBoard =  [["","","","","","","",""],
                                 ["","","","","","","",""],
                                 ["","","","","","","",""],
                                 ["","","","","","","",""]];
+let engineFEN = "";
+
 
 const fenToConventionalBoard = function(fenString)
 {
@@ -120,9 +122,52 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
     return arrayOfPseudoLegalMoves;
 }
 
-const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray)
+const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
 { // TODO: everything
+    if( booleanToMove==true )
+    { // ^^This means White to move, so check if Black is in check
+
+    }
+
     return Boolean;
+}
+
+const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
+{
+    let arrayOfTwoNumbers = [0,0];
+
+    if( booleanToMove == true )
+    {
+        for( let i = 7; i > -1; i-- )
+        {
+            for( let j = 7; j > -1; j-- )
+            {
+                if( conventionalBoardArray[i][j] == "K" )
+                {
+                    arrayOfTwoNumbers[0] = i;
+                    arrayOfTwoNumbers[1] = j;
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        for( let i = 0; i < 8; i++ )
+        {
+            for( let j = 0; j < 8; j++ )
+            {
+                if( conventionalBoardArray[i][j] == "k" )
+                {
+                    arrayOfTwoNumbers[0] = i;
+                    arrayOfTwoNumbers[1] = j;
+                    break;
+                }
+            }
+        }
+    }
+
+    return arrayOfTwoNumbers;
 }
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
