@@ -156,6 +156,29 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
                 {
                     break;
                 }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
         for( let i = 1; i < 8; i++ )
@@ -186,6 +209,29 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
                 if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "q") )
                 {
                     break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -218,6 +264,29 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
                 {
                     break;
                 }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
         for( let i = 1; i < 8; i++ )
@@ -248,6 +317,29 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
                 if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "q") )
                 {
                     break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
