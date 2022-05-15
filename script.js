@@ -123,7 +123,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
 }
 
 const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
-{ // TODO: check for raytracing attacks TODO URGENT: Fix the QR raytracing to be blocked my opponent non-QR pieces
+{ // TODO: check for raytracing attacks TODO URGENT: Fix the QR raytracing to be blocked my opponent non-QR pieces TODO: King checks!
     if( booleanToMove==true )
     { // ^^This means White to move, so check if Black's King is in check
         let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
@@ -368,7 +368,7 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
 }
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
-{ // this assumes the move given is legal and executes it
+{ // this assumes the move given is legal and executes it TODO: add promotion handling
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
 
