@@ -128,6 +128,72 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
     { // ^^This means White to move, so check if Black's King is in check
         let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
         for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NE direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "B") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SW direction
+            
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NW direction
+            
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SE direction
+            
+        }
+        for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the 9 o clock direction
             if( (coordinatesArray[1]-i) > -1 )
             {
