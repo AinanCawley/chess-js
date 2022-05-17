@@ -1140,6 +1140,13 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
 { // this assumes the move given is legal and executes it TODO: add promotion handling
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
+    let promoteToPiece = "";
+
+    if(moveString.length == 5)
+    { // ^^ If move is a pawn promoting
+        promoteToPiece = endSquare.slice(2);
+        endSquare = endSquare.slice(0,2);
+    }
 
     if((conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))])=="P")
     { // ^^ If a White pawn move...
@@ -1153,6 +1160,9 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
                 }
             }
         }
+
+        promoteToPiece = promoteToPiece.toUpperCase();
+        // ^^ So that the promoted piece is White if the pawn promoting is White
     }
     if((conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))])=="p")
     { // ^^ If a Black pawn move...
@@ -1166,13 +1176,22 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
                 }
             }
         }
+
+        promoteToPiece = promoteToPiece.toLowerCase();
+        // ^^ So that the promoted piece is Black if the pawn promoting is Black
     }
     
-
-    conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = 
-    conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))];
-    // ^^The piece moves to the new square
-
+    if(moveString.length == 5)
+    { // ^^ If move is a pawn promotion
+        conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = promoteToPiece;
+    }
+    else
+    {
+        conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))] = 
+        conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))];
+        // ^^The piece moves to the new square
+    }
+    
     conventionalBoardArray[(8-(Number(startSquare.slice(1))))][(letterToNumber(startSquare.slice(0,1)))] = "";
     // ^^The square the move leaves from will always be empty after the move is made
 
