@@ -1137,7 +1137,7 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
 }
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
-{ // this assumes the move given is legal and executes it TODO: add promotion handling
+{ // this assumes the move given is legal and executes it
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
     let promoteToPiece = "";
