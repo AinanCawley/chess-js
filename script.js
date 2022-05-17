@@ -123,7 +123,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
 }
 
 const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
-{ // TODO: finish for Black to move
+{
     if( booleanToMove==true )
     { // ^^This means White to move, so check if Black's King is in check
         let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
