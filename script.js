@@ -585,6 +585,453 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
     }
     else
     { // ^^ else means Black to move, so check if White's King is in check
+        let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NE direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    if( i == 1 )
+                    { // THIS IS A BLACK PAWN ATTACKING THE WHITE KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SW direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NW direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    if( i == 1 )
+                    { // THIS IS A BLACK PAWN ATTACKING THE WHITE KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SE direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 9 o clock direction
+            if( (coordinatesArray[1]-i) > -1 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "r"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 3 o clock direction
+            if( (coordinatesArray[1]+i) < 8 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "r"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]+i) < 8)
+            { // Checking for raytracing attacks from the 6 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "r") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]-i) > -1)
+            { // Checking for raytracing attacks from the 12 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "r") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
         let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,true));
         
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
