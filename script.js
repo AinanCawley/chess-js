@@ -130,7 +130,30 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
         {
             for( let j = 7; j > -1; j-- )
             {
-
+                if( conventionalBoardArray[i][j]=="Q" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="R" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="B" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="N" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="P" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="K" )
+                {
+                    
+                }
             }
         }
     }
@@ -140,7 +163,30 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
         {
             for( let j = 0; j < 8; j++ )
             {
+                if( conventionalBoardArray[i][j]=="q" )
+                {
 
+                }
+                if( conventionalBoardArray[i][j]=="r" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="b" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="n" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="p" )
+                {
+                    
+                }
+                if( conventionalBoardArray[i][j]=="k" )
+                {
+                    
+                }
             }
         }
     }
