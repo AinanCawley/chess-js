@@ -129,10 +129,33 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
         for( let i = 7; i > -1; i-- )
         {
             for( let j = 7; j > -1; j-- )
-            {
+            { // i and j stand for rank and file 
                 if( conventionalBoardArray[i][j]=="Q" )
                 {
-                    
+                    for( let k = 1; k < 8; k++ )
+                    { // South direction
+                        if( i+k < 8 )
+                        {
+                            if( conventionalBoardArray[i+k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( conventionalBoardArray[i+k][j] == conventionalBoardArray[i+k][j].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j) + (8-(i+k))
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
                 if( conventionalBoardArray[i][j]=="R" )
                 {
@@ -190,7 +213,8 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
             }
         }
     }
-    return arrayOfPseudoLegalMoves;
+
+    return arrayOfChecks.concat(arrayOfCaptures,arrayOfOtherMoves);
 }
 
 const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
