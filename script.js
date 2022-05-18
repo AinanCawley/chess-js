@@ -112,13 +112,38 @@ const fenToConventionalBoard = function(fenString)
     return conventionalBoardArray;
 }
 
-const legalMovesFromConventionalBoard = function(conventionalBoardArray)
+const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove)
 { // TODO: everything
     return arrayOfLegalMoves;
 }
 
-const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray)
+const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove)
 { // TODO: everything
+    let arrayOfChecks = [];
+    let arrayOfCaptures = [];
+    let arrayOfOtherMoves = [];
+    // ^ This will be primitive move-ordering to help the alpha-beta search
+
+    if( booleanToMove==true )
+    { // White to move
+        for( let i = 7; i > -1; i-- )
+        {
+            for( let j = 7; j > -1; j-- )
+            {
+
+            }
+        }
+    }
+    else
+    { // Black to move
+        for( let i = 0; i < 8; i++ )
+        {
+            for( let j = 0; j < 8; j++ )
+            {
+
+            }
+        }
+    }
     return arrayOfPseudoLegalMoves;
 }
 
@@ -1137,7 +1162,7 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
 }
 
 const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
-{ // this assumes the move given is legal and executes it
+{ // this assumes the move given is legal and executes it TODO: make the input board unchanged by the function
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
     let promoteToPiece = "";
