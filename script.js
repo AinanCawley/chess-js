@@ -1161,8 +1161,10 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
     return arrayOfTwoNumbers;
 }
 
-const conventionalBoardProcessMove = function(conventionalBoardArray, moveString)
-{ // this assumes the move given is legal and executes it TODO: make the input board unchanged by the function
+const conventionalBoardProcessMove = function(conventionalBoard, moveString)
+{ // this assumes the move given is legal and executes it.
+    let conventionalBoardArray = copyConventionalBoard(conventionalBoard);
+    // ^^ Operate on a copy of the inputted Board so that the inputted board isn't modified
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
     let promoteToPiece = "";
@@ -1255,6 +1257,27 @@ const conventionalBoardProcessMove = function(conventionalBoardArray, moveString
     
 
     return conventionalBoardArray;
+}
+
+const copyConventionalBoard = function(multidimensionalArray)
+{
+    let copy = [["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""]];
+    
+    for( let i = 0; i < 8; i++ )
+    {
+        for( let j = 0; j < 8; j++ )
+        {
+            copy[i][j] = multidimensionalArray[i][j];
+        }
+    }
+    return copy;
 }
 
 // GUI BACKEND
