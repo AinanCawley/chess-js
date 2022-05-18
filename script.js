@@ -138,7 +138,18 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         {
                             if( conventionalBoardArray[i+k][j] == "" )
                             { // empty square means a move is possible and not to break because the raytrace can continue
-                                
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j) + (8-(i+k));
+                                let move = startSquare+endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
                             }
                             else
                             {
@@ -149,7 +160,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j) + (8-(i+k))
+                                    let endSquare = numberToLetter(j) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
