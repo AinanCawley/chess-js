@@ -10,6 +10,8 @@ let engineConventionalBoard =  [["","","","","","","",""],
                                 ["","","","","","","",""]];
 let engineFEN = "";
 
+// TODO: make variables for castling rights and enpassant squares and make functions change them too
+
 
 const fenToConventionalBoard = function(fenString)
 {
@@ -709,7 +711,13 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 }
                 if( conventionalBoardArray[i][j]=="K" )
                 {
-                    
+                    if( i+k < 8 )
+                    { // South direction
+                        if( conventionalBoardArray[i+k][j]=="" )
+                        { // empty square means a move is possible
+                            // TODO: continue from here!
+                        }
+                    }
                 }
             }
         }
