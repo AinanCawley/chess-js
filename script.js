@@ -707,8 +707,30 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                     }
                 }
                 if( conventionalBoardArray[i][j]=="N" )
-                {
-                    
+                {   
+                    let knightSquares = createCoordinatesKnightAttack([i,j]);
+
+                    for( let k = 0; k < knightSquares.length; k++ )
+                    {
+                        let m = knightSquares[k][0]; // m is rank of a Knight move
+                        let n = knightSquares[k][1]; // n is file of a Knight move
+
+                        if( conventionalBoardArray[m][n] == "" )
+                        { // empty square (move is possible)
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter(n) + (8-m);
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[m][n] == conventionalBoardArray[m][n].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(n) + (8-m);
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                    }
                 }
                 if( conventionalBoardArray[i][j]=="P" )
                 {
@@ -725,9 +747,9 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         // TODO: everything
                     }
 
-                    if( i+k < 8 )
+                    if( i+1 < 8 )
                     { // South direction
-                        if( conventionalBoardArray[i+k][j]=="" )
+                        if( conventionalBoardArray[i+1][j]=="" )
                         { // empty square means a move is possible
                             // TODO: continue from here!
                         }
