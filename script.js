@@ -133,6 +133,146 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 if( conventionalBoardArray[i][j]=="Q" )
                 {
                     for( let k = 1; k < 8; k++ )
+                    { // SouthEast direction
+                        if( (i+k < 8) && (j+k < 8) )
+                        {
+                            if( conventionalBoardArray[i+k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                let move = startSquare+endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
+                            }
+                            else
+                            {
+                                if( conventionalBoardArray[i+k][j+k] == conventionalBoardArray[i+k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthWest direction
+                        if( (i-k > -1) && (j-k > -1) )
+                        {
+                            if( conventionalBoardArray[i-k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j-k) + (8-(i-k));
+                                let move = startSquare+endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
+                            }
+                            else
+                            {
+                                if( conventionalBoardArray[i-k][j-k] == conventionalBoardArray[i-k][j-k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthEast direction
+                        if( (i-k > -1) && (j+k < 8) )
+                        {
+                            if( conventionalBoardArray[i-k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                let move = startSquare+endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
+                            }
+                            else
+                            {
+                                if( conventionalBoardArray[i-k][j+k] == conventionalBoardArray[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthWest direction
+                        if( (i+k < 8) && (j-k > -1) )
+                        {
+                            if( conventionalBoardArray[i+k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j-k) + (8-(i+k));
+                                let move = startSquare+endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
+                            }
+                            else
+                            {
+                                if( conventionalBoardArray[i+k][j-k] == conventionalBoardArray[i+k][j-k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
                         {
