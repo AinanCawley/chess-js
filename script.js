@@ -125,7 +125,7 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
 }
 
 const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
-{ // TODO: ~~~ BLACK(everything) ~~~ WHITE(Knight, Pawn, King) ~~~
+{ // TODO: ~~~ BLACK(everything) ~~~ WHITE(Pawn, King) ~~~
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
     let arrayOfOtherMoves = [];
