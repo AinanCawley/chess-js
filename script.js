@@ -9,8 +9,13 @@ let engineConventionalBoard =  [["","","","","","","",""],
                                 ["","","","","","","",""],
                                 ["","","","","","","",""]];
 let engineFEN = "";
+let engineSideToMove = true;
+let engineEnpassantSquare = "";
+let engineCastlingRights = [true,true,true,true]; // White Kingside, White Queenside, Black Kingside, Black Queenside
 
 // TODO: make variables for castling rights and enpassant squares and make functions change them too
+
+// Might just make all these declarations within an engine function that takes in a FEN and outputs the move string 
 
 
 const fenToConventionalBoard = function(fenString)
@@ -114,12 +119,12 @@ const fenToConventionalBoard = function(fenString)
     return conventionalBoardArray;
 }
 
-const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove)
+const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
 { // TODO: everything
     return arrayOfLegalMoves;
 }
 
-const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove)
+const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
 { // TODO: ~~~ BLACK(everything) ~~~ WHITE(Knight, Pawn, King) ~~~
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
@@ -711,12 +716,25 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 }
                 if( conventionalBoardArray[i][j]=="K" )
                 {
+                    if( castlingRights[0] == true )
+                    { // White can castle Kingside
+                        // TODO: everything
+                    }
+                    if( castlingRights[1] == true )
+                    { // White can castle Queenside
+                        // TODO: everything
+                    }
+
                     if( i+k < 8 )
                     { // South direction
                         if( conventionalBoardArray[i+k][j]=="" )
                         { // empty square means a move is possible
                             // TODO: continue from here!
                         }
+                        
+                        // if enemy piece
+
+                        // if friendly piece
                     }
                 }
             }
