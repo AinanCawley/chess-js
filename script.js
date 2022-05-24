@@ -719,7 +719,16 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         { // empty square (move is possible)
                             let startSquare = numberToLetter(j) + (8-i);
                             let endSquare = numberToLetter(n) + (8-m);
-                            arrayOfOtherMoves.push((startSquare+endSquare));
+                            let move = startSquare + endSquare;
+
+                            if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                            {   // if true then the move gives check
+                                arrayOfChecks.push(move);
+                            }
+                            else
+                            {
+                                arrayOfOtherMoves.push(move);
+                            }
                         }
                         else
                         {
