@@ -760,12 +760,22 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                     { // South direction
                         if( conventionalBoardArray[i+1][j]=="" )
                         { // empty square means a move is possible
-                            // TODO: continue from here!
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter(j) + (8-(i+1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i+1][j] == conventionalBoardArray[i+1][j].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j) + (8-(i+1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
                         }
                         
-                        // if enemy piece
-
-                        // if friendly piece
                     }
                 }
             }
