@@ -777,6 +777,153 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         }
                         
                     }
+                    if( i-1 > -1 )
+                    { // North direction
+                        if( conventionalBoardArray[i-1][j]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter(j) + (8-(i-1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i-1][j] == conventionalBoardArray[i-1][j].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j) + (8-(i-1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( j+1 < 8 )
+                    { // East direction
+                        if( conventionalBoardArray[i][j+1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j+1)) + (8-i);
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i][j+1] == conventionalBoardArray[i][j+1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j+1)) + (8-i);
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( j-1 > -1 )
+                    { // West direction
+                        if( conventionalBoardArray[i][j-1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j-1)) + (8-i);
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i][j-1] == conventionalBoardArray[i][j-1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j-1)) + (8-i);
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( (i+1 < 8) && (j+1 < 8) )
+                    { // SouthEast direction
+                        if( conventionalBoardArray[i+1][j+1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j+1)) + (8-(i+1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i+1][j+1] == conventionalBoardArray[i+1][j+1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j+1)) + (8-(i+1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( (i-1 > -1) && (j-1 > -1) )
+                    { // NorthWest direction
+                        if( conventionalBoardArray[i-1][j-1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j-1)) + (8-(i-1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i-1][j-1] == conventionalBoardArray[i-1][j-1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j-1)) + (8-(i-1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( (i+1 < 8) && (j-1 > -1) )
+                    { // SouthWest direction
+                        if( conventionalBoardArray[i+1][j-1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j-1)) + (8-(i+1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i+1][j-1] == conventionalBoardArray[i+1][j-1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j-1)) + (8-(i+1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
+                    if( (i-1 > -1) && (j+1 < 8) )
+                    { // NorthEast direction
+                        if( conventionalBoardArray[i-1][j+1]=="" )
+                        { // empty square means a move is possible
+                            let startSquare = numberToLetter(j) + (8-i);
+                            let endSquare = numberToLetter((j+1)) + (8-(i-1));
+
+                            arrayOfOtherMoves.push((startSquare+endSquare));
+                        }
+                        else
+                        {
+                            if( conventionalBoardArray[i-1][j+1] == conventionalBoardArray[i-1][j+1].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter((j+1)) + (8-(i-1));
+    
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        }
+                        
+                    }
                 }
             }
         }
