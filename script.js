@@ -128,6 +128,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
 { // TODO: ~~~ BLACK(everything) ~~~ WHITE(Pawn) ~~~
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
+    let arrayOfSpecialMoves = []; // for promotion and castling
     let arrayOfOtherMoves = [];
     // ^ This will be primitive move-ordering to help the alpha-beta search
 
@@ -743,7 +744,161 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 }
                 if( conventionalBoardArray[i][j]=="P" )
                 {
-                    
+                    if( i-1 > -1 )
+                    {
+                        if( conventionalBoardArray[i-1][j]=="" )
+                        { // square in front of pawn is empty so it can be pushed
+                            if( i == 1 )
+                            { // means this pawn push will be to promote
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j) + (8-(i-1));
+                                let moveArray = [(startSquare + endSquare + "Q"),
+                                                 (startSquare + endSquare + "R"),
+                                                 (startSquare + endSquare + "N"),
+                                                 (startSquare + endSquare + "B")];
+                                
+                                for( let x = 0; x < 4; x++ )
+                                {
+                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                    {   // if true then the move gives check
+                                        arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
+                                    }
+                                    else
+                                    {
+                                        arrayOfSpecialMoves.unshift(moveArray[x]); // unshift since promotion is probably better than castling
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( i == 6 )
+                                { // pawn is on its starting rank
+                                    if( conventionalBoardArray[4][j]=="" )
+                                    {
+                                        let startSquare = numberToLetter(j) + "2";
+                                        let endSquare = numberToLetter(j) + "4";
+                                        let move = startSquare + endSquare;
+    
+                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                        {   // if true then the move gives check
+                                           arrayOfChecks.push(move);
+                                        }
+                                        else
+                                        {
+                                            arrayOfOtherMoves.push(move);
+                                        }
+                                    }
+                                }
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j) + (8-(i-1));
+                                let move = startSquare + endSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfOtherMoves.push(move);
+                                }
+                            }
+                        }
+
+                        if( j+1 < 8 )
+                        { // pawn attack to the east
+                            if( i == 1 )
+                            {
+                                if( (conventionalBoardArray[i-1][j+1] == conventionalBoardArray[i-1][j+1].toLowerCase()) 
+                                && (conventionalBoardArray[i-1][j+1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i-1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        {   // if true then the move gives check
+                                            arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
+                                        }
+                                        else
+                                        {
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (conventionalBoardArray[i-1][j+1] == conventionalBoardArray[i-1][j+1].toLowerCase()) 
+                                && (conventionalBoardArray[i-1][j+1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i-1));
+                                    let move = startSquare + endSquare;
+
+                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    {   // if true then the move gives check
+                                        arrayOfChecks.push(move);
+                                    }
+                                    else
+                                    {
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    }
+                                }
+                            }
+                        }
+                        if( j-1 > -1 )
+                        { // pawn attack to the west
+                            if( i == 1 )
+                            {
+                                if( (conventionalBoardArray[i-1][j-1] == conventionalBoardArray[i-1][j-1].toLowerCase()) 
+                                && (conventionalBoardArray[i-1][j-1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i-1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        {   // if true then the move gives check
+                                            arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
+                                        }
+                                        else
+                                        {
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (conventionalBoardArray[i-1][j-1] == conventionalBoardArray[i-1][j-1].toLowerCase()) 
+                                && (conventionalBoardArray[i-1][j-1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i-1));
+                                    let move = startSquare + endSquare;
+
+                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    {   // if true then the move gives check
+                                        arrayOfChecks.push(move);
+                                    }
+                                    else
+                                    {
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if( conventionalBoardArray[i][j]=="K" )
                 {
@@ -751,14 +906,14 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                     { // White can castle Kingside
                         if((conventionalBoardArray[7][7] == "R") && ((i==7) && (j==4)))
                         {
-                            arrayOfOtherMoves.unshift("e1g1"); // unshift instead of pop to make castling listed earlier
+                            arrayOfSpecialMoves.push("e1g1");
                         }
                     }
                     if( castlingRights[1] == true )
                     { // White can castle Queenside
                         if((conventionalBoardArray[7][0] == "R") && ((i==7) && (j==4)))
                         {
-                            arrayOfOtherMoves.unshift("e1c1"); // unshift instead of pop to make castling listed earlier
+                            arrayOfSpecialMoves.push("e1c1");
                         }
                     }
 
@@ -968,7 +1123,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
         }
     }
 
-    return arrayOfChecks.concat(arrayOfCaptures,arrayOfOtherMoves);
+    return arrayOfChecks.concat(arrayOfCaptures.concat(arrayOfSpecialMoves),arrayOfOtherMoves);
     // ^^ could instead return a multidimensional array to retain information of what moves are...
     // ...captures, checks, or otherwise
 }
