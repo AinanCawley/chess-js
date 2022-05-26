@@ -749,11 +749,17 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 {
                     if( castlingRights[0] == true )
                     { // White can castle Kingside
-                        // TODO: everything
+                        if((conventionalBoardArray[7][7] == "R") && ((i==7) && (j==4)))
+                        {
+                            arrayOfOtherMoves.unshift("e1g1"); // unshift instead of pop to make castling listed earlier
+                        }
                     }
                     if( castlingRights[1] == true )
                     { // White can castle Queenside
-                        // TODO: everything
+                        if((conventionalBoardArray[7][0] == "R") && ((i==7) && (j==4)))
+                        {
+                            arrayOfOtherMoves.unshift("e1c1"); // unshift instead of pop to make castling listed earlier
+                        }
                     }
 
                     if( i+1 < 8 )
