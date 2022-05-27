@@ -744,6 +744,32 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 }
                 if( conventionalBoardArray[i][j]=="P" )
                 {
+                    if( i == 3 )
+                    { // White en passant is only possible if the pawn is on the 5th rank
+                        console.log("if i==3") // dEBUGGING
+                        if( enpassantSquare != "" )
+                        { // if there even is an enpassant square to consider
+                            console.log("if enpassantsquare != ''") // dEBUGGING
+                            let passantJ = letterToNumber(enpassantSquare.slice(0,1));
+                            console.log((Number(passantJ) - j)) // dEBUGGING
+
+                            if( ((Number(passantJ) - j) == -1) || ((Number(passantJ) - j) == -1) )
+                            { // if the currently checked pawn is 1 file away from the enpassant square
+                                console.log("if currently checked pawn is 1 file away") // dEBUGGING
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let move = startSquare + enpassantSquare;
+
+                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                {   // if true then the move gives check
+                                    arrayOfChecks.push(move);
+                                }
+                                else
+                                {
+                                    arrayOfCaptures.push(move);
+                                }
+                            }
+                        }
+                    }
                     if( i-1 > -1 )
                     {
                         if( conventionalBoardArray[i-1][j]=="" )
@@ -2143,7 +2169,7 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
 }
 
 const conventionalBoardProcessMove = function(conventionalBoard, moveString)
-{ // this assumes the move given is legal and executes it.
+{ // this assumes the move given is legal and executes it. TODO: Make this function return enpassant and castling information
     let conventionalBoardArray = copyConventionalBoard(conventionalBoard);
     // ^^ Operate on a copy of the inputted Board so that the inputted board isn't modified
     let startSquare = moveString.slice(0,2);
