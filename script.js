@@ -750,7 +750,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         { // if there even is an enpassant square to consider
                             let passantJ = letterToNumber(enpassantSquare.slice(0,1));
 
-                            if( ((Number(passantJ) - j) == -1) || ((Number(passantJ) - j) == -1) )
+                            if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
                             { // if the currently checked pawn is 1 file away from the enpassant square
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let move = startSquare + enpassantSquare;
@@ -1729,7 +1729,7 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                         { // if there even is an enpassant square to consider
                             let passantJ = letterToNumber(enpassantSquare.slice(0,1));
 
-                            if( ((Number(passantJ) - j) == -1) || ((Number(passantJ) - j) == -1) )
+                            if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
                             { // if the currently checked pawn is 1 file away from the enpassant square
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let move = startSquare + enpassantSquare;
@@ -2091,10 +2091,6 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
         }
     }
 
-    console.log(arrayOfChecks);
-    console.log(arrayOfCaptures);
-    console.log(arrayOfSpecialMoves);
-    console.log(arrayOfOtherMoves); // DEBUGGING
     return arrayOfChecks.concat(arrayOfCaptures.concat(arrayOfSpecialMoves,arrayOfOtherMoves));
     // ^^ could instead return a multidimensional array to retain information of what moves are...
     // ...captures, checks, or otherwise
