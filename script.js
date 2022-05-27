@@ -746,16 +746,12 @@ const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, b
                 {
                     if( i == 3 )
                     { // White en passant is only possible if the pawn is on the 5th rank
-                        console.log("if i==3") // dEBUGGING
                         if( enpassantSquare != "" )
                         { // if there even is an enpassant square to consider
-                            console.log("if enpassantsquare != ''") // dEBUGGING
                             let passantJ = letterToNumber(enpassantSquare.slice(0,1));
-                            console.log((Number(passantJ) - j)) // dEBUGGING
 
                             if( ((Number(passantJ) - j) == -1) || ((Number(passantJ) - j) == -1) )
                             { // if the currently checked pawn is 1 file away from the enpassant square
-                                console.log("if currently checked pawn is 1 file away") // dEBUGGING
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let move = startSquare + enpassantSquare;
 
