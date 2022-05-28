@@ -121,6 +121,14 @@ const fenToConventionalBoard = function(fenString)
 
 const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
 { // TODO: everything
+    let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(
+                                    conventionalBoardArray,booleanToMove,castlingRights,enpassantSquare);
+    let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
+    {
+        let newBoard = conventionalBoardProcessMove(conventionalBoardArray,element);
+        console.log(!(isTheSideNotToMoveInCheckChecker(newBoard,!(booleanToMove))));
+        return  !(isTheSideNotToMoveInCheckChecker(newBoard,!(booleanToMove)));
+    });
     return arrayOfLegalMoves;
 }
 
