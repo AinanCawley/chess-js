@@ -120,7 +120,7 @@ const fenToConventionalBoard = function(fenString)
 }
 
 const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
-{ // TODO: everything
+{
     let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(
                                     conventionalBoardArray,booleanToMove,castlingRights,enpassantSquare);
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
@@ -132,7 +132,7 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
 }
 
 const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
-{ // TODO: ~~~ BLACK(change Q, R, N, B)
+{
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
     let arrayOfSpecialMoves = []; // for promotion and castling
