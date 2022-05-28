@@ -12,8 +12,13 @@ let engineBoard =
             ["","","","","","","",""]],
     
     sideToMove: true, // true for White, false for Black
+    canWhiteCastleKingside: true,
+    canWhiteCastleQueenside: true,
+    canBlackCastleKingside: true,
+    canBlackCastleQueenside: true,
     enPassantSquare: "",
-    castlingRights: [true,true,true,true], // White Kingside, White Queenside, Black Kingside, Black Queenside
+    halfMoveClock: 0,
+    fullMoveNumber: 1,
 }; // TODO: make functions implement this engineBoard object instead.
 
 let engineConventionalBoard =  [["","","","","","","",""],
@@ -34,17 +39,75 @@ let engineCastlingRights = [true,true,true,true]; // White Kingside, White Queen
 
 const fenToConventionalBoard = function(fenString)
 {
-    let conventionalBoardArray =   [["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""],
-                                    ["","","","","","","",""]];
+    let objectBoard = 
+    {
+        board: [["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""],
+                ["","","","","","","",""]],
+        
+            sideToMove: true, // true for White, false for Black
+            canWhiteCastleKingside: true,
+            canWhiteCastleQueenside: true,
+            canBlackCastleKingside: true,
+            canBlackCastleQueenside: true,
+            enPassantSquare: "",
+            halfMoveClock: 0,
+            fullMoveNumber: 1,
+    };
 
-    fenString = fenString.slice(0,(fenString.indexOf(" ")));
-    //^^ Remove anything that isn't purely where pieces are
+    let conventionalBoardArray = [["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""],
+                                  ["","","","","","","",""]];
+
+    objectBoard.fullMoveNumber = fenString.slice(-1);
+    fenString = fenString.slice(0,-2);
+
+    objectBoard.halfMoveClock = fenString.slice(-1);
+    fenString = fenString.slice(0,-2);
+
+    objectBoard.enPassantSquare = fenString.slice(-1);
+    fenString = fenString.slice(0,-2);
+
+    let sideAndCastling = fenString.slice(1+fenString.indexOf(" "));
+    if( sideAndCastling.slice(0,1)=="w")
+    {
+        objectBoard.sideToMove = true;
+    }
+    else
+    {
+        objectBoard.sideToMove = false;
+    }
+    sideAndCastling = sideAndCastling.slice(1+sideAndCastling.indexOf(" "));
+
+    if(sideAndCastling.indexOf("K") == -1)
+    {
+        objectBoard.canWhiteCastleKingside = false;
+    }
+    if(sideAndCastling.indexOf("Q") == -1)
+    {
+        objectBoard.canWhiteCastleQueenside = false;
+    }
+    if(sideAndCastling.indexOf("k") == -1)
+    {
+        objectBoard.canBlackCastleKingside = false;
+    }
+    if(sideAndCastling.indexOf("q") == -1)
+    {
+        objectBoard.canBlackCastleQueenside = false;
+    }
+
+    fenString = fenString.slice(0,fenString.indexOf(" "));
+
 
     let fenArray = Array.from(fenString);
     let currentRank = 0;
@@ -130,7 +193,9 @@ const fenToConventionalBoard = function(fenString)
         }
     });
 
-    return conventionalBoardArray;
+    objectBoard.board = conventionalBoardArray;
+
+    return objectBoard;
 }
 
 const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
