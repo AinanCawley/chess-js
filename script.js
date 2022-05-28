@@ -126,7 +126,6 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
     {
         let newBoard = conventionalBoardProcessMove(conventionalBoardArray,element);
-        console.log(!(isTheSideNotToMoveInCheckChecker(newBoard,!(booleanToMove))));
         return  !(isTheSideNotToMoveInCheckChecker(newBoard,!(booleanToMove)));
     });
     return arrayOfLegalMoves;
@@ -2567,7 +2566,7 @@ const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, boolea
     }
     else
     { // ^^ else means Black to move, so check if White's King is in check
-        let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
+        let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,true);
         for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the NE direction
             if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
