@@ -1,5 +1,21 @@
 // ENGINE STUFF
 
+let engineBoard = 
+{
+    board: [["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""]],
+    
+    sideToMove: true, // true for White, false for Black
+    enPassantSquare: "",
+    castlingRights: [true,true,true,true], // White Kingside, White Queenside, Black Kingside, Black Queenside
+}; // TODO: make functions implement this engineBoard object instead.
+
 let engineConventionalBoard =  [["","","","","","","",""],
                                 ["","","","","","","",""],
                                 ["","","","","","","",""],
@@ -12,8 +28,6 @@ let engineFEN = "";
 let engineSideToMove = true;
 let engineEnpassantSquare = "";
 let engineCastlingRights = [true,true,true,true]; // White Kingside, White Queenside, Black Kingside, Black Queenside
-
-// TODO: make variables for castling rights and enpassant squares and make functions change them too
 
 // Might just make all these declarations within an engine function that takes in a FEN and outputs the move string 
 
