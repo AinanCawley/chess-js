@@ -21,22 +21,6 @@ let engineBoard =
     fullMoveNumber: 1,
 }; // TODO: make functions implement this engineBoard object instead.
 
-let engineConventionalBoard =  [["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""]];
-let engineFEN = "";
-let engineSideToMove = true;
-let engineEnpassantSquare = "";
-let engineCastlingRights = [true,true,true,true]; // White Kingside, White Queenside, Black Kingside, Black Queenside
-
-// Might just make all these declarations within an engine function that takes in a FEN and outputs the move string 
-
-
 const fenToConventionalBoard = function(fenString)
 {
     let objectBoard = 
@@ -199,7 +183,7 @@ const fenToConventionalBoard = function(fenString)
 }
 
 const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
-{
+{ // TODO: use engineBoard object
     let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(
                                     conventionalBoardArray,booleanToMove,castlingRights,enpassantSquare);
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
@@ -211,7 +195,7 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
 }
 
 const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
-{
+{ // TODO: use engineBoard object
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
     let arrayOfSpecialMoves = []; // for promotion and castling
@@ -3196,7 +3180,7 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
     return arrayOfTwoNumbers;
 }
 
-const conventionalBoardProcessMove = function(conventionalBoard, moveString)
+const conventionalBoardProcessMove = function(conventionalBoard, moveString) // TODO: use engineBoard object
 { // this assumes the move given is legal and executes it. TODO: Make this function return enpassant and castling information
     let conventionalBoardArray = copyConventionalBoard(conventionalBoard);
     // ^^ Operate on a copy of the inputted Board so that the inputted board isn't modified
@@ -3294,7 +3278,7 @@ const conventionalBoardProcessMove = function(conventionalBoard, moveString)
     return conventionalBoardArray;
 }
 
-const copyConventionalBoard = function(multidimensionalArray)
+const copyConventionalBoard = function(multidimensionalArray) // TODO: use engineBoard object
 {
     let copy = [["","","","","","","",""],
                 ["","","","","","","",""],
