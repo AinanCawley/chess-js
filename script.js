@@ -182,8 +182,9 @@ const fenToConventionalBoard = function(fenString)
     return objectBoard;
 }
 
-const legalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
+const legalMovesFromConventionalBoard = function(objectBoard)
 { // TODO: use engineBoard object
+    conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare
     let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(
                                     conventionalBoardArray,booleanToMove,castlingRights,enpassantSquare);
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
@@ -197,10 +198,15 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
 const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 { // TODO: use engineBoard object
     // TODO: clone object before doing these things
-    let conventionalBoardArray = objectBoard.board;
-    let booleanToMove = objectBoard.sideToMove;
-    let castlingRights = ""; // TODO
-    let enpassantSquare = objectBoard.enPassantSquare;
+    let copyOfObjectBoard = structuredClone(objectBoard);
+
+    let conventionalBoardArray = copyOfObjectBoard.board;
+    let booleanToMove = copyOfObjectBoard.sideToMove;
+    let castlingRights = [copyOfObjectBoard.canWhiteCastleKingside,
+                          copyOfObjectBoard.canWhiteCastleQueenside,
+                          copyOfObjectBoard.canBlackCastleKingside,
+                          copyOfObjectBoard.canBlackCastleQueenside];
+    let enpassantSquare = copyOfObjectBoard.enPassantSquare;
 
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
@@ -2168,13 +2174,15 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
     }
 
     return arrayOfChecks.concat(arrayOfCaptures.concat(arrayOfSpecialMoves,arrayOfOtherMoves));
-    // ^^ could instead return a multidimensional array to retain information of what moves are...
+    // ^^ could instead return an object to retain information of what moves are...
     // ...captures, checks, or otherwise
 }
 
-const isTheSideNotToMoveInCheckChecker = function(conventionalBoardArray, booleanToMove)
+const isTheSideNotToMoveInCheckChecker = function(objectBoard)
 {
-    if( booleanToMove==true )
+    let copyOfObjectBoard = structuredClone(objectBoard);
+    let conventionalBoardArray = copyOfObjectBoard.board;
+    if( copyOfObjectBoard.sideToMove==true )
     { // ^^This means White to move, so check if Black's King is in check
         let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
         for( let i = 1; i < 8; i++ )
@@ -3186,10 +3194,12 @@ const findCoordinatesOfKing = function(conventionalBoardArray, booleanToMove)
     return arrayOfTwoNumbers;
 }
 
-const conventionalBoardProcessMove = function(conventionalBoard, moveString) // TODO: use engineBoard object
-{ // this assumes the move given is legal and executes it. TODO: Make this function return enpassant and castling information
-    let conventionalBoardArray = copyConventionalBoard(conventionalBoard);
-    // ^^ Operate on a copy of the inputted Board so that the inputted board isn't modified
+const conventionalBoardProcessMove = function(objectBoard, moveString)
+{ // this assumes the move given is legal and executes it. TODO: Handle enPassant information
+    let copyOfObjectBoard = structuredClone(objectBoard);
+
+    let conventionalBoardArray = copyOfObjectBoard.board;
+
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
     let promoteToPiece = "";
@@ -3262,6 +3272,8 @@ const conventionalBoardProcessMove = function(conventionalBoard, moveString) // 
                 conventionalBoardArray[7][3] = "R";
             }
         }
+        copyOfObjectBoard.canWhiteCastleKingside = false;
+        copyOfObjectBoard.canWhiteCastleQueenside = false;
     } // ^^ Move over White Rook when castling
     if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="k")
     { // ^^ If a king move...
@@ -3278,13 +3290,58 @@ const conventionalBoardProcessMove = function(conventionalBoard, moveString) // 
                 conventionalBoardArray[0][3] = "r";
             }
         }
+        copyOfObjectBoard.canBlackCastleKingside = false;
+        copyOfObjectBoard.canBlackCastleQueenside = false;
     } // ^^ Move over Black Rook when castling
-    
 
-    return conventionalBoardArray;
+    if( copyOfObjectBoard.canWhiteCastleKingside == true )
+    { 
+        if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="R")
+        {
+            if( startSquare == "h1" )
+            {
+                copyOfObjectBoard.canWhiteCastleKingside = false;
+            }
+        }
+    }
+    if( copyOfObjectBoard.canWhiteCastleQueenside == true )
+    { 
+        if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="R")
+        {
+            if( startSquare == "a1" )
+            {
+                copyOfObjectBoard.canWhiteCastleKingside = false;
+            }
+        }
+    }
+    if( copyOfObjectBoard.canBlackCastleKingside == true )
+    { 
+        if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="r")
+        {
+            if( startSquare == "h8" )
+            {
+                copyOfObjectBoard.canWhiteCastleKingside = false;
+            }
+        }
+    }
+    if( copyOfObjectBoard.canBlackCastleQueenside == true )
+    { 
+        if((conventionalBoardArray[(8-(Number(endSquare.slice(1))))][(letterToNumber(endSquare.slice(0,1)))])=="r")
+        {
+            if( startSquare == "a8" )
+            {
+                copyOfObjectBoard.canWhiteCastleKingside = false;
+            }
+        }
+    }
+    
+    copyOfObjectBoard.board = conventionalBoardArray;
+    copyOfObjectBoard.sideToMove = !(copyOfObjectBoard.sideToMove);
+
+    return copyOfObjectBoard;
 }
 
-const copyConventionalBoard = function(multidimensionalArray) // TODO: use engineBoard object
+const copyConventionalBoard = function(multidimensionalArray) // TODO: eventually delete as structuredClone() works for objects
 {
     let copy = [["","","","","","","",""],
                 ["","","","","","","",""],
