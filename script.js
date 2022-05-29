@@ -19,7 +19,7 @@ let engineBoard =
     enPassantSquare: "",
     halfMoveClock: 0,
     fullMoveNumber: 1,
-}; // TODO: make functions implement this engineBoard object instead.
+};
 
 const fenToConventionalBoard = function(fenString)
 {
@@ -60,6 +60,10 @@ const fenToConventionalBoard = function(fenString)
     fenString = fenString.slice(0,-2);
 
     objectBoard.enPassantSquare = fenString.slice(-1);
+    if( objectBoard.enPassantSquare == "-" )
+    {
+        objectBoard.enPassantSquare = "";
+    }
     fenString = fenString.slice(0,-2);
 
     let sideAndCastling = fenString.slice(1+fenString.indexOf(" "));
@@ -183,25 +187,22 @@ const fenToConventionalBoard = function(fenString)
 }
 
 const legalMovesFromConventionalBoard = function(objectBoard)
-{ // TODO: use engineBoard object
-    conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare
-    let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(
-                                    conventionalBoardArray,booleanToMove,castlingRights,enpassantSquare);
+{   
+    let copyOfObjectBoard = structuredClone(objectBoard);
+    let arrayOfPseudoLegalMoves = pseudolegalMovesFromConventionalBoard(copyOfObjectBoard);
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
     {
-        let newBoard = conventionalBoardProcessMove(conventionalBoardArray,element);
-        return  !(isTheSideNotToMoveInCheckChecker(newBoard,!(booleanToMove)));
+        let newBoard = conventionalBoardProcessMove(copyOfObjectBoard,element);
+        return isTheSideNotToMoveInCheckChecker(newBoard);
     });
     return arrayOfLegalMoves;
 }
 
 const pseudolegalMovesFromConventionalBoard = function(objectBoard)
-{ // TODO: use engineBoard object
-    // TODO: clone object before doing these things
+{
     let copyOfObjectBoard = structuredClone(objectBoard);
 
     let conventionalBoardArray = copyOfObjectBoard.board;
-    let booleanToMove = copyOfObjectBoard.sideToMove;
     let castlingRights = [copyOfObjectBoard.canWhiteCastleKingside,
                           copyOfObjectBoard.canWhiteCastleQueenside,
                           copyOfObjectBoard.canBlackCastleKingside,
@@ -214,7 +215,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
     let arrayOfOtherMoves = [];
     // ^ This will be primitive move-ordering to help the alpha-beta search
 
-    if( booleanToMove==true )
+    if( copyOfObjectBoard.sideToMove==true )
     { // White to move
         for( let i = 7; i > -1; i-- )
         {
@@ -232,7 +233,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -267,7 +268,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -302,7 +303,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -337,7 +338,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -372,7 +373,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -407,7 +408,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -442,7 +443,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j-k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -477,7 +478,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j+k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -515,7 +516,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -550,7 +551,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -585,7 +586,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j-k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -620,7 +621,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j+k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -658,7 +659,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -693,7 +694,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -728,7 +729,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -763,7 +764,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -804,7 +805,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                             let endSquare = numberToLetter(n) + (8-m);
                             let move = startSquare + endSquare;
 
-                            if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                            if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                             {   // if true then the move gives check
                                 arrayOfChecks.push(move);
                             }
@@ -837,7 +838,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let move = startSquare + enpassantSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -863,7 +864,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 
                                 for( let x = 0; x < 4; x++ )
                                 {
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                     {   // if true then the move gives check
                                         arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                     }
@@ -883,7 +884,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         let endSquare = numberToLetter(j) + "4";
                                         let move = startSquare + endSquare;
     
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                         {   // if true then the move gives check
                                            arrayOfChecks.push(move);
                                         }
@@ -897,7 +898,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i-1));
                                 let move = startSquare + endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -924,7 +925,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 
                                     for( let x = 0; x < 4; x++ )
                                     {
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                         {   // if true then the move gives check
                                             arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                         }
@@ -944,7 +945,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     let endSquare = numberToLetter(j+1) + (8-(i-1));
                                     let move = startSquare + endSquare;
 
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                     {   // if true then the move gives check
                                         arrayOfChecks.push(move);
                                     }
@@ -971,7 +972,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 
                                     for( let x = 0; x < 4; x++ )
                                     {
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                         {   // if true then the move gives check
                                             arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                         }
@@ -991,7 +992,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     let endSquare = numberToLetter(j-1) + (8-(i-1));
                                     let move = startSquare + endSquare;
 
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                     {   // if true then the move gives check
                                         arrayOfChecks.push(move);
                                     }
@@ -1211,7 +1212,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1246,7 +1247,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1281,7 +1282,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1316,7 +1317,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1351,7 +1352,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1386,7 +1387,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1421,7 +1422,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j-k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1456,7 +1457,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j+k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1494,7 +1495,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1529,7 +1530,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1564,7 +1565,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j-k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1599,7 +1600,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter((j+k)) + (8-i);
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1637,7 +1638,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1672,7 +1673,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1707,7 +1708,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j+k) + (8-(i-k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1742,7 +1743,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j-k) + (8-(i+k));
                                 let move = startSquare+endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1783,7 +1784,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                             let endSquare = numberToLetter(n) + (8-m);
                             let move = startSquare + endSquare;
 
-                            if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                            if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                             {   // if true then the move gives check
                                 arrayOfChecks.push(move);
                             }
@@ -1816,7 +1817,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let move = startSquare + enpassantSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1842,7 +1843,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 
                                 for( let x = 0; x < 4; x++ )
                                 {
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                     {   // if true then the move gives check
                                         arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                     }
@@ -1862,7 +1863,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         let endSquare = numberToLetter(j) + "5";
                                         let move = startSquare + endSquare;
     
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                         {   // if true then the move gives check
                                            arrayOfChecks.push(move);
                                         }
@@ -1876,7 +1877,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 let endSquare = numberToLetter(j) + (8-(i+1));
                                 let move = startSquare + endSquare;
 
-                                if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                 {   // if true then the move gives check
                                     arrayOfChecks.push(move);
                                 }
@@ -1903,7 +1904,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 
                                     for( let x = 0; x < 4; x++ )
                                     {
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                         {   // if true then the move gives check
                                             arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                         }
@@ -1923,7 +1924,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     let endSquare = numberToLetter(j+1) + (8-(i+1));
                                     let move = startSquare + endSquare;
 
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                     {   // if true then the move gives check
                                         arrayOfChecks.push(move);
                                     }
@@ -1950,7 +1951,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 
                                     for( let x = 0; x < 4; x++ )
                                     {
-                                        if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,moveArray[x]),true))
+                                        if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,moveArray[x])))
                                         {   // if true then the move gives check
                                             arrayOfChecks.unshift(moveArray[x]); // unshift since promotion is probably better than usual checks
                                         }
@@ -1970,7 +1971,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     let endSquare = numberToLetter(j-1) + (8-(i+1));
                                     let move = startSquare + endSquare;
 
-                                    if( isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(conventionalBoardArray,move),true))
+                                    if( isTheSideToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard,move)))
                                     {   // if true then the move gives check
                                         arrayOfChecks.push(move);
                                     }
@@ -3104,6 +3105,932 @@ const isTheSideNotToMoveInCheckChecker = function(objectBoard)
     return false;
 }
 
+const isTheSideToMoveInCheckChecker = function(objectBoard)
+{
+    let copyOfObjectBoard = structuredClone(objectBoard);
+    let conventionalBoardArray = copyOfObjectBoard.board;
+    if( copyOfObjectBoard.sideToMove==false )
+    { // ^^This means Black to move, so check if Black's King is in check
+        let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,false);
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NE direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "B") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SW direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "B") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "b") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    if( i == 1 )
+                    { //THIS IS A WHITE PAWN ATTACKING THE BLACK KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NW direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "B") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "b") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SE direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "B") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    if( i == 1 )
+                    { // THIS IS A WHITE PAWN ATTACKING THE BLACK KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 9 o clock direction
+            if( (coordinatesArray[1]-i) > -1 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "Q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "R"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 3 o clock direction
+            if( (coordinatesArray[1]+i) < 8 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "Q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "R"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]+i) < 8)
+            { // Checking for raytracing attacks from the 6 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "Q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "R") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "r") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]-i) > -1)
+            { // Checking for raytracing attacks from the 12 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "Q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "R") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "r") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "K") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,false));
+        
+        for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
+        {
+            if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "N" )
+            { // ^^ Search for White Knights since we're checking for a Black King
+                return true;
+            }
+        }
+    }
+    else
+    { // ^^ else means White to move, so check if White's King is in check
+        let coordinatesArray = findCoordinatesOfKing(conventionalBoardArray,true);
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NE direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    if( i == 1 )
+                    { // THIS IS A BLACK PAWN ATTACKING THE WHITE KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SW direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the NW direction
+            if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]-i > -1) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "p") )
+                {
+                    if( i == 1 )
+                    { // THIS IS A BLACK PAWN ATTACKING THE WHITE KING!
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]-i)][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the SE direction
+            if( (coordinatesArray[0]+i < 8) && (coordinatesArray[1]+i < 8) )
+            {
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "b") ||
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "q") )
+                {
+                    return true;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "r") )
+                {
+                    break;
+                }
+                if(  (conventionalBoardArray[(coordinatesArray[0]+i)][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 9 o clock direction
+            if( (coordinatesArray[1]-i) > -1 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "r"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]-i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        { // Checking for raytracing attacks from the 3 o clock direction
+            if( (coordinatesArray[1]+i) < 8 )
+            {
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "q") ||
+                    (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "r"))
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[coordinatesArray[0]][(coordinatesArray[1]+i)] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]+i) < 8)
+            { // Checking for raytracing attacks from the 6 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "r") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]+i)][coordinatesArray[1]] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        for( let i = 1; i < 8; i++ )
+        {
+            if( (coordinatesArray[0]-i) > -1)
+            { // Checking for raytracing attacks from the 12 o clock direction
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "q") || 
+                    (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "r") )
+                {
+                    return true;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "P") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "N") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "B") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "R") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "Q") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "p") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "n") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "b") )
+                {
+                    break;
+                }
+                if( (conventionalBoardArray[(coordinatesArray[0]-i)][coordinatesArray[1]] == "k") )
+                {
+                    if( i == 1 )
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(conventionalBoardArray,true));
+        
+        for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
+        {
+            if( conventionalBoardArray[coordinatesToSearchForKnights[i][0]][coordinatesToSearchForKnights[i][1]] == "n" )
+            { // ^^ Search for Black Knights since we're checking for a White King
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 const createCoordinatesKnightAttack = function(coordinateArray)
 { // Takes in an array with two values: rank, file (conventional board)
     let arrayOfCoordinates = [];
@@ -3339,27 +4266,6 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
     copyOfObjectBoard.sideToMove = !(copyOfObjectBoard.sideToMove);
 
     return copyOfObjectBoard;
-}
-
-const copyConventionalBoard = function(multidimensionalArray) // TODO: eventually delete as structuredClone() works for objects
-{
-    let copy = [["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""],
-                ["","","","","","","",""]];
-    
-    for( let i = 0; i < 8; i++ )
-    {
-        for( let j = 0; j < 8; j++ )
-        {
-            copy[i][j] = multidimensionalArray[i][j];
-        }
-    }
-    return copy;
 }
 
 // GUI BACKEND
