@@ -193,7 +193,7 @@ const legalMovesFromConventionalBoard = function(objectBoard)
     let arrayOfLegalMoves = arrayOfPseudoLegalMoves.filter(function(element)
     {
         let newBoard = conventionalBoardProcessMove(copyOfObjectBoard,element);
-        return isTheSideNotToMoveInCheckChecker(newBoard);
+        return !isTheSideNotToMoveInCheckChecker(newBoard);
     });
     return arrayOfLegalMoves;
 }
