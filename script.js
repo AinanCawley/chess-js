@@ -194,8 +194,14 @@ const legalMovesFromConventionalBoard = function(conventionalBoardArray, boolean
     return arrayOfLegalMoves;
 }
 
-const pseudolegalMovesFromConventionalBoard = function(conventionalBoardArray, booleanToMove, castlingRights, enpassantSquare)
+const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 { // TODO: use engineBoard object
+    // TODO: clone object before doing these things
+    let conventionalBoardArray = objectBoard.board;
+    let booleanToMove = objectBoard.sideToMove;
+    let castlingRights = ""; // TODO
+    let enpassantSquare = objectBoard.enPassantSquare;
+
     let arrayOfChecks = [];
     let arrayOfCaptures = [];
     let arrayOfSpecialMoves = []; // for promotion and castling
