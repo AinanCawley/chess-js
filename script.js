@@ -2166,7 +2166,7 @@ const isTheSideNotToMoveInCheckChecker = function(objectBoard)
     let copyOfObjectBoard = structuredClone(objectBoard);
     if( copyOfObjectBoard.sideToMove==true )
     { // ^^This means White to move, so check if Black's King is in check
-        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard.board,false);
+        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard,false);
         for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the NE direction
             if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
@@ -2613,7 +2613,7 @@ const isTheSideNotToMoveInCheckChecker = function(objectBoard)
                 }
             }
         }
-        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard.board,false));
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard,false));
         
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
@@ -2625,7 +2625,7 @@ const isTheSideNotToMoveInCheckChecker = function(objectBoard)
     }
     else
     { // ^^ else means Black to move, so check if White's King is in check
-        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard.board,true);
+        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard,true);
         for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the NE direction
             if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
@@ -3072,7 +3072,7 @@ const isTheSideNotToMoveInCheckChecker = function(objectBoard)
                 }
             }
         }
-        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard.board,true));
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard,true));
         
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
@@ -3091,7 +3091,7 @@ const isTheSideToMoveInCheckChecker = function(objectBoard)
     let copyOfObjectBoard = structuredClone(objectBoard);
     if( copyOfObjectBoard.sideToMove==false )
     { // ^^This means Black to move, so check if Black's King is in check
-        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard.board,false);
+        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard,false);
         for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the NE direction
             if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
@@ -3538,7 +3538,7 @@ const isTheSideToMoveInCheckChecker = function(objectBoard)
                 }
             }
         }
-        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard.board,false));
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard,false));
         
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
@@ -3550,7 +3550,7 @@ const isTheSideToMoveInCheckChecker = function(objectBoard)
     }
     else
     { // ^^ else means White to move, so check if White's King is in check
-        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard.board,true);
+        let coordinatesArray = findCoordinatesOfKing(copyOfObjectBoard,true);
         for( let i = 1; i < 8; i++ )
         { // Checking for raytracing attacks from the NE direction
             if( (coordinatesArray[0]-i > -1) && (coordinatesArray[1]+i < 8) )
@@ -3997,7 +3997,7 @@ const isTheSideToMoveInCheckChecker = function(objectBoard)
                 }
             }
         }
-        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard.board,true));
+        let coordinatesToSearchForKnights = createCoordinatesKnightAttack(findCoordinatesOfKing(copyOfObjectBoard,true));
         
         for( let i = 0; i < coordinatesToSearchForKnights.length; i++ )
         {
