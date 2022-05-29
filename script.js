@@ -105,62 +105,62 @@ const fenToConventionalBoard = function(fenString)
             {
                 if(element=="P")
                 {  
-                    copyOfObjectBoard.board[currentRank][currentFile] = "P";
+                    objectBoard.board[currentRank][currentFile] = "P";
                     currentFile++;
                 }
                 if(element=="p")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "p";
+                    objectBoard.board[currentRank][currentFile] = "p";
                     currentFile++;
                 }
                 if(element=="N")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "N";
+                    objectBoard.board[currentRank][currentFile] = "N";
                     currentFile++;
                 }
                 if(element=="n")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "n";
+                    objectBoard.board[currentRank][currentFile] = "n";
                     currentFile++;
                 }
                 if(element=="B")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "B";
+                    objectBoard.board[currentRank][currentFile] = "B";
                     currentFile++;
                 }
                 if(element=="b")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "b";
+                    objectBoard.board[currentRank][currentFile] = "b";
                     currentFile++;
                 }
                 if(element=="R")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "R";
+                    objectBoard.board[currentRank][currentFile] = "R";
                     currentFile++;
                 }
                 if(element=="r")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "r";
+                    objectBoard.board[currentRank][currentFile] = "r";
                     currentFile++;
                 }
                 if(element=="Q")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "Q";
+                    objectBoard.board[currentRank][currentFile] = "Q";
                     currentFile++;
                 }
                 if(element=="q")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "q";
+                    objectBoard.board[currentRank][currentFile] = "q";
                     currentFile++;
                 }
                 if(element=="K")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "K";
+                    objectBoard.board[currentRank][currentFile] = "K";
                     currentFile++;
                 }
                 if(element=="k")
                 {
-                    copyOfObjectBoard.board[currentRank][currentFile] = "k";
+                    objectBoard.board[currentRank][currentFile] = "k";
                     currentFile++;
                 }
             }
