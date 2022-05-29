@@ -4063,12 +4063,12 @@ const createCoordinatesKnightAttack = function(coordinateArray)
     return arrayOfCoordinates; 
 }
 
-const findCoordinatesOfKing = function(engineBoard) // TODO: use engineBoard
+const findCoordinatesOfKing = function(engineBoard, booleanToMove) // TODO: use engineBoard
 { // True is White, False is Black
-    let copyOfEngineBoard = structuredClone(engineBoard);
+    let copyOfObjectBoard = structuredClone(engineBoard);
     let arrayOfTwoNumbers = [0,0];
 
-    if( copyOfEngineBoard.sideToMove == true )
+    if( booleanToMove == true )
     { // ^^If looking for the White King...
         for( let i = 7; i > -1; i-- )
         {
