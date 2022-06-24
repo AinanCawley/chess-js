@@ -991,14 +991,16 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard) // TODO: fix
                 {
                     if( copyOfObjectBoard.canWhiteCastleKingside == true )
                     { // White can castle Kingside
-                        if((copyOfObjectBoard.board[7][7] == "R") && ((i==7) && (j==4)))
+                        if((copyOfObjectBoard.board[7][7] == "R") && ((i==7) && (j==4)) &&
+                         (copyOfObjectBoard.board[7][6] == "") && (copyOfObjectBoard.board[7][5] == ""))
                         {
                             arrayOfSpecialMoves.push("e1g1");
                         }
                     }
                     if( copyOfObjectBoard.canWhiteCastleQueenside == true )
                     { // White can castle Queenside
-                        if((copyOfObjectBoard.board[7][0] == "R") && ((i==7) && (j==4)))
+                        if((copyOfObjectBoard.board[7][0] == "R") && ((i==7) && (j==4)) && 
+                        (copyOfObjectBoard.board[7][1] == "") && (copyOfObjectBoard.board[7][2] == ""))
                         {
                             arrayOfSpecialMoves.push("e1c1");
                         }
@@ -1970,14 +1972,16 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard) // TODO: fix
                 {
                     if( copyOfObjectBoard.canBlackCastleKingside == true )
                     { // Black can castle Kingside
-                        if((copyOfObjectBoard.board[0][7] == "R") && ((i==0) && (j==4)))
+                        if((copyOfObjectBoard.board[0][7] == "R") && ((i==0) && (j==4)) &&
+                        (copyOfObjectBoard.board[0][6] == "") && (copyOfObjectBoard.board[0][5] == ""))
                         {
                             arrayOfSpecialMoves.push("e8g8");
                         }
                     }
                     if( copyOfObjectBoard.canBlackCastleQueenside == true )
                     { // Black can castle Queenside
-                        if((copyOfObjectBoard.board[0][0] == "R") && ((i==0) && (j==4)))
+                        if((copyOfObjectBoard.board[0][0] == "R") && ((i==0) && (j==4)) &&
+                        (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == ""))
                         {
                             arrayOfSpecialMoves.push("e8c8");
                         }
