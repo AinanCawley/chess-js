@@ -18,7 +18,7 @@ let engineBoard =
     sideToMove: true, // true for White, false for Black
     enPassantSquare: "",
     castlingRights: [true,true,true,true], // White Kingside, White Queenside, Black Kingside, Black Queenside
-}; // TODO: make functions implement this engineBoard object instead.
+};
 
 let engineConventionalBoard =  [["","","","","","","",""],
                                 ["","","","","","","",""],
