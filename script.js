@@ -4112,7 +4112,7 @@ const findCoordinatesOfKing = function(engineBoard, booleanToMove)
 }
 
 const conventionalBoardProcessMove = function(objectBoard, moveString)
-{ // this assumes the move given is legal and executes it. TODO: Handle enPassant information
+{ // this assumes the move given is legal and executes it.
     let copyOfObjectBoard = structuredClone(objectBoard);
 
     let startSquare = moveString.slice(0,2);
