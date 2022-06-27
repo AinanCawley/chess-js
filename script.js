@@ -4137,6 +4137,14 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
                 }
             }
         }
+        if( startSquare.slice(1) == "2" )
+        {   // ...starts from the starting rank...
+            if( endSquare.slice(1) == "4" )
+            { //...and moves two squares...
+                copyOfObjectBoard.enPassantSquare = startSquare.slice(0,1) + "3";
+                //...then there is an enpassant Square behind where it ends up
+            }
+        }
 
         promoteToPiece = promoteToPiece.toUpperCase();
         // ^^ So that the promoted piece is White if the pawn promoting is White
@@ -4151,6 +4159,14 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
                 { // and is a diagonal pawn move... then it's an en passant and the opponent pawn must be removed
                     copyOfObjectBoard.board[4][(letterToNumber(endSquare.slice(0,1)))] = "";
                 }
+            }
+        }
+        if( startSquare.slice(1) == "7" )
+        {   // ...starts from the starting rank...
+            if( endSquare.slice(1) == "5" )
+            { //...and moves two squares...
+                copyOfObjectBoard.enPassantSquare = startSquare.slice(0,1) + "6";
+                //...then there is an enpassant Square behind where it ends up
             }
         }
 
