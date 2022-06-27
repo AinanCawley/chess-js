@@ -4072,7 +4072,7 @@ const createCoordinatesKnightAttack = function(coordinateArray)
     return arrayOfCoordinates; 
 }
 
-const findCoordinatesOfKing = function(engineBoard, booleanToMove) // TODO: use engineBoard
+const findCoordinatesOfKing = function(engineBoard, booleanToMove)
 { // True is White, False is Black
     let copyOfObjectBoard = structuredClone(engineBoard);
     let arrayOfTwoNumbers = [0,0];
