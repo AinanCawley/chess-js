@@ -192,7 +192,7 @@ const legalMovesFromConventionalBoard = function(objectBoard)
     return arrayOfLegalMoves;
 }
 
-const pseudolegalMovesFromConventionalBoard = function(objectBoard) // TODO: fix bug with starting position having castling
+const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 {
     let copyOfObjectBoard = structuredClone(objectBoard);
 
