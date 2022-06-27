@@ -1,6 +1,27 @@
 // Perf test
 
-// TODO
+const perfTest = function(board,depth)
+{ // TODO: finish and check if move generation is working flawlessly
+    let numberOfMoves = 0;
+    
+    if( depth==1 )
+    {
+        let moveList = legalMovesFromConventionalBoard(board);
+        return moveList.length;
+    }
+    else
+    {
+        let moveList = legalMovesFromConventionalBoard(board);
+
+        for( let i = 0; i < moveList.length; i++ )
+        {
+            let newBoard = conventionalBoardProcessMove(board,moveList[i]);
+            numberOfMoves = numberOfMoves + perfTest(newBoard,(depth-1));
+        }
+    }
+
+    return numberOfMoves;
+};
 
 // ENGINE STUFF
 
