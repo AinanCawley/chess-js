@@ -26,22 +26,6 @@ let engineBoard =
     fullMoveNumber: 1,
 };
 
-let engineConventionalBoard =  [["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""],
-                                ["","","","","","","",""]];
-let engineFEN = "";
-let engineSideToMove = true;
-let engineEnpassantSquare = "";
-let engineCastlingRights = [true,true,true,true]; // White Kingside, White Queenside, Black Kingside, Black Queenside
-
-// Might just make all these declarations within an engine function that takes in a FEN and outputs the move string 
-
-
 const fenToConventionalBoard = function(fenString)
 {
     let objectBoard = 
