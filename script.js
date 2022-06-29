@@ -77,11 +77,17 @@ const fenToConventionalBoard = function(fenString)
     fenString = fenString.slice(0,-2);
 
     objectBoard.enPassantSquare = fenString.slice(-1);
-    if( objectBoard.enPassantSquare == "-" )
+    if( fenString.slice(-1) == "-" )
     {
         objectBoard.enPassantSquare = "";
+        fenString = fenString.slice(0,-2);
     }
-    fenString = fenString.slice(0,-2);
+    else
+    {
+        objectBoard.enPassantSquare = fenString.slice(-2);
+        fenString = fenString.slice(0,-3);
+    }
+    
 
     let sideAndCastling = fenString.slice(1+fenString.indexOf(" "));
     if( sideAndCastling.slice(0,1)=="w")
