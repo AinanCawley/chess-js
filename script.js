@@ -1034,7 +1034,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                         }
                     }
                 }
-                if( copyOfObjectBoard.board[i][j]=="K" )
+                if( copyOfObjectBoard.board[i][j]=="K" ) // TODO: check that King doesn't pass through check
                 {
                     if( copyOfObjectBoard.canWhiteCastleKingside == true )
                     { // White can castle Kingside
@@ -2017,7 +2017,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                 }
                 if( copyOfObjectBoard.board[i][j]=="k" )
                 {
-                    if( copyOfObjectBoard.canBlackCastleKingside == true )
+                    if( copyOfObjectBoard.canBlackCastleKingside == true ) // TODO: check that King doesn't pass through check
                     { // Black can castle Kingside
                         if((copyOfObjectBoard.board[0][7] == "r") && ((i==0) && (j==4)) &&
                         (copyOfObjectBoard.board[0][6] == "") && (copyOfObjectBoard.board[0][5] == ""))
