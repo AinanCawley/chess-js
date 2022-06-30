@@ -2019,7 +2019,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                 {
                     if( copyOfObjectBoard.canBlackCastleKingside == true )
                     { // Black can castle Kingside
-                        if((copyOfObjectBoard.board[0][7] == "R") && ((i==0) && (j==4)) &&
+                        if((copyOfObjectBoard.board[0][7] == "r") && ((i==0) && (j==4)) &&
                         (copyOfObjectBoard.board[0][6] == "") && (copyOfObjectBoard.board[0][5] == ""))
                         {
                             arrayOfSpecialMoves.push("e8g8");
@@ -2027,7 +2027,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                     }
                     if( copyOfObjectBoard.canBlackCastleQueenside == true )
                     { // Black can castle Queenside
-                        if((copyOfObjectBoard.board[0][0] == "R") && ((i==0) && (j==4)) &&
+                        if((copyOfObjectBoard.board[0][0] == "r") && ((i==0) && (j==4)) &&
                         (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == ""))
                         {
                             arrayOfSpecialMoves.push("e8c8");
