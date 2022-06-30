@@ -1,7 +1,7 @@
 // Perf test
 
 const perfTest = function(board,depth)
-{ // TODO: finish and check if move generation is working flawlessly
+{
     let numberOfMoves = 0;
     
     if( depth==1 )
@@ -16,13 +16,28 @@ const perfTest = function(board,depth)
         for( let i = 0; i < moveList.length; i++ )
         {
             let newBoard = conventionalBoardProcessMove(board,moveList[i]);
-            numberOfMoves = numberOfMoves + perfTest(newBoard,(depth-1));
+            numberOfMoves += perfTest(newBoard,(depth-1));
         }
     }
 
     return numberOfMoves;
 };
 
+const perfTestVerbose = function(board,depth)
+{
+    let moveList = legalMovesFromConventionalBoard(board);
+    let total = 0;
+
+    for( let i = 0; i < moveList.length; i++ )
+    {
+        let newBoard = conventionalBoardProcessMove(board,moveList[i]);
+        let newBoardCount = perfTest(newBoard,(depth-1));
+        console.log(moveList[i] + ": " + newBoardCount + " nodes");
+        total += newBoardCount;
+    }
+
+    return "Total is: " + total + " nodes";
+};
 // ENGINE STUFF
 
 let engineBoard = 
@@ -4141,6 +4156,8 @@ const findCoordinatesOfKing = function(engineBoard, booleanToMove)
 const conventionalBoardProcessMove = function(objectBoard, moveString)
 { // this assumes the move given is legal and executes it.
     let copyOfObjectBoard = structuredClone(objectBoard);
+
+    copyOfObjectBoard.enPassantSquare = "";
 
     let startSquare = moveString.slice(0,2);
     let endSquare = moveString.slice(2);
