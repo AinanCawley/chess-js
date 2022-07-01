@@ -1055,7 +1055,8 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                         if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
                             if((copyOfObjectBoard.board[7][0] == "R") && ((i==7) && (j==4)) && 
-                            (copyOfObjectBoard.board[7][1] == "") && (copyOfObjectBoard.board[7][2] == ""))
+                            (copyOfObjectBoard.board[7][1] == "") && (copyOfObjectBoard.board[7][2] == "")
+                            && (copyOfObjectBoard.board[7][3] == ""))
                             {
                                 if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e1d1")))
                                 {
@@ -2048,7 +2049,8 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                         if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
                             if((copyOfObjectBoard.board[0][0] == "r") && ((i==0) && (j==4)) &&
-                            (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == ""))
+                            (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == "")
+                            && (copyOfObjectBoard.board[0][3] == ""))
                             {
                                 if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e8d8")))
                                 {
