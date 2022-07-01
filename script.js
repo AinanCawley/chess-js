@@ -4311,7 +4311,7 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
         {
             if( startSquare == "a1" )
             {
-                copyOfObjectBoard.canWhiteCastleKingside = false;
+                copyOfObjectBoard.canWhiteCastleQueenside = false;
             }
         }
     }
