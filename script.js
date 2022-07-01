@@ -1038,23 +1038,29 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                 {
                     if( copyOfObjectBoard.canWhiteCastleKingside == true )
                     { // White can castle Kingside
-                        if((copyOfObjectBoard.board[7][7] == "R") && ((i==7) && (j==4)) &&
-                         (copyOfObjectBoard.board[7][6] == "") && (copyOfObjectBoard.board[7][5] == ""))
+                        if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
-                            if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e1f1")))
+                            if((copyOfObjectBoard.board[7][7] == "R") && ((i==7) && (j==4)) &&
+                            (copyOfObjectBoard.board[7][6] == "") && (copyOfObjectBoard.board[7][5] == ""))
                             {
-                                arrayOfSpecialMoves.push("e1g1");
+                                if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e1f1")))
+                                {
+                                    arrayOfSpecialMoves.push("e1g1");
+                                }
                             }
                         }
                     }
                     if( copyOfObjectBoard.canWhiteCastleQueenside == true )
                     { // White can castle Queenside
-                        if((copyOfObjectBoard.board[7][0] == "R") && ((i==7) && (j==4)) && 
-                        (copyOfObjectBoard.board[7][1] == "") && (copyOfObjectBoard.board[7][2] == ""))
+                        if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
-                            if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e1d1")))
+                            if((copyOfObjectBoard.board[7][0] == "R") && ((i==7) && (j==4)) && 
+                            (copyOfObjectBoard.board[7][1] == "") && (copyOfObjectBoard.board[7][2] == ""))
                             {
-                                arrayOfSpecialMoves.push("e1c1");
+                                if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e1d1")))
+                                {
+                                    arrayOfSpecialMoves.push("e1c1");
+                                }
                             }
                         }
                     }
@@ -2025,23 +2031,29 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                 {
                     if( copyOfObjectBoard.canBlackCastleKingside == true ) // TODO: check that King doesn't pass through check
                     { // Black can castle Kingside
-                        if((copyOfObjectBoard.board[0][7] == "r") && ((i==0) && (j==4)) &&
-                        (copyOfObjectBoard.board[0][6] == "") && (copyOfObjectBoard.board[0][5] == ""))
-                        {   
-                            if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e8f8")))
-                            {
-                                arrayOfSpecialMoves.push("e8g8");
+                        if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
+                        {
+                            if((copyOfObjectBoard.board[0][7] == "r") && ((i==0) && (j==4)) &&
+                            (copyOfObjectBoard.board[0][6] == "") && (copyOfObjectBoard.board[0][5] == ""))
+                            {   
+                                if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e8f8")))
+                                {
+                                    arrayOfSpecialMoves.push("e8g8");
+                                }
                             }
                         }
                     }
                     if( copyOfObjectBoard.canBlackCastleQueenside == true )
                     { // Black can castle Queenside
-                        if((copyOfObjectBoard.board[0][0] == "r") && ((i==0) && (j==4)) &&
-                        (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == ""))
+                        if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
-                            if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e8d8")))
+                            if((copyOfObjectBoard.board[0][0] == "r") && ((i==0) && (j==4)) &&
+                            (copyOfObjectBoard.board[0][1] == "") && (copyOfObjectBoard.board[0][2] == ""))
                             {
-                                arrayOfSpecialMoves.push("e8c8");
+                                if( !isTheSideNotToMoveInCheckChecker(conventionalBoardProcessMove(copyOfObjectBoard, "e8d8")))
+                                {
+                                    arrayOfSpecialMoves.push("e8c8");
+                                }
                             }
                         }
                     }
