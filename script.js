@@ -2030,7 +2030,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                 }
                 if( copyOfObjectBoard.board[i][j]=="k" )
                 {
-                    if( copyOfObjectBoard.canBlackCastleKingside == true ) // TODO: check that King doesn't pass through check
+                    if( copyOfObjectBoard.canBlackCastleKingside == true )
                     { // Black can castle Kingside
                         if( !isTheSideToMoveInCheckChecker(copyOfObjectBoard))
                         {
