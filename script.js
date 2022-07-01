@@ -4319,7 +4319,7 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
         {
             if( startSquare == "h8" )
             {
-                copyOfObjectBoard.canWhiteCastleKingside = false;
+                copyOfObjectBoard.canBlackCastleKingside = false;
             }
         }
     }
@@ -4329,7 +4329,7 @@ const conventionalBoardProcessMove = function(objectBoard, moveString)
         {
             if( startSquare == "a8" )
             {
-                copyOfObjectBoard.canWhiteCastleKingside = false;
+                copyOfObjectBoard.canBlackCastleQueenside = false;
             }
         }
     }
