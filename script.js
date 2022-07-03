@@ -4677,9 +4677,99 @@ const loadPosition = function(fenString)
     updateVisuals();
 }
 
-const loadPositionFromBoard = function()
+const loadPositionFromBoard = function(engineBoard)
 { // TODO: same as loadPosition but from board object instead of FEN
 
+};
+
+const boardToFEN = function(engineBoard)
+{ // TODO: turn a board object into FEN text
+    let copyOfObjectBoard = structuredClone(engineBoard);
+
+    let FEN = "";
+
+    for( let i = 0; i < 8; i++ )
+    {
+        let spaceCounter = 0;
+        for( let j = 0; j < 8; j++ )
+        {
+            if( spaceCounter == 0 )
+            {
+                if( copyOfObjectBoard.board[i][j] == "" )
+                {
+                    spaceCounter++;
+                }
+                else
+                {
+                    FEN += copyOfObjectBoard.board[i][j];
+                }
+            }
+            else
+            {
+                if( copyOfObjectBoard.board[i][j] == "" )
+                {
+                    spaceCounter++;
+                    if( j == 7 )
+                    {
+                        FEN += spaceCounter.toString();
+                        spaceCounter = 0;
+                    }
+                }
+                else
+                {
+                    FEN += spaceCounter.toString();
+                    FEN += copyOfObjectBoard.board[i][j];
+                    spaceCounter = 0;
+                }
+            }
+        }
+
+        FEN += "/";
+
+    }
+
+    FEN = FEN.slice(0,-1); // To remove the slash at the end
+
+    if( copyOfObjectBoard.sideToMove == true )
+    {
+        FEN += " w ";
+    }
+    else
+    {
+        FEN += " b ";
+    }
+
+    if( copyOfObjectBoard.canWhiteCastleKingside == true )
+    {
+        FEN += "K";
+    }
+    if( copyOfObjectBoard.canWhiteCastleQueenside == true )
+    {
+        FEN += "Q";
+    }
+    if( copyOfObjectBoard.canBlackCastleKingside == true )
+    {
+        FEN += "k";
+    }
+    if( copyOfObjectBoard.canBlackCastleQueenside == true )
+    {
+        FEN += "q";
+    }
+
+    FEN += " ";
+
+    if( copyOfObjectBoard.enPassantSquare == "" )
+    {
+        FEN += "-";
+    }
+    else
+    {
+        FEN += copyOfObjectBoard.enPassantSquare;
+    }
+
+    FEN += " " + copyOfObjectBoard.halfMoveClock + " " + copyOfObjectBoard.fullMoveNumber;
+
+    return FEN;
 };
 
 const updateVisuals = function()
