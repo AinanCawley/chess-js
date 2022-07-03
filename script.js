@@ -4445,6 +4445,32 @@ const createWhiteChessboard = function()
             {
                 square.style.backgroundColor = darkSquareColour;
             }
+
+            square.addEventListener("click", function()
+            {
+                if( playerTurn == true )
+                {
+                    if( firstSelectedSquare == "" )
+                    {
+                        firstSelectedSquare = square.getAttribute("id");
+
+                        if( (i+j)%2==0 )
+                        {
+                            square.style.backgroundColor = lightSquareSelectedColour;
+                        }
+                        else
+                        {
+                            square.style.backgroundColor = darkSquareSelectedColour;
+                        }
+                    }
+                    else
+                    { // means a square was already selected
+                        secondSelectedSquare = square.getAttribute("id");
+                        userMove = firstSelectedSquare + secondSelectedSquare;
+                        // TODO: finish
+                    }
+                }
+            });
     
             column.appendChild(square);
         }
@@ -4651,6 +4677,11 @@ const loadPosition = function(fenString)
     updateVisuals();
 }
 
+const loadPositionFromBoard = function()
+{ // TODO: same as loadPosition but from board object instead of FEN
+
+};
+
 const updateVisuals = function()
 {
     let whitePawns = document.querySelectorAll(".whitePawn");
@@ -4732,9 +4763,37 @@ let whiteCastleQueenside = false; // true for castling rights in that direction
 let blackCastleKingside = false;  // false for no castling rights in that direction
 let blackCastleQueenside = false; //
 let enPassantSquare = ""; // the coordinate behind a pawn that was pushed 2 squares. For en passant moves. Will be "-" for null
+
 let halfMoveClock = ""; // number of halfmoves (plies) since a capture or a pawn move was made. For the 50-move draw rule.
 let fullMoveNumber = ""; // number of fullmoves. Increments after every Black turn. Starts at 1.
 let gameHistoryArray = []; // array of FENs to keep track of repetition. For the draw by repetition rule.
+
+let playerTurn = false; // if true then it's player's turn to move. If false, it's not player's turn to move.
+let firstSelectedSquare = ""; // first square the player selected
+let secondSelectedSquare = ""; // second square the player selected
+let userMove = ""; // the long form algebraic move the user created by selecting two squares
+let currentBoard = 
+{
+    board: [["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""],
+            ["","","","","","","",""]],
+    
+    sideToMove: true, // true for White, false for Black
+    canWhiteCastleKingside: true,
+    canWhiteCastleQueenside: true,
+    canBlackCastleKingside: true,
+    canBlackCastleQueenside: true,
+    enPassantSquare: "",
+    castlingRights: [true,true,true,true], // White Kingside, White Queenside, Black Kingside, Black Queenside
+    halfMoveClock: 0,
+    fullMoveNumber: 1,
+};
+
 
 //DOM STUFF
 
@@ -4744,3 +4803,5 @@ const gameContainer = document.getElementById("gameContainer")
 
 let lightSquareColour = "hsl(80, 50%, 80%)";
 let darkSquareColour = "hsl(110, 50%, 50%)";
+let lightSquareSelectedColour = "hsl(80, 50%, 70%)";
+let darkSquareSelectedColour = "hsl(110, 50%, 40%)";
