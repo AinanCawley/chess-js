@@ -4679,7 +4679,7 @@ const loadPosition = function(fenString)
 
 const loadPositionFromBoard = function(engineBoard)
 { // TODO: same as loadPosition but from board object instead of FEN
-
+    loadPosition( boardToFEN(engineBoard) );
 };
 
 const boardToFEN = function(engineBoard)
@@ -4698,6 +4698,11 @@ const boardToFEN = function(engineBoard)
                 if( copyOfObjectBoard.board[i][j] == "" )
                 {
                     spaceCounter++;
+                    if( j == 7 )
+                    {
+                        FEN += spaceCounter;
+                        spaceCounter = 0;
+                    }
                 }
                 else
                 {
@@ -4739,21 +4744,32 @@ const boardToFEN = function(engineBoard)
         FEN += " b ";
     }
 
+    let allFalse = true;
+
     if( copyOfObjectBoard.canWhiteCastleKingside == true )
     {
         FEN += "K";
+        allFalse = false;
     }
     if( copyOfObjectBoard.canWhiteCastleQueenside == true )
     {
         FEN += "Q";
+        allFalse = false;
     }
     if( copyOfObjectBoard.canBlackCastleKingside == true )
     {
         FEN += "k";
+        allFalse = false;
     }
     if( copyOfObjectBoard.canBlackCastleQueenside == true )
     {
         FEN += "q";
+        allFalse = false;
+    }
+
+    if( allFalse == true )
+    {
+        FEN += "-";
     }
 
     FEN += " ";
@@ -4773,7 +4789,7 @@ const boardToFEN = function(engineBoard)
 };
 
 const updateVisuals = function()
-{
+{ // TODO: erase previous board before populating
     let whitePawns = document.querySelectorAll(".whitePawn");
     whitePawns.forEach(function(piece)
     {
