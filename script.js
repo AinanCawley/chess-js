@@ -4678,12 +4678,12 @@ const loadPosition = function(fenString)
 }
 
 const loadPositionFromBoard = function(engineBoard)
-{ // TODO: same as loadPosition but from board object instead of FEN
+{
     loadPosition( boardToFEN(engineBoard) );
 };
 
 const boardToFEN = function(engineBoard)
-{ // TODO: turn a board object into FEN text
+{
     let copyOfObjectBoard = structuredClone(engineBoard);
 
     let FEN = "";
