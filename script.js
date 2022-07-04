@@ -1,8 +1,21 @@
 // AI stuff
 
-const chosenAI = function()
-{
+const chosenAI = function(fenString,choice)
+{   
+    if( choice == "random" )
+    {
+        loadPosition(randomAI(fenString));
+        playerTurn = true;
+    }
+}
 
+const randomAI = function(fenString)
+{
+    let array = legalMovesFromFEN(fenString);
+    let arraySize = array.length;
+    let randomNumber = Math.floor(Math.random() * arraySize );
+
+    return boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),array[randomNumber]));
 }
 
 // Perf test
@@ -4494,7 +4507,7 @@ const createWhiteChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
-                            chosenAI( newFEN );
+                            chosenAI( newFEN, choice );
                         }
                         else
                         {
@@ -4576,7 +4589,7 @@ const createBlackChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
-                            chosenAI( newFEN );
+                            chosenAI( newFEN, choice );
                         }
                         else
                         {
@@ -4947,7 +4960,9 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
     updateVisuals();
 }
 
-//Game state STUFF
+//Game state STUFF (GLOBAL VARIABLES)
+
+let choice = ""; // choice of AI to play against
 
 let currentFEN = ""; // current board position represented in FEN
 let boardPerspective = true; // true for white and false for black
