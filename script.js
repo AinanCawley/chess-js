@@ -1,3 +1,6 @@
+// TODO: handle checkmate and stalemate
+// TODO: setup screen where user chooses board orientation, colour they'll play, and opponent
+
 // AI stuff
 
 const chosenAI = function(fenString,choice)
