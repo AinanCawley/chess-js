@@ -4508,6 +4508,8 @@ const createWhiteChessboard = function()
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
                             chosenAI( newFEN, choice );
+                            firstSelectedSquare = "";
+                            secondSelectedSquare = "";
                         }
                         else
                         {
