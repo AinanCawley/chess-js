@@ -4968,15 +4968,47 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
 }
 
 const settingsScreen = function()
-{
+{ // TODO: finish
     gameContainer.replaceChildren();
+    let form = document.createElement("form");
+    let labelSideToMove = document.createElement("label");
+    let chooseSideToMove = document.createElement("select");
+
+    chooseSideToMove.setAttribute("id", "chooseSideToMove");
+    chooseSideToMove.setAttribute("name", "chooseSideToMove");
+    labelSideToMove.setAttribute("for", "chooseSideToMove");
+    labelSideToMove.innerText = "Choose your colour: ";
+    chooseSideToMove.setAttribute("onchange", "sideToMoveScript(this.form.chooseSideToMove);");
+
+    let optionWhite = document.createElement("option");
+    let optionBlack = document.createElement("option");
+
+    optionWhite.setAttribute("value", "White");
+    optionBlack.setAttribute("value", "Black");
+    optionWhite.innerText = "White";
+    optionBlack.innerText = "Black";
+
+    chooseSideToMove.appendChild(optionWhite);
+    chooseSideToMove.appendChild(optionBlack);
+
+    
+
+    form.appendChild(labelSideToMove);
+    form.appendChild(chooseSideToMove);
+
+    gameContainer.appendChild(form);
 }
+
+let sideToMoveScript = function( menu )
+{
+    console.log(menu);
+};
 
 //Game state STUFF (GLOBAL VARIABLES)
 
 let choice = ""; // choice of AI to play against
-
 let currentFEN = ""; // current board position represented in FEN
+
 let boardPerspective = true; // true for white and false for black
 let sideToMove = true;       // true for white and false for black
 let whiteCastleKingside = false;  //
