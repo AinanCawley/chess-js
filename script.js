@@ -1,3 +1,10 @@
+// AI stuff
+
+const chosenAI = function()
+{
+
+}
+
 // Perf test
 
 const perfTest = function(board,depth)
@@ -4463,22 +4470,38 @@ const createWhiteChessboard = function()
                 {
                     if( firstSelectedSquare == "" )
                     { // means user hasn't selected a piece to move yet
-                        firstSelectedSquare = square.getAttribute("id");
-
-                        if( (i+j)%2==0 )
-                        { // To change the colour of the selected square differently for light or dark squares
-                            square.style.backgroundColor = lightSquareSelectedColour;
-                        }
-                        else
+                        if( legalStartingSquaresFromFEN(currentFEN).includes(square.getAttribute("id")))
                         {
-                            square.style.backgroundColor = darkSquareSelectedColour;
+                            firstSelectedSquare = square.getAttribute("id");
+
+                            if( (i+j)%2==0 )   
+                            { // To change the colour of the selected square differently for light or dark squares
+                                square.style.backgroundColor = lightSquareSelectedColour;
+                            }
+                            else
+                            {
+                                square.style.backgroundColor = darkSquareSelectedColour;
+                            }
                         }
                     }
                     else
                     { // means user has selected a piece to move
                         secondSelectedSquare = square.getAttribute("id");
                         userMove = firstSelectedSquare + secondSelectedSquare;
-                        // TODO: finish
+
+                        if( legalMovesFromFEN(currentFEN).includes(userMove) )
+                        {
+                            playerTurn = false;
+                            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
+                            loadPosition( newFEN );
+                            chosenAI( newFEN );
+                        }
+                        else
+                        {
+                            loadPosition(currentFEN);
+                            firstSelectedSquare = "";
+                            secondSelectedSquare = "";
+                        }
                     }
                 }
             });
