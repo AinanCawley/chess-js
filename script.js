@@ -4595,6 +4595,8 @@ const createBlackChessboard = function()
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
                             chosenAI( newFEN, choice );
+                            firstSelectedSquare = "";
+                            secondSelectedSquare = "";
                         }
                         else
                         {
@@ -4963,6 +4965,11 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
 
     // TODO: everything
     updateVisuals();
+}
+
+const settingsScreen = function()
+{
+    gameContainer.replaceChildren();
 }
 
 //Game state STUFF (GLOBAL VARIABLES)
