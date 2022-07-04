@@ -234,6 +234,17 @@ const legalMovesFromConventionalBoard = function(objectBoard)
     return arrayOfLegalMoves;
 }
 
+const legalMovesFromFEN = function(fenString)
+{
+    return legalMovesFromConventionalBoard(fenToConventionalBoard(fenString));
+}
+
+const legalStartingSquaresFromFEN = function(fenString)
+{
+    let array = legalMovesFromFEN(fenString);
+    return array.map( x => x.slice(0,2));
+}
+
 const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 {
     let copyOfObjectBoard = structuredClone(objectBoard);
@@ -4451,11 +4462,11 @@ const createWhiteChessboard = function()
                 if( playerTurn == true )
                 {
                     if( firstSelectedSquare == "" )
-                    {
+                    { // means user hasn't selected a piece to move yet
                         firstSelectedSquare = square.getAttribute("id");
 
                         if( (i+j)%2==0 )
-                        {
+                        { // To change the colour of the selected square differently for light or dark squares
                             square.style.backgroundColor = lightSquareSelectedColour;
                         }
                         else
@@ -4464,7 +4475,7 @@ const createWhiteChessboard = function()
                         }
                     }
                     else
-                    { // means a square was already selected
+                    { // means user has selected a piece to move
                         secondSelectedSquare = square.getAttribute("id");
                         userMove = firstSelectedSquare + secondSelectedSquare;
                         // TODO: finish
@@ -4798,7 +4809,7 @@ const resetVisuals = function()
 };
 
 const updateVisuals = function()
-{ // TODO: erase previous board before populating
+{
 
     resetVisuals();
 
