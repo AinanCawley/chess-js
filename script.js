@@ -4580,11 +4580,11 @@ const loadPosition = function(fenString)
     gameHistoryArray.push(fenString);
 
 
-    if(boardPerspective=="white")
+    if(boardPerspective==true)
     { //To remove all previous piece classes from the board and to start anew
         createWhiteChessboard(); 
     }
-    if(boardPerspective=="black")
+    if(boardPerspective==false)
     { //To remove all previous piece classes from the board and to start anew
         createBlackChessboard();
     }
@@ -4788,8 +4788,20 @@ const boardToFEN = function(engineBoard)
     return FEN;
 };
 
+const resetVisuals = function()
+{
+    let squares = document.querySelectorAll(".chessboardSquare");
+    squares.forEach( function(square)
+    {
+        square.innerText = "";
+    });
+};
+
 const updateVisuals = function()
 { // TODO: erase previous board before populating
+
+    resetVisuals();
+
     let whitePawns = document.querySelectorAll(".whitePawn");
     whitePawns.forEach(function(piece)
     {
