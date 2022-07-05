@@ -1,18 +1,24 @@
-// TODO: handle checkmate and stalemate
+// TODO: allow user to promote pawns!
+// TODO: make board lighter-coloured when AI is thinking to give user feedback
 
 // AI stuff
 
 const chosenAI = function(fenString,choice)
-{   
+{
     if( choice == "random" )
     {
-        let randomMS = Math.floor(Math.random() * 800 );
-        randomMS += 200;
-        setTimeout(() =>
+        if( checkGameState(currentFEN) )
         {
-            loadPosition(randomAI(fenString));
-            playerTurn = true;
-        },randomMS);
+            let randomMS = Math.floor(Math.random() * 800 );
+            randomMS += 200; // Create a random amount of time between 200 and 1000 milliseconds to delay the AI move by
+            setTimeout(() =>
+            {
+                loadPosition(randomAI(fenString));
+                playerTurn = true;
+            },randomMS);
+
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
     }
 }
 
@@ -23,6 +29,37 @@ const randomAI = function(fenString)
     let randomNumber = Math.floor(Math.random() * arraySize );
 
     return boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),array[randomNumber]));
+}
+
+const checkGameState = function(currentFEN)
+{ // Takes the current FEN and checks if it's stalemate or checkmate. Returns false if the game is over.
+    let currentBoard = fenToConventionalBoard(currentFEN);
+
+    let legalMoveArray = legalMovesFromConventionalBoard(currentBoard);
+
+    if( legalMoveArray.length == 0 )
+    { // If there are no legal moves
+        if( isTheSideToMoveInCheckChecker(currentBoard) == true )
+        { // means player to move is checkmated
+            if( playerTurn == true )
+            {
+                playerLoses();
+                return false;
+            }
+            else
+            {
+                playerWins();
+                return false;
+            }
+        }
+        else
+        { // means player to move is stalemated
+            playerStalemate();
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // Perf test
@@ -5079,6 +5116,54 @@ let gameStarter = function()
         loadPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         chosenAI(currentFEN, choice);
     }
+}
+
+const playerLoses = function()
+{
+    let message = document.createElement("p");
+    message.innerText = "You lose!";
+
+    let playAgainButton = document.createElement("button");
+    playAgainButton.innerText = "play again?";
+    playAgainButton.addEventListener("click", event =>
+    {
+        settingsScreen();
+    });
+
+    gameContainer.appendChild(message);
+    gameContainer.appendChild(playAgainButton);
+}
+
+const playerWins = function()
+{
+    let message = document.createElement("p");
+    message.innerText = "You win!";
+
+    let playAgainButton = document.createElement("button");
+    playAgainButton.innerText = "play again?";
+    playAgainButton.addEventListener("click", event =>
+    {
+        settingsScreen();
+    });
+
+    gameContainer.appendChild(message);
+    gameContainer.appendChild(playAgainButton);
+}
+
+const playerStalemate = function()
+{
+    let message = document.createElement("p");
+    message.innerText = "It's a draw by stalemate!";
+
+    let playAgainButton = document.createElement("button");
+    playAgainButton.innerText = "play again?";
+    playAgainButton.addEventListener("click", event =>
+    {
+        settingsScreen();
+    });
+
+    gameContainer.appendChild(message);
+    gameContainer.appendChild(playAgainButton);
 }
 
 let sideToMoveScript = function( menu )
