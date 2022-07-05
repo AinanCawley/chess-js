@@ -4563,8 +4563,11 @@ const createWhiteChessboard = function()
                     }
                     else
                     { // means user has selected a piece to move
-                        secondSelectedSquare = square.getAttribute("id");
-                        userMove = firstSelectedSquare + secondSelectedSquare;
+                        if( thirdSelectedSquare == "" )
+                        {
+                            secondSelectedSquare = square.getAttribute("id");
+                            userMove = firstSelectedSquare + secondSelectedSquare;
+                        }
 
                         if( legalMovesFromFEN(currentFEN).includes(userMove) )
                         {
@@ -4574,57 +4577,28 @@ const createWhiteChessboard = function()
                             chosenAI( newFEN, choice );
                             firstSelectedSquare = "";
                             secondSelectedSquare = "";
+                            thirdSelectedSquare = "";
                         }
                         else
                         {   
-                            loadPosition(currentFEN);
-                            firstSelectedSquare = "";
-                            secondSelectedSquare = "";
+                            //
+                            if( legalPromotionMovesFromFENTruncated(currentFEN).includes(userMove) )
+                            { // TODO: allow user to promote pawn
+                                thirdSelectedSquare == "promoting!";
+                                pawnPromotionSelection();
+                            }
+                            else
+                            {
+                                loadPosition(currentFEN);
+                                firstSelectedSquare = "";
+                                secondSelectedSquare = "";
+                                thirdSelectedSquare = "";
+                            }
+                            //
                         }
                     }
                 }
             });
-    
-            column.appendChild(square);
-        }
-    
-        boardFragment.appendChild(column);
-    }
-    chessboard.replaceChildren();
-    chessboard.appendChild(boardFragment);
-    chessboard.setAttribute("class", "chessboard");
-    gameContainer.replaceChildren();
-    miscContainer.replaceChildren();
-    gameContainer.appendChild(chessboard);
-
-    boardPerspective = true;
-}
-
-const createUninteractiveWhiteChessboard = function()
-{ // for pawn promotion use
-    let chessboard = document.createElement('div');
-    let boardFragment = document.createDocumentFragment();
-    
-    for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
-    {
-        let column = document.createElement("div");
-        column.classList.add("chessboardColumn");
-        for( let j = 0; j < 8; j++ )
-        {
-            let square = document.createElement('div');
-            square.classList.add("chessboardSquare");
-    
-            square.setAttribute("id", numberToLetter(i) + "" + (8-j) );
-            //^^To give each square its standard coordinate name as id
-
-            if( (i+j)%2==0 )
-            {
-                square.style.backgroundColor = lightSquareColour;
-            }
-            else
-            {
-                square.style.backgroundColor = darkSquareColour;
-            }
     
             column.appendChild(square);
         }
@@ -4689,8 +4663,11 @@ const createBlackChessboard = function()
                     }
                     else
                     { // means user has selected a piece to move
-                        secondSelectedSquare = square.getAttribute("id");
-                        userMove = firstSelectedSquare + secondSelectedSquare;
+                        if( thirdSelectedSquare == "" )
+                        {
+                            secondSelectedSquare = square.getAttribute("id");
+                            userMove = firstSelectedSquare + secondSelectedSquare;
+                        }
 
                         if( legalMovesFromFEN(currentFEN).includes(userMove) )
                         {
@@ -4700,19 +4677,22 @@ const createBlackChessboard = function()
                             chosenAI( newFEN, choice );
                             firstSelectedSquare = "";
                             secondSelectedSquare = "";
+                            thirdSelectedSquare = "";
                         }
                         else
                         {
                             //
                             if( legalPromotionMovesFromFENTruncated(currentFEN).includes(userMove) )
                             { // TODO: allow user to promote pawn
-                                createUninteractiveBlackChessboard(); // REMEMBER TODO change colours when copy pasting!
+                                thirdSelectedSquare == "promoting!";
+                                pawnPromotionSelection();
                             }
                             else
                             {
                                 loadPosition(currentFEN);
                                 firstSelectedSquare = "";
                                 secondSelectedSquare = "";
+                                thirdSelectedSquare = "";
                             }
                             //
                         }
@@ -4735,190 +4715,122 @@ const createBlackChessboard = function()
     boardPerspective = false;
 }
 
-const createUninteractiveBlackChessboard = function()
-{ // for pawn promotion use
-    gameContainer.replaceChildren();
+const pawnPromotionSelection = function()
+{
     miscContainer.replaceChildren();
     
-    let chessboard = document.createElement('div');
-    let boardFragment = document.createDocumentFragment();
-    
-    for( let i = 0; i < 8; i++ ) //This creates a chessboard from BLACK's perspective
+    if(boardPerspective==false)
     {
-        let column = document.createElement("div");
-        column.classList.add("chessboardColumn");
-        for( let j = 0; j < 8; j++ )
+        let queenButton = document.createElement("button");
+        queenButton.innerText = "\u265B";
+        queenButton.addEventListener("click", event =>
         {
-            let square = document.createElement('div');
-            square.classList.add("chessboardSquare");
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"Q"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let rookButton = document.createElement("button");
+        rookButton.innerText = "\u265C";
+        rookButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"R"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let bishopButton = document.createElement("button");
+        bishopButton.innerText = "\u265D";
+        bishopButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"B"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let knightButton = document.createElement("button");
+        knightButton.innerText = "\u265E";
+        knightButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"N"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
     
-            square.setAttribute("id", numberToLetter(7-i) + "" + (j+1) );
-            //^^To give each square its standard coordinate name as id
-
-            if( (i+j)%2==0 )
-            {
-                square.style.backgroundColor = lightSquareColour;
-            }
-            else
-            {
-                square.style.backgroundColor = darkSquareColour;
-            }
-    
-            column.appendChild(square);
-        }
-    
-        boardFragment.appendChild(column);
+        miscContainer.appendChild(queenButton);
+        miscContainer.appendChild(rookButton);
+        miscContainer.appendChild(bishopButton);
+        miscContainer.appendChild(knightButton);
     }
-    chessboard.replaceChildren();
-    chessboard.appendChild(boardFragment);
-    chessboard.setAttribute("class", "chessboard");
-
-    tempFEN = currentFEN;
-    tempFEN = tempFEN.slice(0,(tempFEN.indexOf(" ")));
-    // ^^ Remove everything from the FEN that isn't purely where the pieces are
-
-    let fenArray = Array.from(tempFEN);
-    let currentSquare = 0;
+    else
+    {
+        let queenButton = document.createElement("button");
+        queenButton.innerText = "\u2655";
+        queenButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"Q"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let rookButton = document.createElement("button");
+        rookButton.innerText = "\u2656";
+        rookButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"R"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let bishopButton = document.createElement("button");
+        bishopButton.innerText = "\u2657";
+        bishopButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"B"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
+        let knightButton = document.createElement("button");
+        knightButton.innerText = "\u2658";
+        knightButton.addEventListener("click", event =>
+        {
+            playerTurn = false;
+            let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"N"));
+            loadPosition( newFEN );
+            chosenAI( newFEN, choice );
+            firstSelectedSquare = "";
+            secondSelectedSquare = "";
+            miscContainer.replaceChildren();
+        });
     
-    fenArray.forEach(function(element,index)
-    {
-        if( isNaN(Number(fenArray[index])) )
-        {
-            if(element=="/")
-            {
-                //Do nothing with slashes
-            }
-            else
-            {
-                if(element=="P")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whitePawn");
-                    currentSquare++;
-                }
-                if(element=="p")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackPawn");
-                    currentSquare++;
-                }
-                if(element=="N")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whiteKnight");
-                    currentSquare++;
-                }
-                if(element=="n")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackKnight");
-                    currentSquare++;
-                }
-                if(element=="B")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whiteBishop");
-                    currentSquare++;
-                }
-                if(element=="b")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackBishop");
-                    currentSquare++;
-                }
-                if(element=="R")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whiteRook");
-                    currentSquare++;
-                }
-                if(element=="r")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackRook");
-                    currentSquare++;
-                }
-                if(element=="Q")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whiteQueen");
-                    currentSquare++;
-                }
-                if(element=="q")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackQueen");
-                    currentSquare++;
-                }
-                if(element=="K")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("whiteKing");
-                    currentSquare++;
-                }
-                if(element=="k")
-                {
-                    document.getElementById(numberToCoordinate(currentSquare)).classList.add("blackKing");
-                    currentSquare++;
-                }
-            }
-        }
-        else
-        {
-            fenArray[index] = Number(fenArray[index]); // coerce the string to number so that the next line of code works
-            currentSquare += fenArray[index]; 
-        }
-    });
-
-    updateVisuals();
-
-    // TODO: add pawn promotion selection here
-    let queenButton = document.createElement("button");
-    queenButton.innerText = "\u265B";
-    queenButton.addEventListener("click", event =>
-    {
-        playerTurn = false;
-        let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"Q"));
-        createBlackChessboard();
-        loadPosition( newFEN );
-        chosenAI( newFEN, choice );
-        firstSelectedSquare = "";
-        secondSelectedSquare = "";
-    });
-    let rookButton = document.createElement("button");
-    rookButton.innerText = "\u265C";
-    rookButton.addEventListener("click", event =>
-    {
-        playerTurn = false;
-        let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"R"));
-        createBlackChessboard();
-        loadPosition( newFEN );
-        chosenAI( newFEN, choice );
-        firstSelectedSquare = "";
-        secondSelectedSquare = "";
-    });
-    let bishopButton = document.createElement("button");
-    bishopButton.innerText = "\u265D";
-    bishopButton.addEventListener("click", event =>
-    {
-        playerTurn = false;
-        let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"B"));
-        createBlackChessboard();
-        loadPosition( newFEN );
-        chosenAI( newFEN, choice );
-        firstSelectedSquare = "";
-        secondSelectedSquare = "";
-    });
-    let knightButton = document.createElement("button");
-    knightButton.innerText = "\u265E";
-    knightButton.addEventListener("click", event =>
-    {
-        playerTurn = false;
-        let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"N"));
-        createBlackChessboard();
-        loadPosition( newFEN );
-        chosenAI( newFEN, choice );
-        firstSelectedSquare = "";
-        secondSelectedSquare = "";
-    });
-
-    miscContainer.appendChild(queenButton);
-    miscContainer.appendChild(rookButton);
-    miscContainer.appendChild(bishopButton);
-    miscContainer.appendChild(knightButton);
-
-    gameContainer.appendChild(chessboard);
-
-    boardPerspective = false;
+        miscContainer.appendChild(queenButton);
+        miscContainer.appendChild(rookButton);
+        miscContainer.appendChild(bishopButton);
+        miscContainer.appendChild(knightButton);
+    }
 }
 
 const loadPosition = function(fenString)
@@ -5194,7 +5106,6 @@ const resetVisuals = function()
 
 const updateVisuals = function()
 {
-
     resetVisuals();
 
     let whitePawns = document.querySelectorAll(".whitePawn");
@@ -5451,6 +5362,7 @@ let gameHistoryArray = []; // array of FENs to keep track of repetition. For the
 let playerTurn = false; // if true then it's player's turn to move. If false, it's not player's turn to move.
 let firstSelectedSquare = ""; // first square the player selected
 let secondSelectedSquare = ""; // second square the player selected
+let thirdSelectedSquare = ""; // equals "promoting!" or something when player is choosing what piece to promote a pawn into.
 let userMove = ""; // the long form algebraic move the user created by selecting two squares
 let currentBoard = 
 {
