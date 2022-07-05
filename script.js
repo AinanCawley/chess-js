@@ -6,8 +6,13 @@ const chosenAI = function(fenString,choice)
 {   
     if( choice == "random" )
     {
-        loadPosition(randomAI(fenString));
-        playerTurn = true;
+        let randomMS = Math.floor(Math.random() * 800 );
+        randomMS += 200;
+        setTimeout(() =>
+        {
+            loadPosition(randomAI(fenString));
+            playerTurn = true;
+        },randomMS);
     }
 }
 
