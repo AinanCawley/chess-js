@@ -9,6 +9,11 @@
     text-align: center;
 }
 
+#misc
+{
+    text-align: center;
+}
+
 #gameContainer
 {
     display: flex;
@@ -45,3 +50,4 @@
     font-size: 300%;
     user-select: none;
 }
+

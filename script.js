@@ -4770,6 +4770,7 @@ const createUninteractiveBlackChessboard = function()
 
     // TODO: add pawn promotion selection here
 
+
     gameContainer.appendChild(chessboard);
 
     boardPerspective = false;
@@ -5123,6 +5124,7 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
 const settingsScreen = function()
 {
     gameContainer.replaceChildren();
+    miscContainer.replaceChildren();
     
     let colourChoice = document.createElement("select");
     colourChoice.setAttribute("name", "colourChoice");
@@ -5163,8 +5165,8 @@ const settingsScreen = function()
     colourChoice.appendChild(colourChoiceOptionWhite);
     colourChoice.appendChild(colourChoiceOptionBlack);
 
-    gameContainer.appendChild(labelColourChoice);
-    gameContainer.appendChild(colourChoice);
+    miscContainer.appendChild(labelColourChoice);
+    miscContainer.appendChild(colourChoice);
 
     let opponentChoice = document.createElement("select");
     opponentChoice.setAttribute("name", "opponentChoice");
@@ -5197,8 +5199,8 @@ const settingsScreen = function()
     opponentChoice.appendChild(opponentChoiceOptionNull);
     opponentChoice.appendChild(opponentChoiceOptionRandom);
 
-    gameContainer.appendChild(labelOpponentChoice);
-    gameContainer.appendChild(opponentChoice);
+    miscContainer.appendChild(labelOpponentChoice);
+    miscContainer.appendChild(opponentChoice);
 
     let gameStartButton = document.createElement("button");
 
@@ -5208,12 +5210,13 @@ const settingsScreen = function()
         gameStarter();
     });
 
-    gameContainer.appendChild(gameStartButton);
+    miscContainer.appendChild(gameStartButton);
 }
 
 let gameStarter = function()
 {
     gameContainer.replaceChildren();
+    miscContainer.replaceChildren();
 
     if(boardPerspective == true )
     {
@@ -5242,8 +5245,8 @@ const playerLoses = function()
         settingsScreen();
     });
 
-    gameContainer.appendChild(message);
-    gameContainer.appendChild(playAgainButton);
+    miscContainer.appendChild(message);
+    miscContainer.appendChild(playAgainButton);
 }
 
 const playerWins = function()
@@ -5258,8 +5261,8 @@ const playerWins = function()
         settingsScreen();
     });
 
-    gameContainer.appendChild(message);
-    gameContainer.appendChild(playAgainButton);
+    miscContainer.appendChild(message);
+    miscContainer.appendChild(playAgainButton);
 }
 
 const playerStalemate = function()
@@ -5274,8 +5277,8 @@ const playerStalemate = function()
         settingsScreen();
     });
 
-    gameContainer.appendChild(message);
-    gameContainer.appendChild(playAgainButton);
+    miscContainer.appendChild(message);
+    miscContainer.appendChild(playAgainButton);
 }
 
 let sideToMoveScript = function( menu )
@@ -5330,6 +5333,7 @@ let currentBoard =
 //DOM STUFF
 
 const gameContainer = document.getElementById("gameContainer")
+const miscContainer = document.getElementById("misc");
 settingsScreen();
 
 //VISUAL STUFF
