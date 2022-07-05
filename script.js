@@ -4995,13 +4995,13 @@ const settingsScreen = function()
     {
         if(event.target.value == "White" )
         {
-            console.log("White!")
+            boardPerspective = true;
         }
         else
         {
             if(event.target.value == "Black" )
             {
-                console.log("Black!")
+                boardPerspective = false;
             }
         }
     });
@@ -5033,7 +5033,7 @@ const settingsScreen = function()
     {
         if(event.target.value == "random")
         {
-            console.log("random!");
+            choice = "random";
         }
         else
         {
@@ -5046,12 +5046,41 @@ const settingsScreen = function()
 
     gameContainer.appendChild(labelOpponentChoice);
     gameContainer.appendChild(opponentChoice);
+
+    let gameStartButton = document.createElement("button");
+
+    gameStartButton.innerText = "Start game!";
+    gameStartButton.addEventListener("click", event => 
+    {
+        gameStarter();
+    });
+
+    gameContainer.appendChild(gameStartButton);
+}
+
+let gameStarter = function()
+{
+    gameContainer.replaceChildren();
+
+    if(boardPerspective == true )
+    {
+        createWhiteChessboard();
+        playerTurn = true;
+        loadPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    }
+    else
+    {
+        createBlackChessboard();
+        playerTurn = false;
+        loadPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        chosenAI(currentFEN, choice);
+    }
 }
 
 let sideToMoveScript = function( menu )
 {
     console.log(menu);
-};
+}; // I've forgotten what this is about
 
 //Game state STUFF (GLOBAL VARIABLES)
 
@@ -5100,6 +5129,7 @@ let currentBoard =
 //DOM STUFF
 
 const gameContainer = document.getElementById("gameContainer")
+settingsScreen();
 
 //VISUAL STUFF
 
