@@ -1,5 +1,4 @@
 // TODO: handle checkmate and stalemate
-// TODO: setup screen where user chooses board orientation, colour they'll play, and opponent
 
 // AI stuff
 
@@ -4968,7 +4967,7 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
 }
 
 const settingsScreen = function()
-{ // TODO: finish
+{
     gameContainer.replaceChildren();
     
     let colourChoice = document.createElement("select");
