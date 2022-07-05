@@ -4987,16 +4987,65 @@ const settingsScreen = function()
     colourChoiceOptionBlack.setAttribute("value", "Black");
     colourChoiceOptionBlack.innerText = "Black";
 
+    let colourChoiceOptionNull = document.createElement("option");
+    colourChoiceOptionNull.setAttribute("value", "");
+    colourChoiceOptionNull.innerText = "";
+
     colourChoice.addEventListener( "change", event => 
     {
-        console.log(event.target.value);
+        if(event.target.value == "White" )
+        {
+            console.log("White!")
+        }
+        else
+        {
+            if(event.target.value == "Black" )
+            {
+                console.log("Black!")
+            }
+        }
     });
 
+    colourChoice.appendChild(colourChoiceOptionNull);
     colourChoice.appendChild(colourChoiceOptionWhite);
     colourChoice.appendChild(colourChoiceOptionBlack);
 
     gameContainer.appendChild(labelColourChoice);
     gameContainer.appendChild(colourChoice);
+
+    let opponentChoice = document.createElement("select");
+    opponentChoice.setAttribute("name", "opponentChoice");
+    opponentChoice.setAttribute("id", "opponentChoice");
+
+    let labelOpponentChoice = document.createElement("label");
+    labelOpponentChoice.setAttribute("for", "opponentChoice");
+    labelOpponentChoice.innerText = "Choose your AI opponent: ";
+
+    let opponentChoiceOptionNull = document.createElement("option");
+    opponentChoiceOptionNull.setAttribute("value", "");
+    opponentChoiceOptionNull.innerText = "";
+
+    let opponentChoiceOptionRandom = document.createElement("option");
+    opponentChoiceOptionRandom.setAttribute("value", "random");
+    opponentChoiceOptionRandom.innerText = "Random mover";
+
+    opponentChoice.addEventListener("change", event => 
+    {
+        if(event.target.value == "random")
+        {
+            console.log("random!");
+        }
+        else
+        {
+
+        }
+    });
+
+    opponentChoice.appendChild(opponentChoiceOptionNull);
+    opponentChoice.appendChild(opponentChoiceOptionRandom);
+
+    gameContainer.appendChild(labelOpponentChoice);
+    gameContainer.appendChild(opponentChoice);
 }
 
 let sideToMoveScript = function( menu )
