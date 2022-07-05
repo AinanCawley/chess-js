@@ -4600,7 +4600,7 @@ const createWhiteChessboard = function()
 }
 
 const createUninteractiveWhiteChessboard = function()
-{
+{ // for pawn promotion use
     let chessboard = document.createElement('div');
     let boardFragment = document.createDocumentFragment();
     
@@ -4701,9 +4701,10 @@ const createBlackChessboard = function()
                         }
                         else
                         {
+                            //
                             if( legalPromotionMovesFromFENTruncated.includes(userMove) )
                             { // TODO: allow user to promote pawn
-
+                                createUninteractiveBlackChessboard(); // REMEMBER TODO change colours when copy pasting!
                             }
                             else
                             {
@@ -4711,6 +4712,7 @@ const createBlackChessboard = function()
                                 firstSelectedSquare = "";
                                 secondSelectedSquare = "";
                             }
+                            //
                         }
                     }
                 }
@@ -4731,7 +4733,7 @@ const createBlackChessboard = function()
 }
 
 const createUninteractiveBlackChessboard = function()
-{
+{ // for pawn promotion use
     let chessboard = document.createElement('div');
     let boardFragment = document.createDocumentFragment();
     
@@ -4765,6 +4767,9 @@ const createUninteractiveBlackChessboard = function()
     chessboard.appendChild(boardFragment);
     chessboard.setAttribute("class", "chessboard");
     gameContainer.replaceChildren();
+
+    // TODO: add pawn promotion selection here
+
     gameContainer.appendChild(chessboard);
 
     boardPerspective = false;
