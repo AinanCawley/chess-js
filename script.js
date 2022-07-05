@@ -4970,33 +4970,33 @@ const guiProcessMove = function(moveString) // will check if move is legal befor
 const settingsScreen = function()
 { // TODO: finish
     gameContainer.replaceChildren();
-    let form = document.createElement("form");
-    let labelSideToMove = document.createElement("label");
-    let chooseSideToMove = document.createElement("select");
-
-    chooseSideToMove.setAttribute("id", "chooseSideToMove");
-    chooseSideToMove.setAttribute("name", "chooseSideToMove");
-    labelSideToMove.setAttribute("for", "chooseSideToMove");
-    labelSideToMove.innerText = "Choose your colour: ";
-    chooseSideToMove.setAttribute("onchange", "sideToMoveScript(this.form.chooseSideToMove);");
-
-    let optionWhite = document.createElement("option");
-    let optionBlack = document.createElement("option");
-
-    optionWhite.setAttribute("value", "White");
-    optionBlack.setAttribute("value", "Black");
-    optionWhite.innerText = "White";
-    optionBlack.innerText = "Black";
-
-    chooseSideToMove.appendChild(optionWhite);
-    chooseSideToMove.appendChild(optionBlack);
-
     
+    let colourChoice = document.createElement("select");
+    colourChoice.setAttribute("name", "colourChoice");
+    colourChoice.setAttribute("id", "colourChoice");
 
-    form.appendChild(labelSideToMove);
-    form.appendChild(chooseSideToMove);
+    let labelColourChoice = document.createElement("label");
+    labelColourChoice.setAttribute("for", "colourChoice");
+    labelColourChoice.innerText = "Choose your colour: ";
 
-    gameContainer.appendChild(form);
+    let colourChoiceOptionWhite = document.createElement("option");
+    colourChoiceOptionWhite.setAttribute("value", "White");
+    colourChoiceOptionWhite.innerText = "White";
+
+    let colourChoiceOptionBlack = document.createElement("option");
+    colourChoiceOptionBlack.setAttribute("value", "Black");
+    colourChoiceOptionBlack.innerText = "Black";
+
+    colourChoice.addEventListener( "change", event => 
+    {
+        console.log(event.target.value);
+    });
+
+    colourChoice.appendChild(colourChoiceOptionWhite);
+    colourChoice.appendChild(colourChoiceOptionBlack);
+
+    gameContainer.appendChild(labelColourChoice);
+    gameContainer.appendChild(colourChoice);
 }
 
 let sideToMoveScript = function( menu )
