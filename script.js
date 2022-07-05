@@ -303,6 +303,26 @@ const legalMovesFromFEN = function(fenString)
     return legalMovesFromConventionalBoard(fenToConventionalBoard(fenString));
 }
 
+const legalPromotionMovesFromFEN = function(fenString)
+{
+    return legalPromotionMovesFromBoard(fenToConventionalBoard(fenString));
+}
+
+const legalPromotionMovesFromBoard = function( board )
+{
+    let copyOfBoard = structuredClone(board);
+
+    let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+
+    return moveArray.filter( a => a.length > 4 );
+}
+
+const legalPromotionMovesFromFENTruncated = function( fenString )
+{
+    let array = legalPromotionMovesFromFEN( fenString );
+    return array.map( a => a.slice(0,-1) );
+}
+
 const legalStartingSquaresFromFEN = function(fenString)
 {
     let array = legalMovesFromFEN(fenString);
@@ -4556,7 +4576,7 @@ const createWhiteChessboard = function()
                             secondSelectedSquare = "";
                         }
                         else
-                        {
+                        {   
                             loadPosition(currentFEN);
                             firstSelectedSquare = "";
                             secondSelectedSquare = "";
@@ -4564,6 +4584,46 @@ const createWhiteChessboard = function()
                     }
                 }
             });
+    
+            column.appendChild(square);
+        }
+    
+        boardFragment.appendChild(column);
+    }
+    chessboard.replaceChildren();
+    chessboard.appendChild(boardFragment);
+    chessboard.setAttribute("class", "chessboard");
+    gameContainer.replaceChildren();
+    gameContainer.appendChild(chessboard);
+
+    boardPerspective = true;
+}
+
+const createUninteractiveWhiteChessboard = function()
+{
+    let chessboard = document.createElement('div');
+    let boardFragment = document.createDocumentFragment();
+    
+    for( let i = 0; i < 8; i++ ) //This creates a chessboard from WHITE's perspective
+    {
+        let column = document.createElement("div");
+        column.classList.add("chessboardColumn");
+        for( let j = 0; j < 8; j++ )
+        {
+            let square = document.createElement('div');
+            square.classList.add("chessboardSquare");
+    
+            square.setAttribute("id", numberToLetter(i) + "" + (8-j) );
+            //^^To give each square its standard coordinate name as id
+
+            if( (i+j)%2==0 )
+            {
+                square.style.backgroundColor = lightSquareColour;
+            }
+            else
+            {
+                square.style.backgroundColor = darkSquareColour;
+            }
     
             column.appendChild(square);
         }
@@ -4641,13 +4701,60 @@ const createBlackChessboard = function()
                         }
                         else
                         {
-                            loadPosition(currentFEN);
-                            firstSelectedSquare = "";
-                            secondSelectedSquare = "";
+                            if( legalPromotionMovesFromFENTruncated.includes(userMove) )
+                            { // TODO: allow user to promote pawn
+
+                            }
+                            else
+                            {
+                                loadPosition(currentFEN);
+                                firstSelectedSquare = "";
+                                secondSelectedSquare = "";
+                            }
                         }
                     }
                 }
             });
+    
+            column.appendChild(square);
+        }
+    
+        boardFragment.appendChild(column);
+    }
+    chessboard.replaceChildren();
+    chessboard.appendChild(boardFragment);
+    chessboard.setAttribute("class", "chessboard");
+    gameContainer.replaceChildren();
+    gameContainer.appendChild(chessboard);
+
+    boardPerspective = false;
+}
+
+const createUninteractiveBlackChessboard = function()
+{
+    let chessboard = document.createElement('div');
+    let boardFragment = document.createDocumentFragment();
+    
+    for( let i = 0; i < 8; i++ ) //This creates a chessboard from BLACK's perspective
+    {
+        let column = document.createElement("div");
+        column.classList.add("chessboardColumn");
+        for( let j = 0; j < 8; j++ )
+        {
+            let square = document.createElement('div');
+            square.classList.add("chessboardSquare");
+    
+            square.setAttribute("id", numberToLetter(7-i) + "" + (j+1) );
+            //^^To give each square its standard coordinate name as id
+
+            if( (i+j)%2==0 )
+            {
+                square.style.backgroundColor = lightSquareColour;
+            }
+            else
+            {
+                square.style.backgroundColor = darkSquareColour;
+            }
     
             column.appendChild(square);
         }
