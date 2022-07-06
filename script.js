@@ -1,5 +1,6 @@
 // TODO: make board lighter-coloured when AI is thinking to give user feedback
 // TODO: handle insufficient material situations
+// TODO: make robot AI more randomly select between evenly good moves
 
 // AI stuff
 
@@ -38,7 +39,7 @@ const robotAI = function(fenString)
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
     let bestEval = -9999999; // so that any move is better than the initial value
-    let bestMove = "";
+    let bestMoveArray = [];
 
     moveArray.forEach( move =>
     {   
@@ -49,20 +50,21 @@ const robotAI = function(fenString)
         {
             if( thisMoveEval == bestEval )
             {
-                if( (Math.random() * moveArray.length) < 1 )
-                {
-                    bestEval = thisMoveEval;
-                    bestMove = move;
-                }
+                bestMoveArray.push(move);
             }
             else
             {
                 bestEval = thisMoveEval;
-                bestMove = move;
+                bestMoveArray = [move];
             }
             
         }
     })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -137,8 +139,7 @@ const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
 {
     let copyOfBoard = structuredClone(board);
     let materialCount = 0;
-    if( copyOfBoard.sideToMove == true )
-    { // material count from White's perspective
+
         copyOfBoard.board.forEach(row =>
         {
             row.forEach( piece => 
@@ -186,56 +187,10 @@ const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
                 }
             })
         });
-    }
-    else
-    { // material count from Black's perspective
-        copyOfBoard.board.forEach(row =>
-            {
-                row.forEach( piece => 
-                {
-                    if( piece == "P" )
-                    {
-                        materialCount -= 100;
-                    }
-                    if( piece == "N" )
-                    {
-                        materialCount -= 300;
-                    }
-                    if( piece == "B" )
-                    {
-                        materialCount -= 300;
-                    }
-                    if( piece == "R" )
-                    {
-                        materialCount -= 500;
-                    }
-                    if( piece == "Q" )
-                    {
-                        materialCount -= 900;
-                    }
-        
-                    if( piece == "p" )
-                    {
-                        materialCount += 100;
-                    }
-                    if( piece == "n" )
-                    {
-                        materialCount += 300;
-                    }
-                    if( piece == "b" )
-                    {
-                        materialCount += 300;
-                    }
-                    if( piece == "r" )
-                    {
-                        materialCount += 500;
-                    }
-                    if( piece == "q" )
-                    {
-                        materialCount += 900;
-                    }
-                })
-            });
+    
+    if( copyOfBoard.sideToMove == false )
+    {
+        materialCount = materialCount * -1;
     }
 
     return materialCount;
