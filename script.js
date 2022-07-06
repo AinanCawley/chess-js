@@ -1,5 +1,6 @@
 // TODO: allow user to promote pawns!
 // TODO: make board lighter-coloured when AI is thinking to give user feedback
+// TODO: handle insufficient material situations
 
 // AI stuff
 
@@ -32,15 +33,60 @@ const robotAI = function(fenString)
 }
 
 const vanillaMiniMax = function(board,depth)
-{
+{  
+    let copyOfBoard = structuredClone(board);
+    let evaluation = 0;
+
     if(depth==0)
     {
-        return simpleMaterial(board); // a number
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            evaluation = simpleMaterial(copyOfBoard); // a number
+        }
+        else
+        {
+            evaluation = gameStateCheck;
+        }
     }
     else
     {
+        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+        moveArray.forEach( move => 
+        {
+            let newBoard = conventionalBoardProcessMove(copyOfBoard,move);
+            let evalNewBoard = -1 * vanillaMiniMax(newBoard,depth-1);
 
+            if( evalNewBoard > evaluation )
+            {
+                evaluation = evalNewBoard;
+            }
+        })
     }
+
+    return evaluation;
+}
+
+const checkmateOrStaleMateChecker = function(board)
+{ // takes a board and returns a negative infinity for checkmate and 0 for draw
+    let copyOfBoard = structuredClone(board);
+
+    let legalMoveArray = legalMovesFromConventionalBoard(copyOfBoard);
+
+    if( legalMoveArray.length == 0 )
+    { // If there are no legal moves
+        if( isTheSideToMoveInCheckChecker(copyOfBoard) == true )
+        { // means side to move is checkmated
+            return -100000; // super low value to indicate this is undesirable for the side to move
+        }
+        else
+        { // means side to move is stalemated
+            return 0; // it's a draw, neutral result for the side to move
+        }
+    }
+
+    return false; // there are legal moves, continue playing
 }
 
 const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
