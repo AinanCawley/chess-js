@@ -72,7 +72,7 @@ const robotAI = function(fenString)
 const vanillaMiniMax = function(board,depth)
 {  
     let copyOfBoard = structuredClone(board);
-    let evaluation = 0;
+    let evaluation = -999999; // so that any evaluation is better than the initial value
 
     if(depth==0)
     {
