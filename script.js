@@ -20,10 +20,139 @@ const chosenAI = function(fenString,choice)
             checkGameState(currentFEN); // check the game again since the AI has made a move
         }
     }
+    if( choice == "robot" )
+    {
+
+    }
+}
+
+const robotAI = function(fenString)
+{ // TODO: implement minimax to a fixed depth before trying more advanced things
+
+}
+
+const vanillaMiniMax = function(board,depth)
+{
+    if(depth==0)
+    {
+        return simpleMaterial(board); // a number
+    }
+    else
+    {
+
+    }
+}
+
+const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
+{ // TODO
+    let copyOfBoard = structuredClone(board);
+    let materialCount = 0;
+    if( copyOfBoard.sideToMove == true )
+    { // material count from White's perspective
+        copyOfBoard.board.forEach(row =>
+        {
+            row.forEach( piece => 
+            {
+                if( piece == "P" )
+                {
+                    materialCount += 100;
+                }
+                if( piece == "N" )
+                {
+                    materialCount += 300;
+                }
+                if( piece == "B" )
+                {
+                    materialCount += 300;
+                }
+                if( piece == "R" )
+                {
+                    materialCount += 500;
+                }
+                if( piece == "Q" )
+                {
+                    materialCount += 900;
+                }
+    
+                if( piece == "p" )
+                {
+                    materialCount -= 100;
+                }
+                if( piece == "n" )
+                {
+                    materialCount -= 300;
+                }
+                if( piece == "b" )
+                {
+                    materialCount -= 300;
+                }
+                if( piece == "r" )
+                {
+                    materialCount -= 500;
+                }
+                if( piece == "q" )
+                {
+                    materialCount -= 900;
+                }
+            })
+        });
+    }
+    else
+    { // material count from Black's perspective
+        copyOfBoard.board.forEach(row =>
+            {
+                row.forEach( piece => 
+                {
+                    if( piece == "P" )
+                    {
+                        materialCount -= 100;
+                    }
+                    if( piece == "N" )
+                    {
+                        materialCount -= 300;
+                    }
+                    if( piece == "B" )
+                    {
+                        materialCount -= 300;
+                    }
+                    if( piece == "R" )
+                    {
+                        materialCount -= 500;
+                    }
+                    if( piece == "Q" )
+                    {
+                        materialCount -= 900;
+                    }
+        
+                    if( piece == "p" )
+                    {
+                        materialCount += 100;
+                    }
+                    if( piece == "n" )
+                    {
+                        materialCount += 300;
+                    }
+                    if( piece == "b" )
+                    {
+                        materialCount += 300;
+                    }
+                    if( piece == "r" )
+                    {
+                        materialCount += 500;
+                    }
+                    if( piece == "q" )
+                    {
+                        materialCount += 900;
+                    }
+                })
+            });
+    }
+
+    return materialCount;
 }
 
 const randomAI = function(fenString)
-{
+{ // takes FEN and returns new FEN
     let array = legalMovesFromFEN(fenString);
     let arraySize = array.length;
     let randomNumber = Math.floor(Math.random() * arraySize );
@@ -4718,7 +4847,7 @@ const createBlackChessboard = function()
 const pawnPromotionSelection = function()
 {
     miscContainer.replaceChildren();
-    
+
     if(boardPerspective==false)
     {
         let queenButton = document.createElement("button");
