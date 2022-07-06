@@ -1,4 +1,3 @@
-// TODO: allow user to promote pawns!
 // TODO: make board lighter-coloured when AI is thinking to give user feedback
 // TODO: handle insufficient material situations
 
@@ -34,7 +33,7 @@ const chosenAI = function(fenString,choice)
 }
 
 const robotAI = function(fenString)
-{ // TODO: implement minimax to a fixed depth before trying more advanced things
+{
     let depth = 2;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
@@ -135,7 +134,7 @@ const checkmateOrStaleMateChecker = function(board)
 }
 
 const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
-{ // TODO
+{
     let copyOfBoard = structuredClone(board);
     let materialCount = 0;
     if( copyOfBoard.sideToMove == true )
@@ -4801,9 +4800,8 @@ const createWhiteChessboard = function()
                         }
                         else
                         {   
-                            //
                             if( legalPromotionMovesFromFENTruncated(currentFEN).includes(userMove) )
-                            { // TODO: allow user to promote pawn
+                            {
                                 thirdSelectedSquare == "promoting!";
                                 pawnPromotionSelection();
                             }
@@ -4814,7 +4812,6 @@ const createWhiteChessboard = function()
                                 secondSelectedSquare = "";
                                 thirdSelectedSquare = "";
                             }
-                            //
                         }
                     }
                 }
@@ -4901,9 +4898,8 @@ const createBlackChessboard = function()
                         }
                         else
                         {
-                            //
                             if( legalPromotionMovesFromFENTruncated(currentFEN).includes(userMove) )
-                            { // TODO: allow user to promote pawn
+                            {
                                 thirdSelectedSquare == "promoting!";
                                 pawnPromotionSelection();
                             }
@@ -4914,7 +4910,6 @@ const createBlackChessboard = function()
                                 secondSelectedSquare = "";
                                 thirdSelectedSquare = "";
                             }
-                            //
                         }
                     }
                 }
