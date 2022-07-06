@@ -23,13 +23,35 @@ const chosenAI = function(fenString,choice)
     }
     if( choice == "robot" )
     {
+        if( checkGameState(currentFEN) )
+        {
+            loadPosition(robotAI(fenString));
+            playerTurn = true;
 
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
     }
 }
 
 const robotAI = function(fenString)
 { // TODO: implement minimax to a fixed depth before trying more advanced things
+    let depth = 2;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any move is better than the initial value
+    let bestMove = "";
 
+    moveArray.forEach( move =>
+    {
+        let thisMoveEval = vanillaMiniMax(aiBoard,depth);
+        if( thisMoveEval > bestEval )
+        {
+            bestEval = thisMoveEval;
+            bestMove = move;
+        }
+    })
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
 const vanillaMiniMax = function(board,depth)
@@ -52,17 +74,26 @@ const vanillaMiniMax = function(board,depth)
     }
     else
     {
-        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-        moveArray.forEach( move => 
-        {
-            let newBoard = conventionalBoardProcessMove(copyOfBoard,move);
-            let evalNewBoard = -1 * vanillaMiniMax(newBoard,depth-1);
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
-            if( evalNewBoard > evaluation )
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            moveArray.forEach( move => 
             {
-                evaluation = evalNewBoard;
-            }
-        })
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,move);
+                let evalNewBoard = -1 * vanillaMiniMax(newBoard,depth-1);
+
+                if( evalNewBoard > evaluation )
+                {
+                    evaluation = evalNewBoard;
+                }
+            })
+        }
+        else
+        {
+            evaluation = gameStateCheck;
+        }
     }
 
     return evaluation;
@@ -5415,6 +5446,10 @@ const settingsScreen = function()
     opponentChoiceOptionRandom.setAttribute("value", "random");
     opponentChoiceOptionRandom.innerText = "Random mover";
 
+    let opponentChoiceOptionRobot = document.createElement("option");
+    opponentChoiceOptionRobot.setAttribute("value", "robot");
+    opponentChoiceOptionRobot.innerText = "Inefficient Basic Robot";
+
     opponentChoice.addEventListener("change", event => 
     {
         if(event.target.value == "random")
@@ -5423,12 +5458,16 @@ const settingsScreen = function()
         }
         else
         {
-
+            if(event.target.value == "robot")
+            {
+                choice = "robot";
+            }
         }
     });
 
     opponentChoice.appendChild(opponentChoiceOptionNull);
     opponentChoice.appendChild(opponentChoiceOptionRandom);
+    opponentChoice.appendChild(opponentChoiceOptionRobot);
 
     miscContainer.appendChild(labelOpponentChoice);
     miscContainer.appendChild(opponentChoice);
