@@ -135,6 +135,32 @@ const checkmateOrStaleMateChecker = function(board)
     return false; // there are legal moves, continue playing
 }
 
+const simpleFreedom = function(board) // Gives the difference in number of legal moves
+{
+    let copyOfBoardA = structuredClone(board);
+    let copyOfBoardB = structuredClone(board);
+
+    copyOfBoardB.sideToMove = !copyOfBoardB.sideToMove;
+
+    let sideToMoveCount = legalMovesFromConventionalBoard(copyOfBoardA).length;
+    let sideNotToMoveCount = legalMovesFromConventionalBoard(copyOfBoardB).length;
+
+    return sideToMoveCount - sideNotToMoveCount;
+}
+
+const simplePseudoFreedom = function(board) // Gives the difference in number of legal moves
+{
+    let copyOfBoardA = structuredClone(board);
+    let copyOfBoardB = structuredClone(board);
+
+    copyOfBoardB.sideToMove = !copyOfBoardB.sideToMove;
+
+    let sideToMoveCount = pseudolegalMovesFromConventionalBoard(copyOfBoardA).length;
+    let sideNotToMoveCount = pseudolegalMovesFromConventionalBoard(copyOfBoardB).length;
+
+    return sideToMoveCount - sideNotToMoveCount;
+}
+
 const simpleMaterial = function(board) // Classic 1, 3, 3, 5, 9 material eval
 {
     let copyOfBoard = structuredClone(board);
