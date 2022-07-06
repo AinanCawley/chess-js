@@ -42,12 +42,26 @@ const robotAI = function(fenString)
     let bestMove = "";
 
     moveArray.forEach( move =>
-    {
-        let thisMoveEval = vanillaMiniMax(aiBoard,depth);
-        if( thisMoveEval > bestEval )
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * vanillaMiniMax(newAIBoard, depth-1 );
+
+        if( thisMoveEval >= bestEval )
         {
-            bestEval = thisMoveEval;
-            bestMove = move;
+            if( thisMoveEval == bestEval )
+            {
+                if( (Math.random() * moveArray.length) < 1 )
+                {
+                    bestEval = thisMoveEval;
+                    bestMove = move;
+                }
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMove = move;
+            }
+            
         }
     })
 
