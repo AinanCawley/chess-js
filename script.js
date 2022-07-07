@@ -45,7 +45,7 @@ const chosenAI = function(fenString,choice)
 
 const robotAI = function(fenString)
 {
-    let depth = 2;
+    let depth = 3;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
     let bestEval = -9999999; // so that any move is better than the initial value
@@ -81,27 +81,26 @@ const robotAI = function(fenString)
 
 const robotAIAlphaBeta = function(fenString)
 {
-    let depth = 2;
+    let depth = 3;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
-    let alpha = -9999999; // so that any move is better than the initial value
-    let beta = 9999999;
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
     let bestMoveArray = [];
 
     moveArray.forEach( move =>
     {   
         let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
-        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -beta, -alpha );
+        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -9999999, 9999999 );
 
-        if( thisMoveEval >= alpha )
+        if( thisMoveEval >= bestEval )
         {
-            if( thisMoveEval == alpha )
+            if( thisMoveEval == bestEval )
             {
                 bestMoveArray.push(move);
             }
             else
             {
-                alpha = thisMoveEval;
+                bestEval = thisMoveEval;
                 bestMoveArray = [move];
             }
             
@@ -109,7 +108,7 @@ const robotAIAlphaBeta = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
-    console.log("Eval is: " + alpha + " centipawns"); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
