@@ -48,7 +48,7 @@ const robotAI = function(fenString)
     let depth = 3;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
-    let bestEval = -9999999; // so that any move is better than the initial value
+    let bestEval = -99999999; // so that any move is better than the initial value
     let bestMoveArray = [];
 
     moveArray.forEach( move =>
