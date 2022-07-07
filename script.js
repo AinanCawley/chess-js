@@ -55,7 +55,7 @@ const chosenAI = function(fenString,choice)
 
 const robotAI = function(fenString)
 {
-    let depth = 2;
+    let depth = 3;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
     let bestEval = -99999999; // so that any move is better than the initial value
@@ -217,6 +217,7 @@ const freedomMiniMax = function()
 const alphaBetaMiniMax = function(board,depth,alpha,beta)
 {
     let copyOfBoard = structuredClone(board);
+    let eval;
 
     if(depth==0)
     {
@@ -226,11 +227,11 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
 
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
-            alpha = simpleMaterial(copyOfBoard); // a number
+            eval = simpleMaterial(copyOfBoard); // a number
         }
         else
         {
-            alpha = gameStateCheck;
+            eval = gameStateCheck;
         }
     }
     else
@@ -240,28 +241,57 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-            moveArray.forEach( move => 
+            for( let i = 0; i < moveArray.length; i++ )
             {
-                let newBoard = conventionalBoardProcessMove(copyOfBoard,move);
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
                 let evalNewBoard = -1 * alphaBetaMiniMax(newBoard,depth-1,-beta,-alpha);
 
                 if( evalNewBoard >= beta )
                 {
-                    return beta;
+                    eval = beta;
+                    break;
                 }
                 if( evalNewBoard > alpha )
                 {
                     alpha = evalNewBoard;
+                    eval = alpha;
                 }
-            })
+            }
         }
         else
         {
             alpha = gameStateCheck;
+            eval = alpha;
         }
     }
 
-    return alpha;
+    return eval;
+}
+
+const alphaBetaMax = function(board,depth,alpha,beta)
+{
+    let copyOfBoard = structuredClone(board);
+
+    if(depth==0)
+    {
+        console.log("alphaBetaMax"); //debugging
+
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            return simpleMaterial(copyOfBoard); // a number
+        }
+        else
+        {
+            return gameStateCheck;
+        }
+    }
+    else
+    {
+        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+
+    }
 }
 
 const vanillaMiniMax = function(board,depth)
