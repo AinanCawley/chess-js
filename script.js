@@ -61,6 +61,8 @@ const robotAI = function(fenString)
     let bestEval = -99999999; // so that any move is better than the initial value
     let bestMoveArray = [];
 
+    nodeCount = 0; // debugging
+
     moveArray.forEach( move =>
     {   
         let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
@@ -83,6 +85,7 @@ const robotAI = function(fenString)
 
     console.log(bestMoveArray); // debugging
     console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
@@ -137,6 +140,8 @@ const robotAIAlphaBeta = function(fenString)
     let bestEval = -9999999; // so that any evaluation is better than the initial value
     let bestMoveArray = [];
 
+    nodeCount = 0; // debugging
+
     moveArray.forEach( move =>
     {   
         let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
@@ -159,6 +164,7 @@ const robotAIAlphaBeta = function(fenString)
 
     console.log(bestMoveArray); // debugging
     console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
@@ -221,7 +227,8 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
 
     if(depth==0)
     {
-        console.log("alphaBetaMiniMax"); //debugging
+        //debugging
+        nodeCount++;
 
         let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
@@ -301,7 +308,8 @@ const vanillaMiniMax = function(board,depth)
 
     if(depth==0)
     {
-        console.log("vanillaMiniMax"); //debugging
+        //debugging
+        nodeCount++;
 
         let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
@@ -5777,6 +5785,7 @@ let sideToMoveScript = function( menu )
 
 let choice = ""; // choice of AI to play against
 let currentFEN = ""; // current board position represented in FEN
+let nodeCount; // for debugging node count in engines
 
 let boardPerspective = true; // true for white and false for black
 let sideToMove = true;       // true for white and false for black
