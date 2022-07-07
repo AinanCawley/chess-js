@@ -41,11 +41,59 @@ const chosenAI = function(fenString,choice)
             checkGameState(currentFEN); // check the game again since the AI has made a move
         }
     }
+    if( choice == "freedom" )
+    {
+        if( checkGameState(currentFEN) )
+        {
+            loadPosition(freedomAI(fenString));
+            playerTurn = true;
+
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
+    }
 }
 
 const robotAI = function(fenString)
 {
-    let depth = 3;
+    let depth = 2;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -99999999; // so that any move is better than the initial value
+    let bestMoveArray = [];
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * vanillaMiniMax(newAIBoard, depth-1 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
+const freedomAI = function(fenString)
+{
+    let depth = 2;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
     let bestEval = -99999999; // so that any move is better than the initial value
@@ -117,6 +165,53 @@ const robotAIAlphaBeta = function(fenString)
     console.log("move chosen: " + bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
+const freedomMiniMax = function()
+{
+    let copyOfBoard = structuredClone(board);
+    let evaluation = -9999999; // so that any evaluation is better than the initial value
+
+    if(depth==0)
+    {
+        console.log("vanillaMiniMax"); //debugging
+
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            evaluation = simpleFreedom(copyOfBoard); // a number
+        }
+        else
+        {
+            evaluation = gameStateCheck;
+        }
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            moveArray.forEach( move => 
+            {
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,move);
+                let evalNewBoard = -1 * freedomMiniMax(newBoard,depth-1);
+
+                if( evalNewBoard > evaluation )
+                {
+                    evaluation = evalNewBoard;
+                }
+            })
+        }
+        else
+        {
+            evaluation = gameStateCheck;
+        }
+    }
+
+    return evaluation;
 }
 
 const alphaBetaMiniMax = function(board,depth,alpha,beta)
