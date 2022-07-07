@@ -76,6 +76,8 @@ const robotAI = function(fenString)
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
+    console.log("move chosen: " + bestMove);
+
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
@@ -108,9 +110,12 @@ const robotAIAlphaBeta = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
+    console.log("move chosen: " +)
     console.log("Eval is: " + bestEval + " centipawns"); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
