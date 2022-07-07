@@ -5009,10 +5009,14 @@ const createWhiteChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
-                            chosenAI( newFEN, choice );
-                            firstSelectedSquare = "";
-                            secondSelectedSquare = "";
-                            thirdSelectedSquare = "";
+
+                            setTimeout(() =>
+                            {
+                                chosenAI( newFEN, choice );
+                                firstSelectedSquare = "";
+                                secondSelectedSquare = "";
+                                thirdSelectedSquare = "";
+                            },50);
                         }
                         else
                         {   
@@ -5107,10 +5111,14 @@ const createBlackChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
-                            chosenAI( newFEN, choice );
-                            firstSelectedSquare = "";
-                            secondSelectedSquare = "";
-                            thirdSelectedSquare = "";
+
+                            setTimeout(() =>
+                            {
+                                chosenAI( newFEN, choice );
+                                firstSelectedSquare = "";
+                                secondSelectedSquare = "";
+                                thirdSelectedSquare = "";
+                            },50);
                         }
                         else
                         {
@@ -5159,10 +5167,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"Q"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let rookButton = document.createElement("button");
         rookButton.innerText = "\u265C";
@@ -5171,10 +5182,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"R"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let bishopButton = document.createElement("button");
         bishopButton.innerText = "\u265D";
@@ -5183,10 +5197,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"B"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let knightButton = document.createElement("button");
         knightButton.innerText = "\u265E";
@@ -5195,10 +5212,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"N"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
     
         miscContainer.appendChild(queenButton);
@@ -5215,10 +5235,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"Q"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let rookButton = document.createElement("button");
         rookButton.innerText = "\u2656";
@@ -5227,10 +5250,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"R"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let bishopButton = document.createElement("button");
         bishopButton.innerText = "\u2657";
@@ -5239,10 +5265,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"B"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
         let knightButton = document.createElement("button");
         knightButton.innerText = "\u2658";
@@ -5251,10 +5280,13 @@ const pawnPromotionSelection = function()
             playerTurn = false;
             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove+"N"));
             loadPosition( newFEN );
-            chosenAI( newFEN, choice );
-            firstSelectedSquare = "";
-            secondSelectedSquare = "";
-            miscContainer.replaceChildren();
+            setTimeout(() =>
+            {
+                chosenAI( newFEN, choice );
+                firstSelectedSquare = "";
+                secondSelectedSquare = "";
+                miscContainer.replaceChildren();
+            },50);
         });
     
         miscContainer.appendChild(queenButton);
