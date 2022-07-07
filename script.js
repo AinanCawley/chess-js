@@ -1,6 +1,5 @@
 // TODO: make board lighter-coloured when AI is thinking to give user feedback
 // TODO: handle insufficient material situations
-// TODO: make robot AI more randomly select between evenly good moves
 
 // AI stuff
 
