@@ -108,13 +108,15 @@ const freedomAI = function(fenString)
     let depth = 2;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
-    let bestEval = -99999999; // so that any move is better than the initial value
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
     let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
 
     moveArray.forEach( move =>
     {   
         let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
-        let thisMoveEval = -1 * vanillaMiniMax(newAIBoard, depth-1 );
+        let thisMoveEval = -1 * alphaBetaMaxFreedom(newAIBoard, depth-1, -9999999, 9999999 );
 
         if( thisMoveEval >= bestEval )
         {
@@ -132,7 +134,8 @@ const freedomAI = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
-    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Eval is: " + bestEval + " legal move difference"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
@@ -223,7 +226,7 @@ const robotAIAlphaBeta = function(fenString)
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
-const freedomMiniMax = function()
+const freedomMiniMax = function(board)
 {
     let copyOfBoard = structuredClone(board);
     let evaluation = -9999999; // so that any evaluation is better than the initial value
@@ -319,6 +322,94 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
         {
             alpha = gameStateCheck;
             eval = alpha;
+        }
+    }
+
+    return eval;
+}
+
+const alphaBetaMaxFreedom = function(board,depth,alpha,beta)
+{
+    let copyOfBoard = structuredClone(board);
+    let eval;
+
+    if(depth==0)
+    {
+        nodeCount++; // debugging
+
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            return simpleFreedom(copyOfBoard); // a number
+        }
+        else
+        {
+            return gameStateCheck;
+        }
+    }
+    else
+    {
+        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+        for( let i = 0; i < moveArray.length; i++ )
+        {
+            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+            let newEval = alphaBetaMinFreedom(newBoard,depth-1,alpha,beta);
+
+            if( newEval >= beta )
+            {   
+                eval = beta;
+                break;
+            }
+            if( newEval > alpha )
+            {
+                alpha = newEval;
+                eval = alpha;
+            }
+        }
+    }
+
+    return eval;
+}
+
+const alphaBetaMinFreedom = function(board,depth,alpha,beta)
+{
+    let copyOfBoard = structuredClone(board);
+    let eval;
+
+    if(depth==0)
+    {
+        nodeCount++;
+
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            return -1 * simpleFreedom(copyOfBoard); // a number
+        }
+        else
+        {
+            return -1 * gameStateCheck;
+        }
+    }
+    else
+    {
+        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+        for( let i = 0; i < moveArray.length; i++ )
+        {
+            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+            let newEval = alphaBetaMaxFreedom(newBoard,depth-1,alpha,beta);
+
+            if( newEval <= alpha )
+            {   
+                eval = alpha;
+                break;
+            }
+            if( newEval < beta )
+            {
+                beta = newEval;
+                eval = beta;
+            }
         }
     }
 
@@ -5817,7 +5908,11 @@ const settingsScreen = function()
 
     let opponentChoiceOptionRobot = document.createElement("option");
     opponentChoiceOptionRobot.setAttribute("value", "robot");
-    opponentChoiceOptionRobot.innerText = "Inefficient Basic Robot";
+    opponentChoiceOptionRobot.innerText = "Depth 3, cares about the piece point count";
+
+    let opponentChoiceOptionFreedom = document.createElement("option");
+    opponentChoiceOptionFreedom.setAttribute("value", "freedom");
+    opponentChoiceOptionFreedom.innerText = "Depth 3, cares about the quantity of legal moves";
 
     opponentChoice.addEventListener("change", event => 
     {
@@ -5829,7 +5924,14 @@ const settingsScreen = function()
         {
             if(event.target.value == "robot")
             {
-                choice = "robot";
+                choice = "robotAlphaBeta";
+            }
+            else
+            {
+                if(event.target.value == "freedom")
+                {
+                    choice = "freedom";
+                }
             }
         }
     });
@@ -5837,6 +5939,7 @@ const settingsScreen = function()
     opponentChoice.appendChild(opponentChoiceOptionNull);
     opponentChoice.appendChild(opponentChoiceOptionRandom);
     opponentChoice.appendChild(opponentChoiceOptionRobot);
+    opponentChoice.appendChild(opponentChoiceOptionFreedom);
 
     miscContainer.appendChild(labelOpponentChoice);
     miscContainer.appendChild(opponentChoice);
