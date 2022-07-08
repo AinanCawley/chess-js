@@ -1,5 +1,6 @@
 // TODO: make board lighter-coloured when AI is thinking to give user feedback
 // TODO: handle insufficient material situations
+// TODO: improve move-ordering to make AI faster
 
 // AI stuff
 
