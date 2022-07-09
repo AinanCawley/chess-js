@@ -1,6 +1,6 @@
 // TODO: handle insufficient material situations
 // TODO: improve move-ordering to make AI faster (iterative deepening?)
-// TODO: highlight the move AI played
+// TODO: highlight the move AI played (would probably be easier if chosenAI handled a given move and not a given board)
 
 // AI stuff
 
