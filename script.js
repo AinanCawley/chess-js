@@ -351,22 +351,32 @@ const alphaBetaMaxFreedom = function(board,depth,alpha,beta)
     }
     else
     {
-        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-        for( let i = 0; i < moveArray.length; i++ )
-        {
-            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
-            let newEval = alphaBetaMinFreedom(newBoard,depth-1,alpha,beta);
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
-            if( newEval >= beta )
-            {   
-                eval = beta;
-                break;
-            }
-            if( newEval > alpha )
+        if( gameStateCheck == false )
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            for( let i = 0; i < moveArray.length; i++ )
             {
-                alpha = newEval;
-                eval = alpha;
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+                let newEval = alphaBetaMinFreedom(newBoard,depth-1,alpha,beta);
+    
+                if( newEval >= beta )
+                {   
+                    eval = beta;
+                    break;
+                }
+                if( newEval > alpha )
+                {
+                    alpha = newEval;
+                    eval = alpha;
+                }
             }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
         }
     }
 
@@ -395,22 +405,32 @@ const alphaBetaMinFreedom = function(board,depth,alpha,beta)
     }
     else
     {
-        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-        for( let i = 0; i < moveArray.length; i++ )
-        {
-            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
-            let newEval = alphaBetaMaxFreedom(newBoard,depth-1,alpha,beta);
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
-            if( newEval <= alpha )
-            {   
-                eval = alpha;
-                break;
-            }
-            if( newEval < beta )
+        if(gameStateCheck == false)
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            for( let i = 0; i < moveArray.length; i++ )
             {
-                beta = newEval;
-                eval = beta;
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+                let newEval = alphaBetaMaxFreedom(newBoard,depth-1,alpha,beta);
+    
+                if( newEval <= alpha )
+                {   
+                    eval = alpha;
+                    break;
+                }
+                if( newEval < beta )
+                {
+                    beta = newEval;
+                    eval = beta;
+                }
             }
+        }
+        else
+        {
+            beta = gameStateCheck;
+            eval = beta;
         }
     }
 
@@ -439,23 +459,34 @@ const alphaBetaMax = function(board,depth,alpha,beta)
     }
     else
     {
-        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-        for( let i = 0; i < moveArray.length; i++ )
-        {
-            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
-            let newEval = alphaBetaMin(newBoard,depth-1,alpha,beta);
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
-            if( newEval >= beta )
-            {   
-                eval = beta;
-                break;
-            }
-            if( newEval > alpha )
+        if( gameStateCheck == false )
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            for( let i = 0; i < moveArray.length; i++ )
             {
-                alpha = newEval;
-                eval = alpha;
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+                let newEval = alphaBetaMin(newBoard,depth-1,alpha,beta);
+    
+                if( newEval >= beta )
+                {   
+                    eval = beta;
+                    break;
+                }
+                if( newEval > alpha )
+                {
+                    alpha = newEval;
+                    eval = alpha;
+                }
             }
         }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+        }
+        
     }
 
     return eval;
@@ -483,22 +514,32 @@ const alphaBetaMin = function(board,depth,alpha,beta)
     }
     else
     {
-        let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
-        for( let i = 0; i < moveArray.length; i++ )
-        {
-            let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
-            let newEval = alphaBetaMax(newBoard,depth-1,alpha,beta);
+        let gameStateCheck = checkmateOrStaleMateChecker(copyOfBoard);
 
-            if( newEval <= alpha )
-            {   
-                eval = alpha;
-                break;
-            }
-            if( newEval < beta )
+        if( gameStateCheck == false )
+        {
+            let moveArray = legalMovesFromConventionalBoard(copyOfBoard);
+            for( let i = 0; i < moveArray.length; i++ )
             {
-                beta = newEval;
-                eval = beta;
+                let newBoard = conventionalBoardProcessMove(copyOfBoard,moveArray[i]);
+                let newEval = alphaBetaMax(newBoard,depth-1,alpha,beta);
+    
+                if( newEval <= alpha )
+                {   
+                    eval = alpha;
+                    break;
+                }
+                if( newEval < beta )
+                {
+                    beta = newEval;
+                    eval = beta;
+                }
             }
+        }
+        else
+        {
+            beta = gameStateCheck;
+            eval = beta;
         }
     }
 
