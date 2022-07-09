@@ -5149,6 +5149,21 @@ const numberToLetter = function(number)
     }
 }
 
+const makeBoardLight = function()
+{
+    let lightSquares = document.querySelectorAll(".lightSquare");
+    let darkSquares = document.querySelectorAll(".darkSquare");
+
+    lightSquares.forEach(function(square)
+    {
+        square.style.backgroundColor = lightSquareThinkingColour;
+    });
+    darkSquares.forEach(function(square)
+    {
+        square.style.backgroundColor = darkSquareThinkingColour;
+    });
+}
+
 const numberToCoordinate = function(number)
 { //For taking a number between 0 and 63 and turning it into a coordinate. 0 is a8, 7 is h8, 63 is h1.
     return numberToLetter(number % 8) + "" + (8 - Math.floor(number/8));
@@ -5173,10 +5188,12 @@ const createWhiteChessboard = function()
 
             if( (i+j)%2==0 )
             {
+                square.classList.add("lightSquare");
                 square.style.backgroundColor = lightSquareColour;
             }
             else
-            {
+            {   
+                square.classList.add("darkSquare");
                 square.style.backgroundColor = darkSquareColour;
             }
 
@@ -5213,6 +5230,7 @@ const createWhiteChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
+                            makeBoardLight();
 
                             setTimeout(() =>
                             {
@@ -5913,7 +5931,7 @@ const settingsScreen = function()
 
     let opponentChoiceOptionFreedom = document.createElement("option");
     opponentChoiceOptionFreedom.setAttribute("value", "freedom");
-    opponentChoiceOptionFreedom.innerText = "Depth 3, cares about the quantity of legal moves";
+    opponentChoiceOptionFreedom.innerText = "Depth 2, cares about the quantity of legal moves";
 
     opponentChoice.addEventListener("change", event => 
     {
@@ -6085,5 +6103,7 @@ settingsScreen();
 
 let lightSquareColour = "hsl(80, 50%, 80%)";
 let darkSquareColour = "hsl(110, 50%, 50%)";
-let lightSquareSelectedColour = "hsl(80, 50%, 70%)";
-let darkSquareSelectedColour = "hsl(110, 50%, 40%)";
+let lightSquareSelectedColour = "hsl(80, 50%, 65%)";
+let darkSquareSelectedColour = "hsl(110, 50%, 35%)";
+let lightSquareThinkingColour = "hsl(80, 50%, 90%)";
+let darkSquareThinkingColour = "hsl(110, 50%, 60%)";
