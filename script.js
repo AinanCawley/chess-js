@@ -1,6 +1,6 @@
-// TODO: make board lighter-coloured when AI is thinking to give user feedback
 // TODO: handle insufficient material situations
 // TODO: improve move-ordering to make AI faster
+// TODO: highlight the move AI played
 
 // AI stuff
 
@@ -5374,6 +5374,7 @@ const createBlackChessboard = function()
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
                             loadPosition( newFEN );
+                            makeBoardLight();
 
                             setTimeout(() =>
                             {
