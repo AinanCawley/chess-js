@@ -5988,7 +5988,7 @@ const settingsScreen = function()
         {
             if(event.target.value == "robot")
             {
-                choice = "robotAlphaBeta";
+                choice = "robotAlphaBetaNega";
             }
             else
             {
