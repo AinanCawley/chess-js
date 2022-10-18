@@ -187,6 +187,88 @@ const robotAIAlphaBetaNega = function(fenString)
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
+const robotAIAlphaBetaNegaQ = function(fenString)
+{
+    let depth = 1;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
+const robotAIAlphaBetaNegaVariableDepth = function(fenString,vDepth)
+{
+    let depth = vDepth;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
 const robotAIAlphaBeta = function(fenString)
 {
     let depth = 3;
