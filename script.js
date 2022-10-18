@@ -200,7 +200,7 @@ const robotAIAlphaBetaNegaQ = function(fenString)
     moveArray.forEach( move =>
     {   
         let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
-        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -9999999, 9999999 );
+        let thisMoveEval = -1 * alphaBetaMiniMaxQ(newAIBoard, depth-1, -9999999, 9999999 );
 
         if( thisMoveEval >= bestEval )
         {
@@ -268,6 +268,8 @@ const robotAIAlphaBetaNegaVariableDepth = function(fenString,vDepth)
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
+
+
 
 const robotAIAlphaBeta = function(fenString)
 {
@@ -370,6 +372,64 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
+        }
+        else
+        {
+            eval = gameStateCheck;
+        }
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(board);
+            for( let i = 0; i < moveArray.length; i++ )
+            {
+                let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                let evalNewBoard = -1 * alphaBetaMiniMax(newBoard,depth-1,-beta,-alpha);
+
+                if( evalNewBoard >= beta )
+                {
+                    eval = beta;
+                    break;
+                }
+                if( evalNewBoard > alpha )
+                {
+                    alpha = evalNewBoard;
+                    eval = alpha;
+                }
+            }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+        }
+    }
+
+    return eval;
+}
+
+const alphaBetaMiniMaxQ = function(board,depth,alpha,beta)
+{
+    let eval;
+
+    if(depth==0)
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            if( isThereACapture(board) ) //TODO: make function isTHereACapture
+            {
+                //todo
+            }
+            else
+            {
+                eval = simpleMaterial(board);
+            }
         }
         else
         {
@@ -668,6 +728,843 @@ const vanillaMiniMax = function(board,depth)
     }
 
     return evaluation;
+}
+
+const whatCapturesAreLegal = function(board)
+{   //TODO: complete
+    let arrayOfPseudoLegalCaptures = whatCapturesArePseudolegal(board);
+    let arrayOfLegalCaptures = arrayOfPseudoLegalCaptures.filter(function(element)
+    {
+        let newBoard = conventionalBoardProcessMove(board,element);
+        return !isTheSideNotToMoveInCheckChecker(newBoard);
+    });
+    return arrayOfLegalCaptures;
+}
+
+const whatCapturesArePseudolegal = function(board)
+{   //TODO: redo (copy pasting doesn't work, have to selectively delete instead)
+    let arrayOfCaptures = [];
+
+    if( board.sideToMove==true )
+    { // White to move
+        for( let i = 7; i > -1; i-- )
+        {
+            for( let j = 7; j > -1; j-- )
+            { // i and j stand for rank and file 
+                if( board.board[i][j]=="Q" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthEast direction
+                        if( (i+k < 8) && (j+k < 8) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            { // This means the move will be to a friendly piece, which blocks further moves
+                                break;
+                            }
+                            else
+                            { // This means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                                break;
+                            }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthWest direction
+                        if( (i-k > -1) && (j-k > -1) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthEast direction
+                        if( (i-k > -1) && (j+k < 8) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthWest direction
+                        if( (i+k < 8) && (j-k > -1) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // South direction
+                        if( i+k < 8 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // North direction
+                        if( i-k > -1 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // West direction
+                        if( j-k > -1 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // East direction
+                        if( j+k < 8 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="R" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // South direction
+                        if( i+k < 8 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // North direction
+                        if( i-k > -1 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // West direction
+                        if( j-k > -1 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // East direction
+                        if( j+k < 8 )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="B" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthEast direction
+                        if( (i+k < 8) && (j+k < 8) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthWest direction
+                        if( (i-k > -1) && (j-k > -1) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthEast direction
+                        if( (i-k > -1) && (j+k < 8) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthWest direction
+                        if( (i+k < 8) && (j-k > -1) )
+                        {
+                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="N" )
+                {   
+                    let knightSquares = createCoordinatesKnightAttack([i,j]);
+
+                    for( let k = 0; k < knightSquares.length; k++ )
+                    {
+                        let m = knightSquares[k][0]; // m is rank of a Knight move
+                        let n = knightSquares[k][1]; // n is file of a Knight move
+
+                        
+                        
+                            if( board.board[m][n] == board.board[m][n].toLowerCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(n) + (8-m);
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        
+                    }
+                }
+                if( board.board[i][j]=="P" )
+                {
+                    if( i == 3 )
+                    { // White en passant is only possible if the pawn is on the 5th rank
+                        if( board.enPassantSquare != "" )
+                        { // if there even is an enpassant square to consider
+                            let passantJ = letterToNumber(board.enPassantSquare.slice(0,1));
+
+                            if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
+                            { // if the currently checked pawn is 1 file away from the enpassant square
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let move = startSquare + board.enPassantSquare;
+
+                                
+                                
+                                    arrayOfCaptures.push(move);
+                                
+                            }
+                        }
+                    }
+                    if( i-1 > -1 )
+                    {
+
+                        if( j+1 < 8 )
+                        { // pawn attack to the east
+                            if( i == 1 )
+                            {
+                                if( (board.board[i-1][j+1] == board.board[i-1][j+1].toLowerCase()) 
+                                && (board.board[i-1][j+1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i-1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                        
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (board.board[i-1][j+1] == board.board[i-1][j+1].toLowerCase()) 
+                                && (board.board[i-1][j+1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i-1));
+                                    let move = startSquare + endSquare;
+
+                                    
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    
+                                }
+                            }
+                        }
+                        if( j-1 > -1 )
+                        { // pawn attack to the west
+                            if( i == 1 )
+                            {
+                                if( (board.board[i-1][j-1] == board.board[i-1][j-1].toLowerCase()) 
+                                && (board.board[i-1][j-1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i-1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                      
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (board.board[i-1][j-1] == board.board[i-1][j-1].toLowerCase()) 
+                                && (board.board[i-1][j-1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i-1));
+                                    let move = startSquare + endSquare;
+
+                                    
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    { // Black to move
+        for( let i = 0; i < 8; i++ )
+        {
+            for( let j = 0; j < 8; j++ )
+            {
+                if( board.board[i][j]=="q" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthEast direction
+                        if( (i+k < 8) && (j+k < 8) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthWest direction
+                        if( (i-k > -1) && (j-k > -1) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthEast direction
+                        if( (i-k > -1) && (j+k < 8) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthWest direction
+                        if( (i+k < 8) && (j-k > -1) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // South direction
+                        if( i+k < 8 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // North direction
+                        if( i-k > -1 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // West direction
+                        if( j-k > -1 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // East direction
+                        if( j+k < 8 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="r" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // South direction
+                        if( i+k < 8 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // North direction
+                        if( i-k > -1 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // West direction
+                        if( j-k > -1 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // East direction
+                        if( j+k < 8 )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="b" )
+                {
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthEast direction
+                        if( (i+k < 8) && (j+k < 8) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthWest direction
+                        if( (i-k > -1) && (j-k > -1) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // NorthEast direction
+                        if( (i-k > -1) && (j+k < 8) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                    for( let k = 1; k < 8; k++ )
+                    { // SouthWest direction
+                        if( (i+k < 8) && (j-k > -1) )
+                        {
+                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
+                        }
+                    }
+                }
+                if( board.board[i][j]=="n" )
+                {   
+                    let knightSquares = createCoordinatesKnightAttack([i,j]);
+
+                    for( let k = 0; k < knightSquares.length; k++ )
+                    {
+                        let m = knightSquares[k][0]; // m is rank of a Knight move
+                        let n = knightSquares[k][1]; // n is file of a Knight move
+
+                    
+                            if( board.board[m][n] == board.board[m][n].toUpperCase() )
+                            { // this means a capture of an enemy piece
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let endSquare = numberToLetter(n) + (8-m);
+                                arrayOfCaptures.unshift((startSquare+endSquare));
+                            }
+                        
+                    }
+                }
+                if( board.board[i][j]=="p" )
+                {
+                    if( i == 4 )
+                    { // Black en passant is only possible if the pawn is on the 4th rank
+                        if( board.enPassantSquare != "" )
+                        { // if there even is an enpassant square to consider
+                            let passantJ = letterToNumber(board.enPassantSquare.slice(0,1));
+
+                            if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
+                            { // if the currently checked pawn is 1 file away from the enpassant square
+                                let startSquare = numberToLetter(j) + (8-i);
+                                let move = startSquare + board.enPassantSquare;
+
+                               
+                                    arrayOfCaptures.push(move);
+                                
+                            }
+                        }
+                    }
+                    if( i+1 < 8 )
+                    {
+                        if( j+1 < 8 )
+                        { // pawn attack to the east
+                            if( i == 6 )
+                            {
+                                if( (board.board[i+1][j+1] == board.board[i+1][j+1].toUpperCase()) 
+                                && (board.board[i+1][j+1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i+1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                        
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (board.board[i+1][j+1] == board.board[i+1][j+1].toUpperCase()) 
+                                && (board.board[i+1][j+1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+1) + (8-(i+1));
+                                    let move = startSquare + endSquare;
+
+                                    
+                                    
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    
+                                }
+                            }
+                        }
+                        if( j-1 > -1 )
+                        { // pawn attack to the west
+                            if( i == 6 )
+                            {
+                                if( (board.board[i+1][j-1] == board.board[i+1][j-1].toUpperCase()) 
+                                && (board.board[i+1][j-1] != ""))
+                                {
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i+1));
+                                    let moveArray = [(startSquare + endSquare + "Q"),
+                                                     (startSquare + endSquare + "R"),
+                                                     (startSquare + endSquare + "N"),
+                                                     (startSquare + endSquare + "B")];
+
+                                    for( let x = 0; x < 4; x++ )
+                                    {
+                                        
+                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                        
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if( (board.board[i+1][j-1] == board.board[i+1][j-1].toUpperCase()) 
+                                && (board.board[i+1][j-1] != ""))
+                                { // means a capture is possible
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j-1) + (8-(i+1));
+                                    let move = startSquare + endSquare;
+
+                                    
+                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return arrayOfCaptures
+    // ^^ could instead return an object to retain information of what moves are...
+    // ...captures, checks, or otherwise
 }
 
 const checkmateOrStaleMateChecker = function(board)
