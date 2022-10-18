@@ -422,18 +422,40 @@ const alphaBetaMiniMaxQ = function(board,depth,alpha,beta)
 
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
-            if( isThereACapture(board) ) //TODO: make function isTHereACapture
-            {
-                //todo
+            let captureArray = whatCapturesAreLegal(board);
+
+            if(captureArray.length == 0)
+            { // there are no captures. Position is quiet
+                eval = simpleMaterial(board);
+
+                //debugging
+                nodeCount++;
             }
             else
-            {
-                eval = simpleMaterial(board);
+            { // there are captures 
+                    for( let i = 0; i < captureArray.length; i++ )
+                    {
+                        let newBoard = conventionalBoardProcessMove(board,captureArray[i]);
+                        let evalNewBoard = -1 * alphaBetaMiniMaxQ(newBoard,0,-beta,-alpha);
+
+                        if( evalNewBoard >= beta )
+                        {
+                            eval = beta;
+                            break;
+                        }
+                        if( evalNewBoard > alpha )
+                        {
+                            alpha = evalNewBoard;
+                            eval = alpha;
+                        }
+                    }
             }
         }
         else
         {
             eval = gameStateCheck;
+            //debugging
+            nodeCount++;
         }
     }
     else
@@ -442,11 +464,11 @@ const alphaBetaMiniMaxQ = function(board,depth,alpha,beta)
 
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
-            let moveArray = legalMovesFromConventionalBoard(board);
+            let moveArray = whatCapturesAreLegal(board);
             for( let i = 0; i < moveArray.length; i++ )
             {
                 let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
-                let evalNewBoard = -1 * alphaBetaMiniMax(newBoard,depth-1,-beta,-alpha);
+                let evalNewBoard = -1 * alphaBetaMiniMaxQ(newBoard,depth-1,-beta,-alpha);
 
                 if( evalNewBoard >= beta )
                 {
@@ -741,32 +763,39 @@ const whatCapturesAreLegal = function(board)
     return arrayOfLegalCaptures;
 }
 
-const whatCapturesArePseudolegal = function(board)
+const whatCapturesArePseudolegal = function(objectBoard)
 {   //TODO: redo (copy pasting doesn't work, have to selectively delete instead)
     let arrayOfCaptures = [];
 
-    if( board.sideToMove==true )
+    if( objectBoard.sideToMove==true )
     { // White to move
         for( let i = 7; i > -1; i-- )
         {
             for( let j = 7; j > -1; j-- )
             { // i and j stand for rank and file 
-                if( board.board[i][j]=="Q" )
+                if( objectBoard.board[i][j]=="Q" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
-                            { // This means the move will be to a friendly piece, which blocks further moves
-                                break;
+                            if( objectBoard.board[i+k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
                             }
                             else
-                            { // This means a capture of an enemy piece
-                                let startSquare = numberToLetter(j) + (8-i);
-                                let endSquare = numberToLetter(j+k) + (8-(i-k));
-                                arrayOfCaptures.unshift((startSquare+endSquare));
-                                break;
+                            {
+                                if( objectBoard.board[i+k][j+k] == objectBoard.board[i+k][j+k].toUpperCase() )
+                                { // This means the move will be to a friendly piece, which blocks further moves
+                                    break;
+                                }
+                                else
+                                { // This means a capture of an enemy piece
+                                    let startSquare = numberToLetter(j) + (8-i);
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    arrayOfCaptures.unshift((startSquare+endSquare));
+                                    break;
+                                }
                             }
                         }
                     }
@@ -774,24 +803,37 @@ const whatCapturesArePseudolegal = function(board)
                     { // NorthWest direction
                         if( (i-k > -1) && (j-k > -1) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j-k] == objectBoard.board[i-k][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthEast direction
                         if( (i-k > -1) && (j+k < 8) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                               
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j+k] == objectBoard.board[i-k][j+k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
@@ -802,206 +844,290 @@ const whatCapturesArePseudolegal = function(board)
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // SouthWest direction
                         if( (i+k < 8) && (j-k > -1) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i+k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j-k] == objectBoard.board[i+k][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i+k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j] == objectBoard.board[i+k][j].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // North direction
                         if( i-k > -1 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j] == objectBoard.board[i-k][j].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // West direction
                         if( j-k > -1 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j-k] == objectBoard.board[i][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter((j-k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // East direction
                         if( j+k < 8 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j+k] == objectBoard.board[i][j+k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter((j+k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="R" )
+                if( objectBoard.board[i][j]=="R" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i+k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j] == objectBoard.board[i+k][j].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // North direction
                         if( i-k > -1 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j] == objectBoard.board[i-k][j].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // West direction
                         if( j-k > -1 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j-k] == objectBoard.board[i][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter((j-k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // East direction
                         if( j+k < 8 )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j+k] == objectBoard.board[i][j+k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter((j+k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="B" )
+                if( objectBoard.board[i][j]=="B" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i+k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j+k] == objectBoard.board[i+k][j+k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthWest direction
                         if( (i-k > -1) && (j-k > -1) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j-k] == objectBoard.board[i-k][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthEast direction
                         if( (i-k > -1) && (j+k < 8) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i-k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j+k] == objectBoard.board[i-k][j+k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
@@ -1012,27 +1138,35 @@ const whatCapturesArePseudolegal = function(board)
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // SouthWest direction
                         if( (i+k < 8) && (j-k > -1) )
                         {
-                            if( board.board[i-k][j+k] == board.board[i-k][j+k].toUpperCase() )
+                            if( objectBoard.board[i+k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j-k] == objectBoard.board[i+k][j-k].toUpperCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="N" )
+                if( objectBoard.board[i][j]=="N" )
                 {   
                     let knightSquares = createCoordinatesKnightAttack([i,j]);
 
@@ -1041,31 +1175,34 @@ const whatCapturesArePseudolegal = function(board)
                         let m = knightSquares[k][0]; // m is rank of a Knight move
                         let n = knightSquares[k][1]; // n is file of a Knight move
 
-                        
-                        
-                            if( board.board[m][n] == board.board[m][n].toLowerCase() )
+                        if( objectBoard.board[m][n] == "" )
+                        { // empty square (move is possible)
+                            
+                        }
+                        else
+                        {
+                            if( objectBoard.board[m][n] == objectBoard.board[m][n].toLowerCase() )
                             { // this means a capture of an enemy piece
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let endSquare = numberToLetter(n) + (8-m);
                                 arrayOfCaptures.unshift((startSquare+endSquare));
                             }
-                        
+                        }
                     }
                 }
-                if( board.board[i][j]=="P" )
+                if( objectBoard.board[i][j]=="P" )
                 {
                     if( i == 3 )
                     { // White en passant is only possible if the pawn is on the 5th rank
-                        if( board.enPassantSquare != "" )
+                        if( objectBoard.enPassantSquare != "" )
                         { // if there even is an enpassant square to consider
-                            let passantJ = letterToNumber(board.enPassantSquare.slice(0,1));
+                            let passantJ = letterToNumber(objectBoard.enPassantSquare.slice(0,1));
 
                             if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
                             { // if the currently checked pawn is 1 file away from the enpassant square
                                 let startSquare = numberToLetter(j) + (8-i);
-                                let move = startSquare + board.enPassantSquare;
+                                let move = startSquare + objectBoard.enPassantSquare;
 
-                                
                                 
                                     arrayOfCaptures.push(move);
                                 
@@ -1074,13 +1211,14 @@ const whatCapturesArePseudolegal = function(board)
                     }
                     if( i-1 > -1 )
                     {
+                        
 
                         if( j+1 < 8 )
                         { // pawn attack to the east
                             if( i == 1 )
                             {
-                                if( (board.board[i-1][j+1] == board.board[i-1][j+1].toLowerCase()) 
-                                && (board.board[i-1][j+1] != ""))
+                                if( (objectBoard.board[i-1][j+1] == objectBoard.board[i-1][j+1].toLowerCase()) 
+                                && (objectBoard.board[i-1][j+1] != ""))
                                 {
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j+1) + (8-(i-1));
@@ -1099,8 +1237,8 @@ const whatCapturesArePseudolegal = function(board)
                             }
                             else
                             {
-                                if( (board.board[i-1][j+1] == board.board[i-1][j+1].toLowerCase()) 
-                                && (board.board[i-1][j+1] != ""))
+                                if( (objectBoard.board[i-1][j+1] == objectBoard.board[i-1][j+1].toLowerCase()) 
+                                && (objectBoard.board[i-1][j+1] != ""))
                                 { // means a capture is possible
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j+1) + (8-(i-1));
@@ -1116,8 +1254,8 @@ const whatCapturesArePseudolegal = function(board)
                         { // pawn attack to the west
                             if( i == 1 )
                             {
-                                if( (board.board[i-1][j-1] == board.board[i-1][j-1].toLowerCase()) 
-                                && (board.board[i-1][j-1] != ""))
+                                if( (objectBoard.board[i-1][j-1] == objectBoard.board[i-1][j-1].toLowerCase()) 
+                                && (objectBoard.board[i-1][j-1] != ""))
                                 {
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j-1) + (8-(i-1));
@@ -1128,7 +1266,7 @@ const whatCapturesArePseudolegal = function(board)
 
                                     for( let x = 0; x < 4; x++ )
                                     {
-                                      
+                                        
                                             arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
                                         
                                     }
@@ -1136,8 +1274,8 @@ const whatCapturesArePseudolegal = function(board)
                             }
                             else
                             {
-                                if( (board.board[i-1][j-1] == board.board[i-1][j-1].toLowerCase()) 
-                                && (board.board[i-1][j-1] != ""))
+                                if( (objectBoard.board[i-1][j-1] == objectBoard.board[i-1][j-1].toLowerCase()) 
+                                && (objectBoard.board[i-1][j-1] != ""))
                                 { // means a capture is possible
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j-1) + (8-(i-1));
@@ -1160,13 +1298,19 @@ const whatCapturesArePseudolegal = function(board)
         {
             for( let j = 0; j < 8; j++ )
             {
-                if( board.board[i][j]=="q" )
+                if( objectBoard.board[i][j]=="q" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j+k] == objectBoard.board[i+k][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
@@ -1177,206 +1321,290 @@ const whatCapturesArePseudolegal = function(board)
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthWest direction
                         if( (i-k > -1) && (j-k > -1) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j-k] == objectBoard.board[i-k][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthEast direction
                         if( (i-k > -1) && (j+k < 8) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j+k] == objectBoard.board[i-k][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // SouthWest direction
                         if( (i+k < 8) && (j-k > -1) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j-k] == objectBoard.board[i+k][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j] == objectBoard.board[i+k][j].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // North direction
                         if( i-k > -1 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j] == objectBoard.board[i-k][j].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // West direction
                         if( j-k > -1 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j-k] == objectBoard.board[i][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter((j-k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // East direction
                         if( j+k < 8 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j+k] == objectBoard.board[i][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter((j+k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="r" )
+                if( objectBoard.board[i][j]=="r" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j] == objectBoard.board[i+k][j].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // North direction
                         if( i-k > -1 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j] == objectBoard.board[i-k][j].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // West direction
                         if( j-k > -1 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j-k] == objectBoard.board[i][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter((j-k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // East direction
                         if( j+k < 8 )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i][j+k] == objectBoard.board[i][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter((j+k)) + (8-i);
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="b" )
+                if( objectBoard.board[i][j]=="b" )
                 {
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j+k] == objectBoard.board[i+k][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
@@ -1387,61 +1615,83 @@ const whatCapturesArePseudolegal = function(board)
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthWest direction
                         if( (i-k > -1) && (j-k > -1) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j-k] == objectBoard.board[i-k][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // NorthEast direction
                         if( (i-k > -1) && (j+k < 8) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i-k][j+k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i-k][j+k] == objectBoard.board[i-k][j+k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j+k) + (8-(i-k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                     for( let k = 1; k < 8; k++ )
                     { // SouthWest direction
                         if( (i+k < 8) && (j-k > -1) )
                         {
-                            if( board.board[i+k][j+k] == board.board[i+k][j+k].toLowerCase() )
+                            if( objectBoard.board[i+k][j-k] == "" )
+                            { // empty square means a move is possible and not to break because the raytrace can continue
+                                
+                            }
+                            else
+                            {
+                                if( objectBoard.board[i+k][j-k] == objectBoard.board[i+k][j-k].toLowerCase() )
                                 { // This means the move will be to a friendly piece, which blocks further moves
                                     break;
                                 }
                                 else
                                 { // This means a capture of an enemy piece
                                     let startSquare = numberToLetter(j) + (8-i);
-                                    let endSquare = numberToLetter(j+k) + (8-(i+k));
+                                    let endSquare = numberToLetter(j-k) + (8-(i+k));
                                     arrayOfCaptures.unshift((startSquare+endSquare));
                                     break;
                                 }
+                            }
                         }
                     }
                 }
-                if( board.board[i][j]=="n" )
+                if( objectBoard.board[i][j]=="n" )
                 {   
                     let knightSquares = createCoordinatesKnightAttack([i,j]);
 
@@ -1450,30 +1700,35 @@ const whatCapturesArePseudolegal = function(board)
                         let m = knightSquares[k][0]; // m is rank of a Knight move
                         let n = knightSquares[k][1]; // n is file of a Knight move
 
-                    
-                            if( board.board[m][n] == board.board[m][n].toUpperCase() )
+                        if( objectBoard.board[m][n] == "" )
+                        { // empty square (move is possible)
+                            
+                        }
+                        else
+                        {
+                            if( objectBoard.board[m][n] == objectBoard.board[m][n].toUpperCase() )
                             { // this means a capture of an enemy piece
                                 let startSquare = numberToLetter(j) + (8-i);
                                 let endSquare = numberToLetter(n) + (8-m);
                                 arrayOfCaptures.unshift((startSquare+endSquare));
                             }
-                        
+                        }
                     }
                 }
-                if( board.board[i][j]=="p" )
+                if( objectBoard.board[i][j]=="p" )
                 {
                     if( i == 4 )
                     { // Black en passant is only possible if the pawn is on the 4th rank
-                        if( board.enPassantSquare != "" )
+                        if( objectBoard.enPassantSquare != "" )
                         { // if there even is an enpassant square to consider
-                            let passantJ = letterToNumber(board.enPassantSquare.slice(0,1));
+                            let passantJ = letterToNumber(objectBoard.enPassantSquare.slice(0,1));
 
                             if( ((Number(passantJ) - j) == 1) || ((Number(passantJ) - j) == -1) )
                             { // if the currently checked pawn is 1 file away from the enpassant square
                                 let startSquare = numberToLetter(j) + (8-i);
-                                let move = startSquare + board.enPassantSquare;
+                                let move = startSquare + objectBoard.enPassantSquare;
 
-                               
+                                
                                     arrayOfCaptures.push(move);
                                 
                             }
@@ -1481,12 +1736,14 @@ const whatCapturesArePseudolegal = function(board)
                     }
                     if( i+1 < 8 )
                     {
+                        
+
                         if( j+1 < 8 )
                         { // pawn attack to the east
                             if( i == 6 )
                             {
-                                if( (board.board[i+1][j+1] == board.board[i+1][j+1].toUpperCase()) 
-                                && (board.board[i+1][j+1] != ""))
+                                if( (objectBoard.board[i+1][j+1] == objectBoard.board[i+1][j+1].toUpperCase()) 
+                                && (objectBoard.board[i+1][j+1] != ""))
                                 {
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j+1) + (8-(i+1));
@@ -1505,14 +1762,13 @@ const whatCapturesArePseudolegal = function(board)
                             }
                             else
                             {
-                                if( (board.board[i+1][j+1] == board.board[i+1][j+1].toUpperCase()) 
-                                && (board.board[i+1][j+1] != ""))
+                                if( (objectBoard.board[i+1][j+1] == objectBoard.board[i+1][j+1].toUpperCase()) 
+                                && (objectBoard.board[i+1][j+1] != ""))
                                 { // means a capture is possible
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j+1) + (8-(i+1));
                                     let move = startSquare + endSquare;
 
-                                    
                                     
                                         arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
                                     
@@ -1523,8 +1779,8 @@ const whatCapturesArePseudolegal = function(board)
                         { // pawn attack to the west
                             if( i == 6 )
                             {
-                                if( (board.board[i+1][j-1] == board.board[i+1][j-1].toUpperCase()) 
-                                && (board.board[i+1][j-1] != ""))
+                                if( (objectBoard.board[i+1][j-1] == objectBoard.board[i+1][j-1].toUpperCase()) 
+                                && (objectBoard.board[i+1][j-1] != ""))
                                 {
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j-1) + (8-(i+1));
@@ -1543,8 +1799,8 @@ const whatCapturesArePseudolegal = function(board)
                             }
                             else
                             {
-                                if( (board.board[i+1][j-1] == board.board[i+1][j-1].toUpperCase()) 
-                                && (board.board[i+1][j-1] != ""))
+                                if( (objectBoard.board[i+1][j-1] == objectBoard.board[i+1][j-1].toUpperCase()) 
+                                && (objectBoard.board[i+1][j-1] != ""))
                                 { // means a capture is possible
                                     let startSquare = numberToLetter(j) + (8-i);
                                     let endSquare = numberToLetter(j-1) + (8-(i+1));
@@ -1558,11 +1814,12 @@ const whatCapturesArePseudolegal = function(board)
                         }
                     }
                 }
+                
             }
         }
     }
 
-    return arrayOfCaptures
+    return arrayOfCaptures;
     // ^^ could instead return an object to retain information of what moves are...
     // ...captures, checks, or otherwise
 }
