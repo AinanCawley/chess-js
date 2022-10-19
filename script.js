@@ -62,6 +62,16 @@ const chosenAI = function(fenString,choice)
             checkGameState(currentFEN); // check the game again since the AI has made a move
         }
     }
+    if( choice == "hybrid" )
+    {
+        if( checkGameState(currentFEN) )
+        {
+            loadPosition(robotAIAlphaBetaNegaHybrid(fenString));
+            playerTurn = true;
+
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
+    }
 }
 
 const robotAI = function(fenString)
@@ -148,6 +158,88 @@ const freedomAI = function(fenString)
 
 const robotAIAlphaBetaNega = function(fenString)
 {
+    let depth = 3;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMax(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
+const robotAIAlphaBetaNegaHybrid = function(fenString)
+{
+    let depth = 3;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMaxHybrid(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
+const robotAIAlphaBetaNegaMove = function(fenString)
+{ //TODO implement alphaBetaMiniMaxMove
     let depth = 3;
     let aiBoard = fenToConventionalBoard(fenString);
     let moveArray = legalMovesFromConventionalBoard(aiBoard);
@@ -410,6 +502,156 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
     }
 
     return eval;
+}
+
+const alphaBetaMiniMaxHybrid = function(board,depth,alpha,beta)
+{
+    let eval;
+
+    if(depth==0)
+    {
+        //debugging
+        nodeCount++;
+
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            eval = simpleMaterial(board); // a number
+            eval = eval + ((simpleFreedom(board))*29);// a number
+        }
+        else
+        {
+            eval = gameStateCheck;
+        }
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(board);
+            for( let i = 0; i < moveArray.length; i++ )
+            {
+                let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                let evalNewBoard = -1 * alphaBetaMiniMax(newBoard,depth-1,-beta,-alpha);
+
+                if( evalNewBoard >= beta )
+                {
+                    eval = beta;
+                    break;
+                }
+                if( evalNewBoard > alpha )
+                {
+                    alpha = evalNewBoard;
+                    eval = alpha;
+                }
+            }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+        }
+    }
+
+    return eval;
+}
+
+const alphaBetaMiniMaxMove = function(board,depth,alphaTHIS,betaTHIS,evalAndMove)
+{ //TODO: figure out why it's suicidal (doesn't work)
+    let alpha = alphaTHIS;
+    let beta = betaTHIS;
+    let eval;
+    let moveToConsiderFirst = evalAndMove[1];
+    let bestMove;
+
+    if(depth==0)
+    {
+        //debugging
+        nodeCount++;
+
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            eval = simpleMaterial(board); // a number
+        }
+        else
+        {
+            eval = gameStateCheck;
+        }
+
+        bestMove = "";
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(board);
+
+            bestMove = moveArray[0]; //to initialise bestMove with a move from the array
+
+            if(moveToConsiderFirst != "")
+            {
+
+                console.log(moveArray); //debugging
+                moveArray.splice(moveArray.indexOf(moveToConsiderFirst),1);
+                moveArray.unshift(moveToConsiderFirst);
+                console.log(moveArray); //debugging
+
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxMove(newBoard,depth-1,-beta,-alpha,[0,""])[0];
+
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                        bestMove = moveArray[i];
+                    }
+                }
+            }
+            else
+            {
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxMove(newBoard,depth-1,-beta,-alpha,[0,""])[0];
+    
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                        bestMove = moveArray[i];
+                    }
+                }
+            }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+
+            bestMove = "";
+        }
+    }
+
+    return [eval,bestMove];
 }
 
 const alphaBetaMiniMaxQ = function(board,depth,alpha,beta)
@@ -753,7 +995,7 @@ const vanillaMiniMax = function(board,depth)
 }
 
 const whatCapturesAreLegal = function(board)
-{   //TODO: complete
+{
     let arrayOfPseudoLegalCaptures = whatCapturesArePseudolegal(board);
     let arrayOfLegalCaptures = arrayOfPseudoLegalCaptures.filter(function(element)
     {
@@ -764,7 +1006,7 @@ const whatCapturesAreLegal = function(board)
 }
 
 const whatCapturesArePseudolegal = function(objectBoard)
-{   //TODO: redo (copy pasting doesn't work, have to selectively delete instead)
+{
     let arrayOfCaptures = [];
 
     if( objectBoard.sideToMove==true )
@@ -7193,6 +7435,10 @@ const settingsScreen = function()
     opponentChoiceOptionFreedom.setAttribute("value", "freedom");
     opponentChoiceOptionFreedom.innerText = "Depth 2, cares about the quantity of legal moves";
 
+    let opponentChoiceOptionHybrid = document.createElement("option");
+    opponentChoiceOptionHybrid.setAttribute("value", "hybrid");
+    opponentChoiceOptionHybrid.innerText = "Depth 3, cares about both piece values and move availability";
+
     opponentChoice.addEventListener("change", event => 
     {
         if(event.target.value == "random")
@@ -7211,6 +7457,13 @@ const settingsScreen = function()
                 {
                     choice = "freedom";
                 }
+                else
+                {
+                    if(event.target.value == "hybrid")
+                    {
+                        choice = "hybrid";
+                    }
+                }
             }
         }
     });
@@ -7219,6 +7472,7 @@ const settingsScreen = function()
     opponentChoice.appendChild(opponentChoiceOptionRandom);
     opponentChoice.appendChild(opponentChoiceOptionRobot);
     opponentChoice.appendChild(opponentChoiceOptionFreedom);
+    opponentChoice.appendChild(opponentChoiceOptionHybrid);
 
     miscContainer.appendChild(labelOpponentChoice);
     miscContainer.appendChild(opponentChoice);
