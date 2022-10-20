@@ -72,6 +72,16 @@ const chosenAI = function(fenString,choice)
             checkGameState(currentFEN); // check the game again since the AI has made a move
         }
     }
+    if( choice == "negaExtension" )
+    {
+        if( checkGameState(currentFEN) )
+        {
+            loadPosition(robotAIAlphaBetaNegaExtension(fenString));
+            playerTurn = true;
+
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
+    }
 }
 
 const robotAI = function(fenString)
@@ -580,9 +590,6 @@ const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
                 {
                     let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
                     let evalNewBoard = -1 * alphaBetaMiniMaxExtension(newBoard,depth,-beta,-alpha);
-
-                    //debugging
-                    console.log("extended");
 
                     if( evalNewBoard >= beta )
                     {
@@ -7547,19 +7554,23 @@ const settingsScreen = function()
 
     let opponentChoiceOptionRandom = document.createElement("option");
     opponentChoiceOptionRandom.setAttribute("value", "random");
-    opponentChoiceOptionRandom.innerText = "Random mover";
+    opponentChoiceOptionRandom.innerText = "AI One: Random mover";
 
     let opponentChoiceOptionRobot = document.createElement("option");
     opponentChoiceOptionRobot.setAttribute("value", "robot");
-    opponentChoiceOptionRobot.innerText = "Depth 3, cares about the piece point count";
+    opponentChoiceOptionRobot.innerText = "AI Three: Depth 3, cares about the piece point count";
 
     let opponentChoiceOptionFreedom = document.createElement("option");
     opponentChoiceOptionFreedom.setAttribute("value", "freedom");
-    opponentChoiceOptionFreedom.innerText = "Depth 2, cares about the quantity of legal moves";
+    opponentChoiceOptionFreedom.innerText = "AI Two: Depth 2, cares about the quantity of legal moves";
 
     let opponentChoiceOptionHybrid = document.createElement("option");
     opponentChoiceOptionHybrid.setAttribute("value", "hybrid");
-    opponentChoiceOptionHybrid.innerText = "Depth 3, cares about both piece values and move availability";
+    opponentChoiceOptionHybrid.innerText = "AI Four: Depth 3, cares about both piece values and move availability";
+
+    let opponentChoiceOptionExtension = document.createElement("option");
+    opponentChoiceOptionExtension.setAttribute("value", "negaExtension");
+    opponentChoiceOptionExtension.innerText = "AI Five: Depth 3+, only cares about piece values but selectively looks deeper into forcing lines";
 
     opponentChoice.addEventListener("change", event => 
     {
@@ -7585,6 +7596,13 @@ const settingsScreen = function()
                     {
                         choice = "hybrid";
                     }
+                    else
+                    {
+                        if( event.target.value == "negaExtension")
+                        {
+                            choice = "negaExtension";
+                        }
+                    }
                 }
             }
         }
@@ -7592,9 +7610,10 @@ const settingsScreen = function()
 
     opponentChoice.appendChild(opponentChoiceOptionNull);
     opponentChoice.appendChild(opponentChoiceOptionRandom);
-    opponentChoice.appendChild(opponentChoiceOptionRobot);
     opponentChoice.appendChild(opponentChoiceOptionFreedom);
+    opponentChoice.appendChild(opponentChoiceOptionRobot);
     opponentChoice.appendChild(opponentChoiceOptionHybrid);
+    opponentChoice.appendChild(opponentChoiceOptionExtension);
 
     miscContainer.appendChild(labelOpponentChoice);
     miscContainer.appendChild(opponentChoice);
