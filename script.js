@@ -197,6 +197,47 @@ const robotAIAlphaBetaNega = function(fenString)
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
+const robotAIAlphaBetaNegaExtension = function(fenString)
+{
+    let depth = 3;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMaxExtension(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            
+        }
+    })
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
 const robotAIAlphaBetaNegaHybrid = function(fenString)
 {
     let depth = 3;
@@ -228,7 +269,7 @@ const robotAIAlphaBetaNegaHybrid = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
-    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Eval is: " + (bestEval/2) + " centipawns"); // debugging
     console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
@@ -491,6 +532,87 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
                 {
                     alpha = evalNewBoard;
                     eval = alpha;
+                }
+            }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+        }
+    }
+
+    return eval;
+}
+
+const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
+{
+    let eval;
+
+    if(depth==0)
+    {
+        //debugging
+        nodeCount++;
+
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            eval = simpleMaterial(board); // a number
+        }
+        else
+        {
+            eval = gameStateCheck;
+        }
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(board);
+
+
+            if((moveArray.length) < 3)
+            {
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxExtension(newBoard,depth,-beta,-alpha);
+
+                    //debugging
+                    console.log("extended");
+
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                    }
+                }
+            }
+            else
+            {
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxExtension(newBoard,depth-1,-beta,-alpha);
+    
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                    }
                 }
             }
         }
