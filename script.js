@@ -5582,8 +5582,8 @@ const pieceActivityFromBoard = function(objectBoard)
 
     let minorPiecePenalty = 0;
 
-    let bishopActivity = bishopMoves*5+bishopAttacks*8;
-    let knightActivity = knightMoves*8+knightAttacks*13;
+    let bishopActivity = bishopMoves*13+bishopAttacks*17;
+    let knightActivity = knightMoves*30+knightAttacks*40;
 
     if((numberBishops!=0)&&(numberKnights!=0))
     {
@@ -5605,8 +5605,8 @@ const pieceActivityFromBoard = function(objectBoard)
     }
     
 
-    return ((pawnMoves*3+rookMoves*2+queenMoves)+
-            (pawnAttacks*8+rookAttacks*3+queenAttacks*2)+
+    return ((pawnMoves*8+rookMoves*5+queenMoves)+
+            (pawnAttacks*21+rookAttacks*7+queenAttacks*1.3)+
             bishopActivity+knightActivity-minorPiecePenalty);
 }
 
