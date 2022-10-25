@@ -648,7 +648,8 @@ const alphaBetaMiniMaxHybrid = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            eval = eval + ((simpleFreedom(board))*29);// a number
+            //eval = eval + ((simpleFreedom(board))*29);// a number
+            eval += pieceActivityEval(board);//temporary
         }
         else
         {
@@ -4629,6 +4630,9 @@ const pieceActivityFromBoard = function(objectBoard)
     let rookAttacks = 0;
     let queenAttacks = 0;
 
+    let numberKnights = 0; //Keep track of number of minor pieces so that eval...
+    let numberBishops = 0; //...doesn't over-prioritise making a single piece super "active"
+
     if( objectBoard.sideToMove==true )
     { // White to move
         for( let i = 7; i > -1; i-- )
@@ -4907,6 +4911,9 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="B" )
                 {
+
+                    numberBishops++;
+
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
@@ -4998,6 +5005,9 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="N" )
                 {   
+
+                    numberKnights++;
+
                     let knightSquares = createCoordinatesKnightAttack([i,j]);
 
                     for( let k = 0; k < knightSquares.length; k++ )
@@ -5374,6 +5384,9 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="b" )
                 {
+
+                    numberBishops++;
+
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
@@ -5465,6 +5478,9 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="n" )
                 {   
+
+                    numberKnights++;
+
                     let knightSquares = createCoordinatesKnightAttack([i,j]);
 
                     for( let k = 0; k < knightSquares.length; k++ )
@@ -5564,8 +5580,34 @@ const pieceActivityFromBoard = function(objectBoard)
         }
     }
 
-    return ((pawnMoves*3+knightMoves*5+bishopMoves*3+rookMoves*2+queenMoves)+
-            (pawnAttacks*8+knightAttacks*8+bishopAttacks*5+rookAttacks*3+queenAttacks*2));
+    let minorPiecePenalty = 0;
+
+    let bishopActivity = bishopMoves*5+bishopAttacks*8;
+    let knightActivity = knightMoves*8+knightAttacks*13;
+
+    if((numberBishops!=0)&&(numberKnights!=0))
+    {
+        if(numberBishops==numberKnights)
+        {
+            minorPiecePenalty = Math.abs(knightActivity-bishopActivity)/2;
+        }
+        else
+        {
+            if(numberBishops==numberKnights*2)
+            {
+                minorPiecePenalty = Math.abs(knightActivity*2-bishopActivity)/2;
+            }
+            if(numberKnights==numberBishops*2)
+            {
+                minorPiecePenalty = Math.abs(knightActivity-bishopActivity*2)/2;
+            }
+        }    
+    }
+    
+
+    return ((pawnMoves*3+rookMoves*2+queenMoves)+
+            (pawnAttacks*8+rookAttacks*3+queenAttacks*2)+
+            bishopActivity+knightActivity-minorPiecePenalty);
 }
 
 const isTheSideNotToMoveInCheckChecker = function(objectBoard)
