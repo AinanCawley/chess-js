@@ -2,6 +2,7 @@
 // TODO: improve move-ordering to make AI faster (iterative deepening?)
 // TODO: highlight the move AI played (would probably be easier if chosenAI handled a given move and not a given board)
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
+// TODO: Implement King safety and an opening book (for AI Six perhaps)
 
 // AI stuff
 
@@ -5602,7 +5603,7 @@ const pieceActivityFromBoard = function(objectBoard)
             }
         }    
     }
-    
+    //TODO check if Rook activity is severely underrated compared to minor piece activity (which might result in Rooks not being developed)
 
     return ((pawnMoves*8+rookMoves*5+queenMoves)+
             (pawnAttacks*21+rookAttacks*7+queenAttacks*1.3)+
