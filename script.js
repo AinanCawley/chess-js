@@ -238,7 +238,7 @@ const robotAIAlphaBetaNegaExtension = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
-    console.log("Eval is: " + bestEval + " centipawns"); // debugging
+    console.log("Eval is: " + (bestEval/2) + " centipawns"); // debugging // eval is halved because of piece activity inclusion
     console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
@@ -279,7 +279,7 @@ const robotAIAlphaBetaNegaHybrid = function(fenString)
     })
 
     console.log(bestMoveArray); // debugging
-    console.log("Eval is: " + (bestEval/2) + " centipawns"); // debugging
+    console.log("Eval is: " + (bestEval/2) + " centipawns"); // debugging // eval is halved because of piece freedom inclusion
     console.log("Nodecount is: " + nodeCount); // debugging
 
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
@@ -569,7 +569,7 @@ const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            
+            eval += pieceActivityEval(board)/2; //proabably float number
         }
         else
         {
@@ -585,7 +585,7 @@ const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
             let moveArray = legalMovesFromConventionalBoard(board);
 
 
-            if((moveArray.length) < 3)
+            if((moveArray.length) < 6) // move extension check
             {
                 for( let i = 0; i < moveArray.length; i++ )
                 {
@@ -648,8 +648,7 @@ const alphaBetaMiniMaxHybrid = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            //eval = eval + ((simpleFreedom(board))*29);// a number
-            eval += pieceActivityEval(board);//temporary
+            eval = eval + ((simpleFreedom(board))*29);// a number
         }
         else
         {
@@ -8575,7 +8574,7 @@ const settingsScreen = function()
 
     let opponentChoiceOptionExtension = document.createElement("option");
     opponentChoiceOptionExtension.setAttribute("value", "negaExtension");
-    opponentChoiceOptionExtension.innerText = "AI Five: Depth 3+, only cares about piece values but selectively looks deeper into forcing lines";
+    opponentChoiceOptionExtension.innerText = "AI Five: Depth 3+, looks deeper into forcing lines. Pieces and their activity eval.";
 
     opponentChoice.addEventListener("change", event => 
     {
