@@ -569,7 +569,7 @@ const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            eval += pieceActivityEval(board)/2; //proabably float number
+            eval += pieceActivityEval(board)/4; //proabably float number
         }
         else
         {
