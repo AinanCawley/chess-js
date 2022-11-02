@@ -83,6 +83,16 @@ const chosenAI = function(fenString,choice)
             checkGameState(currentFEN); // check the game again since the AI has made a move
         }
     }
+    if( choice == "kingSafe")
+    {
+        if( checkGameState(currentFEN) )
+        {
+            loadPosition(robotAIAlphaBetaKingSafe(fenString));
+            playerTurn = true;
+
+            checkGameState(currentFEN); // check the game again since the AI has made a move
+        }
+    }
 }
 
 const robotAI = function(fenString)
@@ -208,6 +218,82 @@ const robotAIAlphaBetaNega = function(fenString)
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
+const robotAIAlphaBetaKingSafe = function(fenString)
+{
+    let depth = 3;
+    let aiBoard = fenToConventionalBoard(fenString);
+    let moveArray = legalMovesFromConventionalBoard(aiBoard);
+    let bestEval = -9999999; // so that any evaluation is better than the initial value
+    let bestMoveArray = [];
+
+    nodeCount = 0; // debugging
+
+    moveArray.forEach( move =>
+    {   
+        let newAIBoard = conventionalBoardProcessMove(aiBoard, move);
+        let thisMoveEval = -1 * alphaBetaMiniMaxKingSafe(newAIBoard, depth-1, -9999999, 9999999 );
+
+        if(move=="e8g8")
+        {
+            thisMoveEval += 35;
+        }
+        if(move=="e8c8")
+        {
+            thisMoveEval += 35;
+        }
+        if(move=="e1g1")
+        {
+            thisMoveEval += 35;
+        }
+        if(move=="e1c1")
+        {
+            thisMoveEval += 35;
+        }
+
+        if( thisMoveEval >= bestEval )
+        {
+            if( thisMoveEval == bestEval )
+            {
+                bestMoveArray.push(move);
+            }
+            else
+            {
+                bestEval = thisMoveEval;
+                bestMoveArray = [move];
+            }
+            console.log(move+" "+thisMoveEval);//debugging
+        }
+    })
+
+    if(bestMoveArray.includes("e1g1"))
+    {
+        bestMoveArray = ["e1g1"];
+    }
+    if(bestMoveArray.includes("e1c1"))
+    {
+        bestMoveArray = ["e1c1"];
+    }
+    if(bestMoveArray.includes("e8g8"))
+    {
+        bestMoveArray = ["e8g8"];
+    }
+    if(bestMoveArray.includes("e8c8"))
+    {
+        bestMoveArray = ["e8c8"];
+    }
+
+    console.log(bestMoveArray); // debugging
+    console.log("Eval is: " + (bestEval/2) + " centipawns"); // debugging // eval is halved because of piece activity inclusion
+    console.log("Nodecount is: " + nodeCount); // debugging
+
+    
+    let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
+
+    console.log("move chosen: " + bestMove);
+
+    return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
+}
+
 const robotAIAlphaBetaNegaExtension = function(fenString)
 {
     let depth = 3;
@@ -234,7 +320,7 @@ const robotAIAlphaBetaNegaExtension = function(fenString)
                 bestEval = thisMoveEval;
                 bestMoveArray = [move];
             }
-            
+            console.log(move+" "+thisMoveEval);//debugging
         }
     })
 
@@ -556,6 +642,86 @@ const alphaBetaMiniMax = function(board,depth,alpha,beta)
     return eval;
 }
 
+const alphaBetaMiniMaxKingSafe = function(board,depth,alpha,beta)
+{
+    let eval;
+
+    if(depth==0)
+    {
+        //debugging
+        nodeCount++;
+
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            eval = simpleMaterial(board); // a number
+            eval += pieceActivityEval(board)*50; //proabably float number
+            eval += kingSafetyEval(board)*110;
+        }
+        else
+        {
+            eval = gameStateCheck;
+        }
+    }
+    else
+    {
+        let gameStateCheck = checkmateOrStaleMateChecker(board);
+
+        if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
+        {
+            let moveArray = legalMovesFromConventionalBoard(board);
+
+
+            if((moveArray.length) < 6) // move extension check
+            {
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxExtension(newBoard,depth,-beta,-alpha);
+
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                    }
+                }
+            }
+            else
+            {
+                for( let i = 0; i < moveArray.length; i++ )
+                {
+                    let newBoard = conventionalBoardProcessMove(board,moveArray[i]);
+                    let evalNewBoard = -1 * alphaBetaMiniMaxExtension(newBoard,depth-1,-beta,-alpha);
+    
+                    if( evalNewBoard >= beta )
+                    {
+                        eval = beta;
+                        break;
+                    }
+                    if( evalNewBoard > alpha )
+                    {
+                        alpha = evalNewBoard;
+                        eval = alpha;
+                    }
+                }
+            }
+        }
+        else
+        {
+            alpha = gameStateCheck;
+            eval = alpha;
+        }
+    }
+
+    return eval;
+}
+
 const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
 {
     let eval;
@@ -570,7 +736,8 @@ const alphaBetaMiniMaxExtension = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            eval += pieceActivityEval(board)/4; //proabably float number
+            eval += pieceActivityEval(board)*50; //proabably float number
+            eval += Math.random()*4-2; //to add some variety into moves
         }
         else
         {
@@ -2391,7 +2558,7 @@ const perfTestVerbose = function(board,depth)
     return "Total is: " + total + " nodes";
 };
 // ENGINE STUFF
-
+//vv also referred to as objectBoard vv
 let engineBoard = 
 {
     board: [["","","","","","","",""],
@@ -4616,6 +4783,120 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
     // ...captures, checks, or otherwise
 }
 
+const kingSafetyEval = function(objectBoard)
+{
+    let clone = structuredClone(objectBoard);
+    clone.sideToMove = !clone.sideToMove;
+
+    return (kingSafetyFromBoard(objectBoard))-(kingSafetyFromBoard(clone));
+}
+
+const kingSafetyFromBoard = function(objectBoard)
+{
+    if(objectBoard.sideToMove==true)
+    {//white to move
+        if(isThereAnEnemyQueen(objectBoard))
+        {
+            if((objectBoard.canWhiteCastleKingside==true)||(objectBoard.canWhiteCastleQueenside==true))
+            {
+                return 0; //king still in centre but can castle so it's not bad
+            }
+            else
+            { //King can't castle... is it because King HAS castled?
+                let coor = findCoordinatesOfKing(objectBoard,true);
+                if(coor[0]==7)
+                {
+                    if((coor[1]==0)
+                    ||(coor[1]==1)
+                    ||(coor[1]==7))
+                    {
+                        return 1; //king castled! Good
+                    }
+                    else
+                    {
+                        return -1; //king is in the centre and can't castle and there are queens. Bad.
+                    }
+                }
+                else
+                {
+                    return -1; //King can't castle and is in the centre with Queens on the board; bad.
+                }
+            }
+        }
+        else
+        { //no enemy queen
+            return 0; // no enemy queen so King isn't in danger (simplistic)
+        }
+    }
+    else
+    {//black to move
+        if(isThereAnEnemyQueen(objectBoard))
+        {
+            if((objectBoard.canBlackCastleKingside==true)||(objectBoard.canBlackCastleQueenside==true))
+            {
+                return 0; //king still in centre but can castle so it's not bad
+            }
+            else
+            { //King can't castle... is it because King HAS castled?
+                let coor = findCoordinatesOfKing(objectBoard,false);
+                if(coor[0]==0)
+                {
+                    if((coor[1]==0)
+                    ||(coor[1]==1)
+                    ||(coor[1]==7))
+                    {
+                        return 1; //king castled! Good
+                    }
+                    else
+                    {
+                        return -1; //king is in the centre and can't castle and there are queens. Bad.
+                    }
+                }
+                else
+                {
+                    return -1; //King can't castle and is in the centre with Queens on the board; bad.
+                }
+            }
+        }
+        else
+        { //no enemy queen
+            return 0; // no enemy queen so King isn't in danger (simplistic)
+        }
+    }
+}
+
+const isThereAnEnemyQueen = function(objectBoard)
+{
+    if(objectBoard.sideToMove==true)
+    { //white's perspective so look for Black Queen
+        for(let x = 0; x < 8; x++)
+        {
+            for(let y = 0; y < 8; y++)
+            {
+                if(objectBoard.board[x][y]=="q")
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    else
+    { //black's perspective so look for White Queen
+        for(let x = 0; x < 8; x++)
+        {
+            for(let y = 0; y < 8; y++)
+            {
+                if(objectBoard.board[x][y]=="Q")
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 const pieceActivityFromBoard = function(objectBoard)
 {
     let pawnMoves = 0;
@@ -4632,6 +4913,9 @@ const pieceActivityFromBoard = function(objectBoard)
 
     let numberKnights = 0; //Keep track of number of minor pieces so that eval...
     let numberBishops = 0; //...doesn't over-prioritise making a single piece super "active"
+    let numberRooks = 0;
+    let numberQueens = 0;
+    let numberPawns = 0;
 
     if( objectBoard.sideToMove==true )
     { // White to move
@@ -4641,6 +4925,8 @@ const pieceActivityFromBoard = function(objectBoard)
             { // i and j stand for rank and file 
                 if( objectBoard.board[i][j]=="Q" )
                 {
+                    numberQueens++;
+
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
@@ -4820,6 +5106,8 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="R" )
                 {
+                    numberRooks++;
+
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
@@ -5030,6 +5318,8 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="P" )
                 {
+                    numberPawns++;
+
                     if( i == 3 )
                     { // White en passant is only possible if the pawn is on the 5th rank
                         if( objectBoard.enPassantSquare != "" )
@@ -5114,6 +5404,8 @@ const pieceActivityFromBoard = function(objectBoard)
             {
                 if( objectBoard.board[i][j]=="q" )
                 {
+                    numberQueens++;
+
                     for( let k = 1; k < 8; k++ )
                     { // SouthEast direction
                         if( (i+k < 8) && (j+k < 8) )
@@ -5293,6 +5585,8 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="r" )
                 {
+                    numberRooks++;
+
                     for( let k = 1; k < 8; k++ )
                     { // South direction
                         if( i+k < 8 )
@@ -5503,6 +5797,8 @@ const pieceActivityFromBoard = function(objectBoard)
                 }
                 if( objectBoard.board[i][j]=="p" )
                 {
+                    numberPawns++;
+
                     if( i == 4 )
                     { // Black en passant is only possible if the pawn is on the 4th rank
                         if( objectBoard.enPassantSquare != "" )
@@ -5580,34 +5876,135 @@ const pieceActivityFromBoard = function(objectBoard)
         }
     }
 
-    let minorPiecePenalty = 0;
-
-    let bishopActivity = bishopMoves*13+bishopAttacks*17;
-    let knightActivity = knightMoves*30+knightAttacks*40;
-
-    if((numberBishops!=0)&&(numberKnights!=0))
+    if(numberKnights>0)
     {
-        if(numberBishops==numberKnights)
+        knightMoves /= numberKnights;
+        knightAttacks /= numberKnights;
+    }
+    if(numberBishops>0)
+    {
+        bishopMoves /= numberBishops;
+        bishopAttacks /= numberBishops;
+    }
+    if(numberRooks>0)
+    {
+        rookMoves /= numberRooks;
+        rookAttacks /= numberRooks;
+    }
+    if(numberQueens>0)
+    {
+        queenMoves /= numberQueens;
+        queenAttacks /= numberQueens;
+    }
+    if(numberPawns>0)
+    {
+        pawnMoves /= numberPawns; //pawnMoves should now range between 0 to 2.
+        //pawnAttacks isn't normalised for number of pawns because having an edge of 1 or 2 pawn attacks is indication of a good position
+    }
+
+    let knightActivity = knightMoves/8 + knightAttacks/4; //max moves = 1, max attacks = 2
+    let bishopActivity = bishopMoves/13 + bishopAttacks/(52/17); //max moves = 1, max attacks = 2
+    let rookActivity = rookMoves/14 + rookAttacks/(28/9); //max moves = 1, max attacks = 2
+    let queenActivity = queenMoves/27 + queenAttacks/(216/35); //max moves = 1, max attacks = 2
+
+    //knight having 0.625 is fine.
+    //bishop having 0.5 is fine.
+    //rook having 0.1 is fine.
+    //queen having 0.1 is fine.
+
+    //knight having 1 is excellent.
+    //bishop having 0.8 is excellent.
+    //rook having 0.5 is excellent.
+    //queen having 0.5 is excellent.
+
+
+
+    if(bishopActivity>0.5)
+    {
+        if(bishopActivity>0.8)
         {
-            minorPiecePenalty = Math.abs(knightActivity-bishopActivity)/2;
+            bishopActivity = 1.5+(bishopActivity-0.8)/4.8; //up to 1.75
         }
         else
         {
-            if(numberBishops==numberKnights*2)
-            {
-                minorPiecePenalty = Math.abs(knightActivity*2-bishopActivity)/2;
-            }
-            if(numberKnights==numberBishops*2)
-            {
-                minorPiecePenalty = Math.abs(knightActivity-bishopActivity*2)/2;
-            }
-        }    
+            bishopActivity = 1+(bishopActivity-0.5)*(1.6666); //up to 1.5
+        }
     }
-    //TODO check if Rook activity is severely underrated compared to minor piece activity (which might result in Rooks not being developed)
+    else
+    {
+        bishopActivity *= 2; //up to 1
+    }
 
-    return ((pawnMoves*8+rookMoves*5+queenMoves)+
-            (pawnAttacks*21+rookAttacks*7+queenAttacks*1.3)+
-            bishopActivity+knightActivity-minorPiecePenalty);
+    if(knightActivity>0.625)
+    {
+        if(knightActivity>1)
+        {
+            knightActivity = 1.5+(knightActivity-1)/4; //up to 1.75
+        }
+        else
+        {
+            knightActivity = 1+(knightActivity-0.625)*(1.3333); //up to 1.5
+        }
+    }
+    else
+    {
+        knightActivity *= 1.6; //up to 1
+    }
+
+    if(queenActivity>0.1)
+    {
+        if(queenActivity>0.5)
+        {
+            queenActivity = 1.5+(queenActivity-0.5)/6; //up to 1.75
+        }
+        else
+        {
+            queenActivity = 1+(queenActivity-0.1)*(1.25); //up to 1.5
+        }
+    }
+    else
+    {
+        queenActivity *= 10; //up to 1
+    }
+
+    if(rookActivity>0.1)
+    {
+        if(rookActivity>0.5)
+        {
+            rookActivity = 1.5+(rookActivity-0.5)/6; //up to 1.75
+        }
+        else
+        {
+            rookActivity = 1+(rookActivity-0.1)*(1.25); //up to 1.5
+        }
+    }
+    else
+    {
+        rookActivity *= 10; //up to 1
+    }
+    
+    
+    //...pawnMoves should be weighted high and pawnAttacks very high to evaluate pawn forks as almost winning a piece
+    //piece activities now sum from 0 to 7.
+
+    
+    //console.log(bishopActivity+" is Bishop activity");
+    //console.log(knightActivity+" is Knight activity");
+    //console.log(rookActivity+" is Rook activity");
+    //console.log(queenActivity+" is Queen activity");
+    //console.log(pawnMoves+" is Pawn activity");
+    //console.log(pawnAttacks+" is pawn attacks");
+   // debugging
+
+    
+    //console.log(numberPawns);
+    //console.log(numberKnights);
+    //console.log(numberBishops);
+    //console.log(numberRooks);
+    //console.log(numberQueens);//debugging
+
+
+    return (knightActivity+bishopActivity+rookActivity*0.75+queenActivity/16)+(pawnMoves/2+pawnAttacks);
 }
 
 const isTheSideNotToMoveInCheckChecker = function(objectBoard)
@@ -8577,6 +8974,11 @@ const settingsScreen = function()
     opponentChoiceOptionExtension.setAttribute("value", "negaExtension");
     opponentChoiceOptionExtension.innerText = "AI Five: Depth 3+, looks deeper into forcing lines. Pieces and their activity eval.";
 
+    let opponentChoiceOptionKingSafe = document.createElement("option");
+    opponentChoiceOptionKingSafe.setAttribute("value", "kingSafe");
+    opponentChoiceOptionKingSafe.innerText = "AI Six: Depth 3+, same as AI Five but also cares about castling.";
+
+
     opponentChoice.addEventListener("change", event => 
     {
         if(event.target.value == "random")
@@ -8607,6 +9009,13 @@ const settingsScreen = function()
                         {
                             choice = "negaExtension";
                         }
+                        else
+                        {
+                            if( event.target.value == "kingSafe")
+                            {
+                                choice = "kingSafe";
+                            }
+                        }
                     }
                 }
             }
@@ -8619,6 +9028,7 @@ const settingsScreen = function()
     opponentChoice.appendChild(opponentChoiceOptionRobot);
     opponentChoice.appendChild(opponentChoiceOptionHybrid);
     opponentChoice.appendChild(opponentChoiceOptionExtension);
+    opponentChoice.appendChild(opponentChoiceOptionKingSafe);
 
     miscContainer.appendChild(labelOpponentChoice);
     miscContainer.appendChild(opponentChoice);

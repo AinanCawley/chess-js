@@ -34,6 +34,12 @@ This AI combines both caring about the number of legal moves (like AI Two), and 
 
 This AI evaluates leaf nodes using a more nuanced piece activity eval instead of simply the number of legal moves. For example, the number of King moves doesn't come into the equation, and the number of Queen moves is hardly considered (to discourage early Queen play in the opening and the Queen usually has many more moves anyways). 
 
-Another nuance is that there is a penalty for a disparity in minor piece activity. What this means is that the AI would much rather have all the minor pieces "somewhat developed" instead of having just a single piece "super developed".
+Another nuance is that improving a specific type of piece has diminishing returns. For example, it is preferred to develop both Bishop and Knights to an adequate level instead of "super developing" the Knights but leaving the Bishops undeveloped.
 
 A depth 3 alpha-beta minimax is used but with SEARCH EXTENSION! This AI uses search extensions to look deeper into lines with forcing moves. If there are 5 or less legal moves, the search depth isn't decremented. 
+
+# AI Six
+
+"AI Six: Depth 3+, same as AI Five but also cares about castling"
+
+This AI is the same as AI Five but with an evaluation component that depends on whether Queens are on the board. If there are Queens, having castled is preferred to having castling rights which is preferred to having lost castling rights.
