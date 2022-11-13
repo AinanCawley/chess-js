@@ -3,6 +3,7 @@
 // TODO: highlight the move AI played (would probably be easier if chosenAI handled a given move and not a given board)
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
 // TODO: Implement King safety and an opening book (for AI Six perhaps)
+// TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
 
 // AI stuff
 
@@ -239,7 +240,7 @@ const robotAIAlphaBetaKingSafe = function(fenString)
         }
         if(move=="e8c8")
         {
-            thisMoveEval += 35;
+            thisMoveEval += 45;
         }
         if(move=="e1g1")
         {
@@ -247,7 +248,7 @@ const robotAIAlphaBetaKingSafe = function(fenString)
         }
         if(move=="e1c1")
         {
-            thisMoveEval += 35;
+            thisMoveEval += 45;
         }
 
         if( thisMoveEval >= bestEval )
@@ -6004,7 +6005,7 @@ const pieceActivityFromBoard = function(objectBoard)
     //console.log(numberQueens);//debugging
 
 
-    return (knightActivity+bishopActivity+rookActivity*0.75+queenActivity/16)+(pawnMoves/2+pawnAttacks);
+    return (knightActivity+bishopActivity+rookActivity*0.75+queenActivity/16)+(pawnMoves+pawnAttacks*4);
 }
 
 const isTheSideNotToMoveInCheckChecker = function(objectBoard)
