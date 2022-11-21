@@ -23,6 +23,8 @@ const chosenAI = function(fenString,choice)
             },randomMS);
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "robot" )
@@ -135,7 +137,7 @@ const robotAI = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -178,7 +180,7 @@ const freedomAI = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -221,7 +223,7 @@ const robotAIAlphaBetaNega = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -299,7 +301,7 @@ const robotAIAlphaBetaKingSafe = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -342,7 +344,7 @@ const robotAIAlphaBetaNegaExtension = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -385,7 +387,7 @@ const robotAIAlphaBetaNegaHybrid = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -553,7 +555,7 @@ const robotAIAlphaBeta = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
-    moveArray.push(bestMove);
+    gameHistoryArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -2499,7 +2501,7 @@ const randomAI = function(fenString)
     let arraySize = array.length;
     let randomNumber = Math.floor(Math.random() * arraySize );
     let chosenMove = array[randomNumber];
-    moveArray.push(chosenMove);
+    gameHistoryArray.push(chosenMove);
 
     return boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),chosenMove));
 }
@@ -8279,9 +8281,10 @@ const createWhiteChessboard = function()
                         {
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
-                            moveArray.push(userMove);
+                            gameHistoryArray.push(userMove);
                             loadPosition( newFEN );
                             makeBoardLight();
+                            highlightLastMove();
 
                             setTimeout(() =>
                             {
@@ -8385,9 +8388,10 @@ const createBlackChessboard = function()
                         {
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
-                            moveArray.push(userMove);
+                            gameHistoryArray.push(userMove);
                             loadPosition( newFEN );
                             makeBoardLight();
+                            highlightLastMove();
 
                             setTimeout(() =>
                             {
@@ -8623,8 +8627,8 @@ const loadPosition = function(fenString)
         }
     }
 
-    gameHistoryArray = []; // start anew
-    gameHistoryArray.push(fenString);
+    //gameHistoryArray = []; // start anew
+    //gameHistoryArray.push(fenString);
 
 
     if(boardPerspective==true)
@@ -9132,6 +9136,49 @@ const playerStalemate = function()
     miscContainer.appendChild(playAgainButton);
 }
 
+let highlightLastMove = function()
+{
+    let lastMove = gameHistoryArray[gameHistoryArray.length - 1];
+    let square1 = lastMove.slice(0,2);
+    let square2 = lastMove.slice(2,4);
+
+    let square1UI = document.getElementById(square1);
+    let square2UI = document.getElementById(square2);
+
+    if(isSquareLight(square1))
+    {
+        square1UI.style.backgroundColor = lightSquareSelectedColour;
+    }
+    else
+    {
+        square1UI.style.backgroundColor = darkSquareSelectedColour;
+    }
+
+    if(isSquareLight(square2))
+    {
+        square2UI.style.backgroundColor = lightSquareSelectedColour;
+    }
+    else
+    {
+        square2UI.style.backgroundColor = darkSquareSelectedColour;
+    }
+}
+
+let isSquareLight = function(squareString)
+{
+    let coordinate1 = letterToNumber(squareString.slice(0,1)) + 1; //should be a number from 1 to 8
+    let coordinate2 = Number(squareString.slice(1,2)); //should be a number from 1 to 8
+
+    if((coordinate1 + coordinate2)%2 == 0 )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 let sideToMoveScript = function( menu )
 {
     console.log(menu);
@@ -9153,7 +9200,7 @@ let enPassantSquare = ""; // the coordinate behind a pawn that was pushed 2 squa
 
 let halfMoveClock = ""; // number of halfmoves (plies) since a capture or a pawn move was made. For the 50-move draw rule.
 let fullMoveNumber = ""; // number of fullmoves. Increments after every Black turn. Starts at 1.
-let gameHistoryArray = []; // array of FENs to keep track of repetition. For the draw by repetition rule.
+let gameHistoryArray = []; // array of longmove notations
 
 let playerTurn = false; // if true then it's player's turn to move. If false, it's not player's turn to move.
 let firstSelectedSquare = ""; // first square the player selected
