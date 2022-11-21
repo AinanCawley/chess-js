@@ -3,7 +3,6 @@
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
 // TODO: Implement an opening book (for AI Six perhaps)
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
-// TODO: move-ordering can be improved by putting pawn captures first
 
 // AI stuff
 
@@ -2818,6 +2817,7 @@ const legalStartingSquaresFromFEN = function(fenString)
 const pseudolegalMovesFromConventionalBoard = function(objectBoard)
 {
     let arrayOfChecks = [];
+    let arrayOfPawnCaptures = [];
     let arrayOfCaptures = [];
     let arrayOfSpecialMoves = []; // for promotion and castling
     let arrayOfOtherMoves = [];
@@ -3452,7 +3452,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 }
                                 else
                                 {
-                                    arrayOfCaptures.push(move);
+                                    arrayOfPawnCaptures.push(move);
                                 }
                             }
                         }
@@ -3539,7 +3539,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         }
                                         else
                                         {
-                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                            arrayOfPawnCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
                                         }
                                     }
                                 }
@@ -3559,7 +3559,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     }
                                     else
                                     {
-                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                        arrayOfPawnCaptures.unshift(move); // unshift because pawn captures are usually better
                                     }
                                 }
                             }
@@ -3586,7 +3586,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         }
                                         else
                                         {
-                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                            arrayOfPawnCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
                                         }
                                     }
                                 }
@@ -3606,7 +3606,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     }
                                     else
                                     {
-                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                        arrayOfPawnCaptures.unshift(move); // unshift because pawn captures are usually better
                                     }
                                 }
                             }
@@ -4446,7 +4446,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                 }
                                 else
                                 {
-                                    arrayOfCaptures.push(move);
+                                    arrayOfPawnCaptures.push(move);
                                 }
                             }
                         }
@@ -4533,7 +4533,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         }
                                         else
                                         {
-                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                            arrayOfPawnCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
                                         }
                                     }
                                 }
@@ -4553,7 +4553,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     }
                                     else
                                     {
-                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                        arrayOfPawnCaptures.unshift(move); // unshift because pawn captures are usually better
                                     }
                                 }
                             }
@@ -4580,7 +4580,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                         }
                                         else
                                         {
-                                            arrayOfCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
+                                            arrayOfPawnCaptures.unshift(moveArray[x]); // unshift since promotion is probably better than usual captures
                                         }
                                     }
                                 }
@@ -4600,7 +4600,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
                                     }
                                     else
                                     {
-                                        arrayOfCaptures.unshift(move); // unshift because pawn captures are usually better
+                                        arrayOfPawnCaptures.unshift(move); // unshift because pawn captures are usually better
                                     }
                                 }
                             }
@@ -4812,7 +4812,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
         }
     }
 
-    return arrayOfChecks.concat(arrayOfCaptures.concat(arrayOfSpecialMoves,arrayOfOtherMoves));
+    return arrayOfChecks.concat(arrayOfPawnCaptures.concat(arrayOfCaptures.concat(arrayOfSpecialMoves,arrayOfOtherMoves)));
     // ^^ could instead return an object to retain information of what moves are...
     // ...captures, checks, or otherwise
 }
