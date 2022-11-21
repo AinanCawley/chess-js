@@ -19,6 +19,7 @@ const chosenAI = function(fenString,choice)
             setTimeout(() =>
             {
                 loadPosition(randomAI(fenString));
+                highlightLastMove();
                 playerTurn = true;
             },randomMS);
 
@@ -35,6 +36,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "robotAlphaBeta" )
@@ -45,6 +48,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "robotAlphaBetaNega" )
@@ -55,6 +60,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "freedom" )
@@ -65,6 +72,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "hybrid" )
@@ -75,6 +84,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "negaExtension" )
@@ -85,6 +96,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
     if( choice == "kingSafe")
@@ -95,6 +108,8 @@ const chosenAI = function(fenString,choice)
             playerTurn = true;
 
             checkGameState(currentFEN); // check the game again since the AI has made a move
+
+            highlightLastMove();
         }
     }
 }
@@ -9073,6 +9088,8 @@ let gameStarter = function()
     gameContainer.replaceChildren();
     miscContainer.replaceChildren();
 
+    gameHistoryArray = [];
+
     if(boardPerspective == true )
     {
         createWhiteChessboard();
@@ -9138,29 +9155,32 @@ const playerStalemate = function()
 
 let highlightLastMove = function()
 {
-    let lastMove = gameHistoryArray[gameHistoryArray.length - 1];
-    let square1 = lastMove.slice(0,2);
-    let square2 = lastMove.slice(2,4);
-
-    let square1UI = document.getElementById(square1);
-    let square2UI = document.getElementById(square2);
-
-    if(isSquareLight(square1))
+    if(gameHistoryArray.length > 0)
     {
-        square1UI.style.backgroundColor = lightSquareSelectedColour;
-    }
-    else
-    {
-        square1UI.style.backgroundColor = darkSquareSelectedColour;
-    }
-
-    if(isSquareLight(square2))
-    {
-        square2UI.style.backgroundColor = lightSquareSelectedColour;
-    }
-    else
-    {
-        square2UI.style.backgroundColor = darkSquareSelectedColour;
+        let lastMove = gameHistoryArray[gameHistoryArray.length - 1];
+        let square1 = lastMove.slice(0,2);
+        let square2 = lastMove.slice(2,4);
+    
+        let square1UI = document.getElementById(square1);
+        let square2UI = document.getElementById(square2);
+    
+        if(isSquareLight(square1))
+        {
+            square1UI.style.backgroundColor = lightSquareSelectedColour;
+        }
+        else
+        {
+            square1UI.style.backgroundColor = darkSquareSelectedColour;
+        }
+    
+        if(isSquareLight(square2))
+        {
+            square2UI.style.backgroundColor = lightSquareSelectedColour;
+        }
+        else
+        {
+            square2UI.style.backgroundColor = darkSquareSelectedColour;
+        }
     }
 }
 
