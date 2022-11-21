@@ -687,7 +687,7 @@ const alphaBetaMiniMaxKingSafe = function(board,depth,alpha,beta)
         if( gameStateCheck == false ) // there's no checkmate or stalemate so resort to material count
         {
             eval = simpleMaterial(board); // a number
-            eval += pieceActivityEval(board)*50; //proabably float number
+            eval += pieceActivityEval(board)*50; //probably float number
             eval += kingSafetyEval(board)*110;
         }
         else
@@ -4812,7 +4812,7 @@ const pseudolegalMovesFromConventionalBoard = function(objectBoard)
         }
     }
 
-    return arrayOfChecks.concat(arrayOfPawnCaptures.concat(arrayOfCaptures.concat(arrayOfSpecialMoves,arrayOfOtherMoves)));
+    return arrayOfPawnCaptures.concat(arrayOfCaptures.concat(arrayOfChecks.concat(arrayOfSpecialMoves,arrayOfOtherMoves)));
     // ^^ could instead return an object to retain information of what moves are...
     // ...captures, checks, or otherwise
 }
