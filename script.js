@@ -118,15 +118,19 @@ const chosenAI = function(fenString,choice)
                 }
                 else
                 {
-                    gameHistoryArray.push(bookResult);
-                    loadPosition(boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),bookResult)));
-                    playerTurn = true;
+                    let randomMS = Math.random() * 500 + 200;
+                    setTimeout(() =>
+                    {
+                        gameHistoryArray.push(bookResult);
+                        loadPosition(boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),bookResult)));
+                        playerTurn = true;
 
-                    checkGameState(currentFEN); // check the game again since the AI has made a move
+                        checkGameState(currentFEN); // check the game again since the AI has made a move
 
-                    highlightLastMove();
+                        highlightLastMove();
 
-                    inBook = true;
+                        inBook = true;
+                    },randomMS);
                 }
             }
             else
@@ -150,9 +154,35 @@ const openingBook = function()
         {
             if(gameHistoryArray[0] == "e2e4")
             {
-                return "e7e5";
+                let r = Math.random() * 2;
+
+                if( r > 0.7 )
+                {
+                    return "e7e5";
+                }
+                else
+                {
+                    return "c7c5";
+                }
             }
             if(gameHistoryArray[0] == "d2d4")
+            {
+                let r = Math.random() * 2;
+
+                if( r > 0.7 )
+                {
+                    return "d7d5";
+                }
+                else
+                {
+                    return "g8f6";
+                }
+            }
+            if(gameHistoryArray[0] == "c2c4")
+            {
+                return "e7e5";
+            }
+            if(gameHistoryArray[0] == "g1f3")
             {
                 return "d7d5";
             }
@@ -168,6 +198,13 @@ const openingBook = function()
                         return "b8c6";
                     }
                 }
+                if(gameHistoryArray[1] == "c7c5")
+                {
+                    if(gameHistoryArray[2] == "g1f3")
+                    {
+                        return "b8c6";
+                    }
+                }
             }
             if(gameHistoryArray[0] == "d2d4")
             {
@@ -176,6 +213,13 @@ const openingBook = function()
                     if(gameHistoryArray[2] == "c2c4")
                     {
                         return "e7e6";
+                    }
+                }
+                if(gameHistoryArray[1] == "g8f6")
+                {
+                    if(gameHistoryArray[2] == "c2c4")
+                    {
+                        return "g7g6";
                     }
                 }
             }
@@ -210,18 +254,70 @@ const openingBook = function()
                     {
                         return "g1f3";
                     }
+                    if(gameHistoryArray[1] == "e7e6")
+                    {
+                        return "d2d4";
+                    }
+                    if(gameHistoryArray[1] == "c7c6")
+                    {
+                        return "d2d4";
+                    }
+                    if(gameHistoryArray[1] == "c7c5")
+                    {
+                        return "g1f3";
+                    }
+                    if(gameHistoryArray[1] == "b7b6")
+                    {
+                        return "d2d4";
+                    }
+                    if(gameHistoryArray[1] == "g7g6")
+                    {
+                        return "d2d4";
+                    }
+                    if(gameHistoryArray[1] == "d7d6")
+                    {
+                        return "d2d4";
+                    }
+                    if(gameHistoryArray[1] == "g8f6")
+                    {
+                        return "e4e5";
+                    }
                 }
                 if(gameHistoryArray[0] == "d2d4")
                 {
                     if(gameHistoryArray[1] == "d7d5")
                     {
-                        return "g1f3";
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "g8f6")
+                    {
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "e7e6")
+                    {
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "c7c6")
+                    {
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "d7d6")
+                    {
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "g7g6")
+                    {
+                        return "c2c4";
+                    }
+                    if(gameHistoryArray[1] == "b7b6")
+                    {
+                        return "c2c4";
                     }
                 }
             }
             if(gameHistoryArray.length == 4)
             {
-
+            
             }
             if(gameHistoryArray.length == 6)
             {
