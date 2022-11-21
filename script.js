@@ -147,6 +147,151 @@ const chosenAI = function(fenString,choice)
 }
 
 const openingBook = function()
+{
+    let moves = "";
+
+    for(let i = 0; i < gameHistoryArray.length; i++)
+    {
+        if(i % 2 == 1)
+        {
+            moves += gameHistoryArray[i] + " ";
+        }
+        else
+        {
+            moves += (i/2+1) + ". " + gameHistoryArray[i] + " ";
+        }
+    }
+
+    // moves will be of the form "1. e2e4 c7c5 2. g1f3 b8c6 " or "1. e2e4 e7e5 2. g1f3 b8c6 3. f1c4 " for example
+
+    if(moves=="")
+    {
+        let r = Math.random() * 2;
+        if( r > 0.9 )
+        {
+            return "e2e4";
+        }
+        else
+        {
+            return "d2d4";
+        }
+    }
+
+    if(moves=="1. e2e4 ")
+    {
+        let r = Math.random() * 2;
+        if( r > 0.9 )
+        {
+            return "e7e5";
+        }
+        else
+        {
+            return "c7c5";
+        }
+    }
+    if(moves=="1. d2d4 ")
+    {
+        let r = Math.random() * 2;
+        if( r > 0.9 )
+        {
+            return "d7d5";
+        }
+        else
+        {
+            return "g8f6";
+        }
+    }
+
+    if(moves=="1. e2e4 e7e5 ")
+    {
+        return "g1f3";
+    }
+    if(moves=="1. d2d4 d7d5 ")
+    {
+        return "c2c4";
+    }
+    if(moves=="1. d2d4 g8f6 ")
+    {
+        return "c2c4";
+    }
+    if(moves=="1. e2e4 e7e6 ")
+    {
+        return "d2d4";
+    }
+    if(moves=="1. e2e4 c7c6 ")
+    {
+        return "d2d4";
+    }
+    if(moves=="1. e2e4 c7c5 ")
+    {
+        return "g1f3";
+    }
+    if(moves=="1. e2e4 b7b6 ")
+    {
+        return "d2d4";
+    }
+    if(moves=="1. e2e4 g7g6 ")
+    {
+        return "d2d4";
+    }
+    if(moves=="1. e2e4 d7d6 ")
+    {
+        return "d2d4";
+    }
+    if(moves=="1. d2d4 b7b6 ")
+    {
+        return "c2c4";
+    }
+    if(moves=="1. d2d4 g7g6 ")
+    {
+        return "c2c4";
+    }
+    if(moves=="1. d2d4 d7d6 ")
+    {
+        return "c2c4";
+    }
+
+    if(moves=="1. e2e4 e7e5 2. g1f3 ")
+    {
+        return "b8c6";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 ")
+    {
+        return "b8c6";
+    }
+    if(moves=="1. e2e4 e7e5 2. d2d4 ")
+    {
+        return "e5d4";
+    }
+    if(moves=="1. e2e4 e7e5 2. f2f4 ")
+    {
+        return "d7d5";
+    }
+    if(moves=="1. e2e4 e7e5 2. b1c3 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 ")
+    {
+        return "e7e6";
+    }
+    if(moves=="1. d2d4 d7d5 2. g1f3 ")
+    {
+        return "c7c5";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 ")
+    {
+        return "g7g6";
+    }
+    if(moves=="1. d2d4 g8f6 2. g1f3 ")
+    {
+        return "g7g6";
+    }
+
+    return false;
+}
+
+const openingBookOld = function()
 {   // TODO: redo this shit, there must be an easier way
     if(boardPerspective == true)
     { // means book should be for black
