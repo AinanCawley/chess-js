@@ -1,8 +1,7 @@
 // TODO: handle insufficient material situations
 // TODO: improve move-ordering to make AI faster (iterative deepening?)
-// TODO: highlight the move AI played (would probably be easier if chosenAI handled a given move and not a given board)
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
-// TODO: Implement King safety and an opening book (for AI Six perhaps)
+// TODO: Implement an opening book (for AI Six perhaps)
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
 // TODO: move-ordering can be improved by putting pawn captures first
 
