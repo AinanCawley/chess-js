@@ -147,7 +147,7 @@ const chosenAI = function(fenString,choice)
 }
 
 const openingBook = function()
-{
+{   // TODO: redo this shit, there must be an easier way
     if(boardPerspective == true)
     { // means book should be for black
         if(gameHistoryArray.length == 1)
@@ -317,7 +317,27 @@ const openingBook = function()
             }
             if(gameHistoryArray.length == 4)
             {
-            
+                if(gameHistoryArray[0] == "e2e4")
+                {
+                    if(gameHistoryArray[1] == "e7e5")
+                    {
+                        if(gameHistoryArray[2] == "g1f3")
+                        {
+                            if(gameHistoryArray[3] == "d7d6")
+                            {
+                                return "d2d4";
+                            }
+                            if(gameHistoryArray[3] == "g8f6")
+                            {
+                                return "d2d4";
+                            }
+                            if(gameHistoryArray[3] == "b8c6");
+                            {
+                                return "f1c4";
+                            }
+                        }
+                    }
+                }
             }
             if(gameHistoryArray.length == 6)
             {
