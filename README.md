@@ -40,6 +40,6 @@ A depth 3 alpha-beta minimax is used but with SEARCH EXTENSION! This AI uses sea
 
 # AI Six
 
-"AI Six: Depth 3+, same as AI Five but also cares about castling"
+"AI Six: Depth 3+, same as AI Five but also cares about castling and uses an opening book."
 
-This AI is the same as AI Five but with an evaluation component that depends on whether Queens are on the board. If there are Queens, having castled is preferred to having castling rights which is preferred to having lost castling rights.
+This AI is the same as AI Five but with an opening book and an evaluation component that depends on whether Queens are on the board. If there are Queens, having castled is preferred to having castling rights which is preferred to having lost castling rights.

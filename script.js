@@ -102,14 +102,135 @@ const chosenAI = function(fenString,choice)
     {
         if( checkGameState(currentFEN) )
         {
-            loadPosition(robotAIAlphaBetaKingSafe(fenString));
-            playerTurn = true;
+            if(inBook)
+            {
+                let bookResult = openingBook();
+                if(bookResult == false)
+                {
+                    loadPosition(robotAIAlphaBetaKingSafe(fenString));
+                    playerTurn = true;
+        
+                    checkGameState(currentFEN); // check the game again since the AI has made a move
+        
+                    highlightLastMove();
 
-            checkGameState(currentFEN); // check the game again since the AI has made a move
+                    inBook = false;
+                }
+                else
+                {
+                    gameHistoryArray.push(bookResult);
+                    loadPosition(boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),bookResult)));
+                    playerTurn = true;
 
-            highlightLastMove();
+                    checkGameState(currentFEN); // check the game again since the AI has made a move
+
+                    highlightLastMove();
+
+                    inBook = true;
+                }
+            }
+            else
+            {
+                loadPosition(robotAIAlphaBetaKingSafe(fenString));
+                playerTurn = true;
+    
+                checkGameState(currentFEN); // check the game again since the AI has made a move
+    
+                highlightLastMove();
+            }
         }
     }
+}
+
+const openingBook = function()
+{
+    if(boardPerspective == true)
+    { // means book should be for black
+        if(gameHistoryArray.length == 1)
+        {
+            if(gameHistoryArray[0] == "e2e4")
+            {
+                return "e7e5";
+            }
+            if(gameHistoryArray[0] == "d2d4")
+            {
+                return "d7d5";
+            }
+        }
+        if(gameHistoryArray.length == 3)
+        {
+            if(gameHistoryArray[0] == "e2e4")
+            {
+                if(gameHistoryArray[1] == "e7e5")
+                {
+                    if(gameHistoryArray[2] == "g1f3")
+                    {
+                        return "b8c6";
+                    }
+                }
+            }
+            if(gameHistoryArray[0] == "d2d4")
+            {
+                if(gameHistoryArray[1] == "d7d5")
+                {
+                    if(gameHistoryArray[2] == "c2c4")
+                    {
+                        return "e7e6";
+                    }
+                }
+            }
+        }
+        if(gameHistoryArray.length == 5)
+        {
+
+        }
+    }
+    else
+    { // means book should be for white
+        if(gameHistoryArray.length == 0)
+        { // opening move
+            let r = Math.random() * 2;
+
+            if(r > 0.7)
+            {
+                return "e2e4";
+            }
+            else
+            {
+                return "d2d4";
+            }
+        }
+        else
+        {
+            if(gameHistoryArray.length == 2)
+            {
+                if(gameHistoryArray[0] == "e2e4")
+                {
+                    if(gameHistoryArray[1] == "e7e5")
+                    {
+                        return "g1f3";
+                    }
+                }
+                if(gameHistoryArray[0] == "d2d4")
+                {
+                    if(gameHistoryArray[1] == "d7d5")
+                    {
+                        return "g1f3";
+                    }
+                }
+            }
+            if(gameHistoryArray.length == 4)
+            {
+
+            }
+            if(gameHistoryArray.length == 6)
+            {
+
+            }
+        }
+    }
+
+    return false;
 }
 
 const robotAI = function(fenString)
@@ -9014,7 +9135,7 @@ const settingsScreen = function()
 
     let opponentChoiceOptionKingSafe = document.createElement("option");
     opponentChoiceOptionKingSafe.setAttribute("value", "kingSafe");
-    opponentChoiceOptionKingSafe.innerText = "AI Six: Depth 3+, same as AI Five but also cares about castling.";
+    opponentChoiceOptionKingSafe.innerText = "AI Six: Depth 3+, same as AI Five but also cares about castling and uses an opening book.";
 
 
     opponentChoice.addEventListener("change", event => 
@@ -9088,6 +9209,7 @@ let gameStarter = function()
     miscContainer.replaceChildren();
 
     gameHistoryArray = [];
+    inBook = true;
 
     if(boardPerspective == true )
     {
@@ -9208,6 +9330,7 @@ let sideToMoveScript = function( menu )
 let choice = ""; // choice of AI to play against
 let currentFEN = ""; // current board position represented in FEN
 let nodeCount; // for debugging node count in engines
+let inBook = true;
 
 let boardPerspective = true; // true for white and false for black
 let sideToMove = true;       // true for white and false for black
