@@ -135,6 +135,8 @@ const robotAI = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
+    moveArray.push(bestMove);
+
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
@@ -176,6 +178,8 @@ const freedomAI = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
+    moveArray.push(bestMove);
+
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
@@ -216,6 +220,8 @@ const robotAIAlphaBetaNega = function(fenString)
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
     console.log("move chosen: " + bestMove);
+
+    moveArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -293,6 +299,8 @@ const robotAIAlphaBetaKingSafe = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
+    moveArray.push(bestMove);
+
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
@@ -334,6 +342,8 @@ const robotAIAlphaBetaNegaExtension = function(fenString)
 
     console.log("move chosen: " + bestMove);
 
+    moveArray.push(bestMove);
+
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
 
@@ -374,6 +384,8 @@ const robotAIAlphaBetaNegaHybrid = function(fenString)
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
     console.log("move chosen: " + bestMove);
+
+    moveArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
@@ -540,6 +552,8 @@ const robotAIAlphaBeta = function(fenString)
     let bestMove = bestMoveArray[(Math.floor(Math.random() * bestMoveArray.length))];
 
     console.log("move chosen: " + bestMove);
+
+    moveArray.push(bestMove);
 
     return boardToFEN(conventionalBoardProcessMove(aiBoard,bestMove));
 }
