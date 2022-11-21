@@ -4,6 +4,7 @@
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
 // TODO: Implement King safety and an opening book (for AI Six perhaps)
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
+// TODO: move-ordering can be improved by putting pawn captures first
 
 // AI stuff
 
@@ -2483,8 +2484,10 @@ const randomAI = function(fenString)
     let array = legalMovesFromFEN(fenString);
     let arraySize = array.length;
     let randomNumber = Math.floor(Math.random() * arraySize );
+    let chosenMove = array[randomNumber];
+    moveArray.push(chosenMove);
 
-    return boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),array[randomNumber]));
+    return boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(fenString),chosenMove));
 }
 
 const checkGameState = function(currentFEN)
@@ -8262,6 +8265,7 @@ const createWhiteChessboard = function()
                         {
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
+                            moveArray.push(userMove);
                             loadPosition( newFEN );
                             makeBoardLight();
 
@@ -8367,6 +8371,7 @@ const createBlackChessboard = function()
                         {
                             playerTurn = false;
                             let newFEN = boardToFEN(conventionalBoardProcessMove(fenToConventionalBoard(currentFEN),userMove));
+                            moveArray.push(userMove);
                             loadPosition( newFEN );
                             makeBoardLight();
 
