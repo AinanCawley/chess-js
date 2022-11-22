@@ -328,6 +328,18 @@ const openingBook = function()
     {
         return "b1c3";
     }
+    if(moves=="1. d2d4 e7e6 2. c2c4 d7d5 ")
+    {
+        return "b1c3";
+    }
+    if(moves=="1. d2d4 c7c6 2. c2c4 d7d5 ")
+    {
+        return "b1c3";
+    }
+    if(moves=="1. d2d4 g7g6 2. c2c4 g8f6 ")
+    {
+        return "b1c3";
+    }
     if(moves=="1. e2e4 c7c5 2. g1f3 b8c6 ")
     {
         return "d2d4";
@@ -355,6 +367,43 @@ const openingBook = function()
     if(moves=="1. e2e4 d7d5 2. e4d5 d8d5 ")
     {
         return "b1c3";
+    }
+    ////
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1b5 ")
+    {
+        return "f7f5";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1c4 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. d2d4 ")
+    {
+        return "e5d4";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. b1c3 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 b8c6 3. d2d4 ")
+    {
+        return "c5d4";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. g1f3 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. b1c3 ")
+    {
+        return "d7d5";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. g1f3 ")
+    {
+        return "f8g7";
     }
 
     return false;
