@@ -316,6 +316,18 @@ const openingBook = function()
     {
         return "c4d5";
     }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 ")
+    {
+        return "b1c3";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 e7e6 ")
+    {
+        return "g1f3";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 c7c6 ")
+    {
+        return "b1c3";
+    }
     if(moves=="1. e2e4 c7c5 2. g1f3 b8c6 ")
     {
         return "d2d4";
