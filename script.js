@@ -3,6 +3,7 @@
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
 // TODO: Implement an opening book (for AI Six perhaps)
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
+// TODO: make the AI stop repeating positions (recognise a draw by repetition)
 
 // AI stuff
 
@@ -449,6 +450,103 @@ const openingBook = function()
     if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1c4 f8c5 ")
     {
         return "b2b4";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 b8c6 3. d2d4 c5d4 ")
+    {
+        return "f3d4";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 e7e6 3. d2d4 c5d4 ")
+    {
+        return "f3d4";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 d7d6 3. d2d4 c5d4 ")
+    {
+        return "f3d4";
+    }
+    if(moves=="1. e2e4 c7c6 2. d2d4 d7d5 3. b1c3 d5e4 ")
+    {
+        return "c3e4";
+    }
+    if(moves=="1. e2e4 e7e6 2. d2d4 d7d5 3. b1c3 d5e4 ")
+    {
+        return "c3e4";
+    }
+    if(moves=="1. e2e4 e7e6 2. d2d4 d7d5 3. b1c3 g8f6 ")
+    {
+        return "c1g5";
+    }
+    if(moves=="1. e2e4 e7e6 2. d2d4 d7d5 3. b1c3 f8b4 ")
+    {
+        return "e4e5";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 g8f6 ")
+    {
+        return "c1g5";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 f8e7 ")
+    {
+        return "g1f3";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 d5c4 ")
+    {
+        return "e2e4";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 c7c6 ")
+    {
+        return "e2e4";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 d5c4 3. e2e4 e7e5 ")
+    {
+        return "g1f3";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 d5c4 3. e2e4 e7e6 ")
+    {
+        return "f1c4";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 d5c4 3. e2e4 g8f6 ")
+    {
+        return "e4e5";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 e7e6 3. g1f3 d7d5 ")
+    {
+        return "b1c3";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. b1c3 d7d5 ")
+    {
+        return "c4d5";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. b1c3 f8g7 ")
+    {
+        return "e2e4";
+    }
+    ////
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1b5 f7f5 4. e4f5 ")
+    {
+        return "e5e4";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1b5 f7f5 4. b1c3 ")
+    {
+        return "f5e4";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1b5 f7f5 4. d2d3 ")
+    {
+        return "f5e4";
+    }
+    if(moves=="1. e2e4 e7e5 2. g1f3 b8c6 3. f1b5 f7f5 4. b5c6 ")
+    {
+        return "d7c6";
+    }
+    if(moves=="1. e2e4 c7c5 2. g1f3 b8c6 3. d2d4 c5d4 4. f3d4 ")
+    {
+        return "g8f6";
+    }
+    if(moves=="1. e2e4 e7e5 2. b1c3 g8f6 3. f2f4 d7d5 4. f4e5 ")
+    {
+        return "f6e4";
+    }
+    if(moves=="1. e2e4 e7e5 2. b1c3 g8f6 3. f2f4 d7d5 4. e4d5 ")
+    {
+        return "f6d5";
     }
 
     return false;
