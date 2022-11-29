@@ -3,6 +3,7 @@
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
 // TODO: make the AI stop repeating positions (recognise a draw by repetition)
+// TODO: make move extensions have a limit so that endgames don't crash by infinite recursion.
 
 // AI stuff
 
