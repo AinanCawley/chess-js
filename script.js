@@ -548,6 +548,26 @@ const openingBook = function()
     {
         return "f6d5";
     }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 g8f6 4. g1f3 ")
+    {
+        return "f8e7";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 g8f6 4. c1g5 ")
+    {
+        return "f8e7";
+    }
+    if(moves=="1. d2d4 d7d5 2. c2c4 e7e6 3. b1c3 g8f6 4. c4d5 ")
+    {
+        return "e6d5";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. b1c3 d7d5 4. g1f3 ")
+    {
+        return "f8g7";
+    }
+    if(moves=="1. d2d4 g8f6 2. c2c4 g7g6 3. b1c3 d7d5 4. c4d5 ")
+    {
+        return "f6d5";
+    }
 
     return false;
 }
