@@ -202,6 +202,22 @@ const openingBook = function()
             return "g8f6";
         }
     }
+    if(moves=="1. g1f3 ")
+    {
+        return "d7d5";
+    }
+    if(moves=="1. c2c4 ")
+    {
+        return "e7e5";
+    }
+    if(moves=="1. b2b3 ")
+    {
+        return "d7d5";
+    }
+    if(moves=="1. g2g3 ")
+    {
+        return "d7d5";
+    }
     ////
     if(moves=="1. e2e4 e7e5 ")
     {
