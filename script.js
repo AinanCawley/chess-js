@@ -1,7 +1,6 @@
 // TODO: handle insufficient material situations
 // TODO: improve move-ordering to make AI faster (iterative deepening?)
 // TODO: make fenToConventionalBoard handle multiple digit move numbers
-// TODO: Implement an opening book (for AI Six perhaps)
 // TODO: fix bug where checkmate caused by promotion doesn't show the play again screen
 // TODO: make the AI stop repeating positions (recognise a draw by repetition)
 
