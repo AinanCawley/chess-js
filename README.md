@@ -4,7 +4,7 @@ Making a Chess GUI and Engine from scratch in Javascript.
 
 # AI Opponents
 
-Currently there are 5 "AI" opponents to choose from. They get progressively more advanced.
+Currently there are 6 "AI" opponents to choose from. They get progressively more advanced.
 
 # AI One 
 
