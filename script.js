@@ -9546,7 +9546,7 @@ const updateVisuals = function()
     let whitePawns = document.querySelectorAll(".whitePawn");
     whitePawns.forEach(function(piece)
     {
-        piece.innerText = "\u2659";
+        piece.innerText = "\u2659\uFE0E";
     });
     let blackPawns = document.querySelectorAll(".blackPawn");
     blackPawns.forEach(function(piece)
@@ -9556,52 +9556,52 @@ const updateVisuals = function()
     let whiteKnight = document.querySelectorAll(".whiteKnight");
     whiteKnight.forEach(function(piece)
     {
-        piece.innerText = "\u2658";
+        piece.innerText = "\u2658\uFE0E";
     });
     let blackKnights = document.querySelectorAll(".blackKnight");
     blackKnights.forEach(function(piece)
     {
-        piece.innerText = "\u265E";
+        piece.innerText = "\u265E\uFE0E";
     });
     let whiteBishops = document.querySelectorAll(".whiteBishop");
     whiteBishops.forEach(function(piece)
     {
-        piece.innerText = "\u2657";
+        piece.innerText = "\u2657\uFE0E";
     });
     let blackBishops = document.querySelectorAll(".blackBishop");
     blackBishops.forEach(function(piece)
     {
-        piece.innerText = "\u265D";
+        piece.innerText = "\u265D\uFE0E";
     });
     let whiteRooks = document.querySelectorAll(".whiteRook");
     whiteRooks.forEach(function(piece)
     {
-        piece.innerText = "\u2656";
+        piece.innerText = "\u2656\uFE0E";
     });
     let blackRooks = document.querySelectorAll(".blackRook");
     blackRooks.forEach(function(piece)
     {
-        piece.innerText = "\u265C";
+        piece.innerText = "\u265C\uFE0E";
     });
     let whiteQueens = document.querySelectorAll(".whiteQueen");
     whiteQueens.forEach(function(piece)
     {
-        piece.innerText = "\u2655";
+        piece.innerText = "\u2655\uFE0E";
     });
     let blackQueens = document.querySelectorAll(".blackQueen");
     blackQueens.forEach(function(piece)
     {
-        piece.innerText = "\u265B";
+        piece.innerText = "\u265B\uFE0E";
     });
     let whiteKings = document.querySelectorAll(".whiteKing");
     whiteKings.forEach(function(piece)
     {
-        piece.innerText = "\u2654";
+        piece.innerText = "\u2654\uFE0E";
     });
     let blackKings = document.querySelectorAll(".blackKing");
     blackKings.forEach(function(piece)
     {
-        piece.innerText = "\u265A";
+        piece.innerText = "\u265A\uFE0E";
     });
 }
 
@@ -9806,9 +9806,11 @@ let gameStarter = function()
 const playerLoses = function()
 {
     let message = document.createElement("p");
+    message.setAttribute("class", "fw-bold");
     message.innerText = "You lose!";
 
     let playAgainButton = document.createElement("button");
+    playAgainButton.setAttribute("class", "btn btn-primary");
     playAgainButton.innerText = "play again?";
     playAgainButton.addEventListener("click", event =>
     {
@@ -9822,9 +9824,11 @@ const playerLoses = function()
 const playerWins = function()
 {
     let message = document.createElement("p");
+    message.setAttribute("class", "fw-bold");
     message.innerText = "You win!";
 
     let playAgainButton = document.createElement("button");
+    playAgainButton.setAttribute("class", "btn btn-primary");
     playAgainButton.innerText = "play again?";
     playAgainButton.addEventListener("click", event =>
     {
