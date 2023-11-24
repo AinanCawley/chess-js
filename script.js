@@ -9551,7 +9551,7 @@ const updateVisuals = function()
     let blackPawns = document.querySelectorAll(".blackPawn");
     blackPawns.forEach(function(piece)
     {
-        piece.innerText = "\u265F";
+        piece.innerText = "\u265F\uFE0E";
     });
     let whiteKnight = document.querySelectorAll(".whiteKnight");
     whiteKnight.forEach(function(piece)
@@ -9616,14 +9616,18 @@ const settingsScreen = function()
 {
     gameContainer.replaceChildren();
     miscContainer.replaceChildren();
+
+    let form = document.createElement("div");
+    form.setAttribute("class", "input-group");
     
     let colourChoice = document.createElement("select");
     colourChoice.setAttribute("name", "colourChoice");
     colourChoice.setAttribute("id", "colourChoice");
+    colourChoice.setAttribute("class", "form-select");
 
-    let labelColourChoice = document.createElement("label");
-    labelColourChoice.setAttribute("for", "colourChoice");
-    labelColourChoice.innerText = "Choose your colour: ";
+    let labelColourChoice = document.createElement("span");
+    labelColourChoice.setAttribute("class", "input-group-text");
+    labelColourChoice.innerText = "Play as:";
 
     let colourChoiceOptionWhite = document.createElement("option");
     colourChoiceOptionWhite.setAttribute("value", "White");
@@ -9634,8 +9638,9 @@ const settingsScreen = function()
     colourChoiceOptionBlack.innerText = "Black";
 
     let colourChoiceOptionNull = document.createElement("option");
+    colourChoiceOptionNull.setAttribute("hidden", true);
     colourChoiceOptionNull.setAttribute("value", "");
-    colourChoiceOptionNull.innerText = "";
+    colourChoiceOptionNull.innerText = "Select your colour";
 
     colourChoice.addEventListener( "change", event => 
     {
@@ -9656,20 +9661,23 @@ const settingsScreen = function()
     colourChoice.appendChild(colourChoiceOptionWhite);
     colourChoice.appendChild(colourChoiceOptionBlack);
 
-    miscContainer.appendChild(labelColourChoice);
-    miscContainer.appendChild(colourChoice);
+    
+    form.appendChild(labelColourChoice);
+    form.appendChild(colourChoice);
 
     let opponentChoice = document.createElement("select");
     opponentChoice.setAttribute("name", "opponentChoice");
     opponentChoice.setAttribute("id", "opponentChoice");
+    opponentChoice.setAttribute("class", "form-select");
 
-    let labelOpponentChoice = document.createElement("label");
-    labelOpponentChoice.setAttribute("for", "opponentChoice");
-    labelOpponentChoice.innerText = "Choose your AI opponent: ";
+    let labelOpponentChoice = document.createElement("span");
+    labelOpponentChoice.setAttribute("class", "input-group-text");
+    labelOpponentChoice.innerText = "Opponent:";
 
     let opponentChoiceOptionNull = document.createElement("option");
+    opponentChoiceOptionNull.innerText = "Select your AI opponent";
     opponentChoiceOptionNull.setAttribute("value", "");
-    opponentChoiceOptionNull.innerText = "";
+    opponentChoiceOptionNull.setAttribute("hidden", true);
 
     let opponentChoiceOptionRandom = document.createElement("option");
     opponentChoiceOptionRandom.setAttribute("value", "random");
@@ -9747,18 +9755,29 @@ const settingsScreen = function()
     opponentChoice.appendChild(opponentChoiceOptionExtension);
     opponentChoice.appendChild(opponentChoiceOptionKingSafe);
 
-    miscContainer.appendChild(labelOpponentChoice);
-    miscContainer.appendChild(opponentChoice);
+    form.appendChild(labelOpponentChoice);
+    form.appendChild(opponentChoice);
 
     let gameStartButton = document.createElement("button");
 
+    gameStartButton.setAttribute("class", "btn input-group-btn btn-outline-primary");
     gameStartButton.innerText = "Start game!";
     gameStartButton.addEventListener("click", event => 
     {
-        gameStarter();
+        if(opponentChoice.value === "" || colourChoice.value === "")
+        {
+            //  they need to select a colour or opponent
+            // TODO: give user feedback that they need to select these things
+        }
+        else
+        {
+            gameStarter();
+        }
     });
 
-    miscContainer.appendChild(gameStartButton);
+    form.appendChild(gameStartButton);
+
+    miscContainer.appendChild(form);
 }
 
 let gameStarter = function()
